@@ -1,0 +1,91 @@
+.red-text{
+  color: red;
+}
+.ml-5{
+  margin-left: 5px;
+}
+.box-card{
+  min-width: 300px;
+  max-width: 1000px;
+}
+.required-item{
+  color: red;
+  margin-left: 5px;
+  font-size: 15px;
+}
+.el-input,textarea{
+  width: 400px;
+}
+.citySelectClass{
+  height: 32px !important;
+  line-height: 32px !important;
+  margin-top: 1px;
+}
+.train-dialog{
+  .el-input,textarea{
+    width: 313px;
+  }
+}
+
+.account-upload{
+  .el-form-item__content{
+    display: flex;
+  }
+}
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  i{
+    font-size: 23px;
+  }
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409EFF;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+}
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
+}
+
+.ml-10{
+  margin-left: 10px;
+}
+
+.ml-50{
+  margin-left: 50px;
+}
+
+.mini-item{
+  width: 550px;
+  text-align: right;
+  p{
+    margin: 0;
+    span{
+      min-width: 80px;
+      display: inline-block;
+    }
+  }
+}
+.order-log-list-dialog {
+  .el-table--mini td {
+    vertical-align: top;
+  }
+  .el-table--mini td .cell {
+    height: auto;
+    overflow: unset;
+    white-space: unset;
+    text-overflow: unset;
+  }
+}

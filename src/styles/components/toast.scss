@@ -1,0 +1,159 @@
+@import "../colors";
+
+.toast {
+  position: absolute;
+  min-width: 100px;
+  max-width: 80%;
+  max-height: 80%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 8px 12px;
+  z-index: 999999999;
+  background-color: rgba(0, 0, 0, .6);
+  bottom: 10%;
+  color: white;
+  text-align: center;
+  //opacity: 0;
+  font-size: 14px;
+  border-radius: 5px;
+  -webkit-transition: opacity .2s;
+  -moz-transition: opacity .2s;
+  -o-transition: opacity .2s;
+  transition: opacity .2s linear;
+}
+
+.toast.show {
+  //opacity: 1;
+}
+
+.toast-default {
+  background-color: rgba($defaultColor, .8)
+}
+
+.toast-success {
+  background-color: rgba($successColor, .8);
+}
+
+.toast-warning {
+  background-color: rgba($warningColor, .8);
+}
+
+.toast-info {
+  background-color: rgba($infoColor, .8);
+}
+
+.toast-danger, .toast-error {
+  background-color: rgba($dangerColor, .8);
+}
+
+.toast-position-top {
+  bottom: inherit;
+  top: 10%;
+}
+
+/* popup-toast */
+.popup-toast {
+  //background-color: #f7f7f8;
+  background-color: #efefef;
+
+  .toolbar {
+    //background-color: #ffffff;
+    border-bottom: 1px #dddddd solid;
+    &:before {
+      display: none;
+    }
+  }
+
+  .bg-danger, .bg-success, .bg-info, .bg-warning {
+    a.link {
+      color: #ffffff;
+    }
+  }
+
+  .popup-toast-content {
+    background-color: #ffffff;
+    //background-color: #f7f7f8;
+    border-bottom: 1px #e4eaec solid;
+
+    .toast-content-inner {
+      padding: 10px 0;
+    }
+    .toast-icon {
+      width: 30px;
+      height: 30px;
+      line-height: 30px;
+      margin: auto;
+      border-radius: 30px;
+
+      i.icon {
+        color: #ffffff;
+        font-size: 25px;
+      }
+    }
+    .toast-title {
+      margin-top: 10px;
+      font-size: 22px;
+    }
+    .toast-text {
+      color: $textColor;
+      padding: 20px 0 0 0;
+      font-size: 14px;
+      a {
+        font-size: 20px;
+        padding: 0 15px;
+      }
+    }
+    .text-bold {
+      font-size: 18px;
+      font-weight: 300 !important;
+      margin-bottom: 6px;
+    }
+
+    &.default {
+      .toast-icon, .toast-title {
+        color: #007aff;
+      }
+      .toast-icon {
+        background-color: #007aff;
+      }
+    }
+
+    &.danger, &.error {
+      .toast-icon, .toast-title {
+        color: $dangerColor
+      }
+      .toast-icon {
+        background-color: $dangerColor;
+      }
+    }
+
+    &.success {
+      .toast-icon, .toast-title {
+        color: $successColor
+      }
+      .toast-icon {
+        background-color: $successColor;
+      }
+    }
+
+    &.info {
+      .toast-icon, .toast-title {
+        color: $infoColor
+      }
+      .toast-icon {
+        background-color: $infoColor;
+      }
+    }
+    &.warning {
+      .toast-icon, .toast-title {
+        color: $warningColor
+      }
+      .toast-icon {
+        background-color: $warningColor;
+      }
+    }
+  }
+  .content-block {
+    margin: 25px 0;
+  }
+}

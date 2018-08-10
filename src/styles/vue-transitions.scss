@@ -1,0 +1,49 @@
+.fade-enter-active, .fade-leave-active {
+  transition: all 0.1s
+}
+
+.fade-enter, .fade-leave-active {
+  opacity: 0
+}
+
+.vux-pop-out-enter-active,
+.vux-pop-out-leave-active,
+.vux-pop-in-enter-active,
+.vux-pop-in-leave-active {
+  will-change: transform;
+  transition: all .1s;
+  backface-visibility: hidden;
+  perspective: 1000;
+  -webkit-perspective: 1000;
+}
+
+.vux-pop-out-enter {
+  opacity: 0;
+  transform: translate3d(-30px, 0, 0);
+}
+
+.vux-pop-out-leave-active {
+  opacity: 0;
+  transform: translate3d(30px, 0, 0);
+}
+
+.vux-pop-in-enter {
+  opacity: 0;
+  transform: translate3d(30px, 0, 0);
+}
+
+.vux-pop-in-leave-active {
+  opacity: 0;
+  transform: translate3d(-30px, 0, 0);
+}
+
+.slide-left-enter,
+.slide-right-leave-active {
+  opacity: 0;
+  transform: translate(30px, 0);
+}
+.slide-left-leave-active,
+.slide-right-enter {
+  opacity: 0;
+  transform: translate(-30px, 0);
+}

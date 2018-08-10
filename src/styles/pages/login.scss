@@ -1,0 +1,89 @@
+&{
+  background-color: #bbbec2;
+  height: 100%;
+  width: 100%
+}
+.login {
+  color: #848a9a;
+  position: relative;
+}
+.login, .nav-boxes>.nav-box-item, .over-hr, .pod .pod-info, .pod .pod-message, .pod .pod-name, .pod .pod-state, .subpod-name I, .toggle-advanced {
+  text-align: center;
+}
+.login H1 {
+  font-size: 28px;
+  color: #fff;
+  word-break: normal;
+  margin: 0;
+}
+.el-form-item {
+  margin-bottom: 0px;
+  &.is-error {
+    margin-bottom: 10px;
+  }
+}
+.farm-box h1, .farm-box h2 {
+  padding: 40px 20px;
+  color: #fff;
+  position: relative;
+}
+.farm-box .btn-primary, .farm-box h1 {
+  background-color: #0075a8;
+}
+.farm-box h1 .logo, .farm-box h2 .logo {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -37px;
+}
+.login .logo {
+  height: 75px;
+  width: 75px;
+  background-image: url(../assets/images/logo.png);
+  background-repeat: no-repeat;
+  background-size: 49px;
+  background-position: center center;
+  border-radius: 50%;
+  margin: 0 auto;
+  background-color: #0075a8;
+  z-index: 5;
+}
+.login SECTION {
+  padding: 40px;
+}
+.farm-box SECTION {
+  min-width: 50%;
+  background-color: #fff;
+  padding: 20px;
+}
+.r-pb0 {
+  padding-bottom: 0!important;
+}
+.form-group {
+  padding-bottom: 15px;
+  margin-bottom: 0;
+}
+.farm-box SECTION .form-group LABEL {
+  color: #0075a8;
+}
+.el-form--label-top .el-form-item__label {
+  padding: 0;
+  color: #0075a8;
+  font-weight: 700;
+}
+
+.verifyCode {
+  .el-form-item__content {
+    line-height: 1;
+  }
+  .verifyCodeImg {
+    border: 1px solid #dddddd;
+    height: 38px;
+    width: 97px;
+    line-height: 38px;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    cursor: pointer;
+  }
+}

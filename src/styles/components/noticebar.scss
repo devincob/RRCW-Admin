@@ -1,0 +1,84 @@
+@import "../colors";
+
+.am-notice-bar {
+  background-color: #fefcec;
+  height: 36px;
+  width: 100%;
+  overflow: hidden;
+  font-size: 14px;
+  line-height: 36px;
+  color: #f76a24;
+  display: -webkit-box;
+  display: flex;
+
+  i.icon {
+    color: #f76a24 !important;
+  }
+
+  .am-notice-bar-icon {
+    margin-left: 15px;
+    display: -webkit-box;
+    display: flex;
+    align-items: center;
+  }
+  .am-notice-bar-content {
+    flex: 1;
+    /*width: 100%;*/
+    width: auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin: auto 3px;
+  }
+  .am-notice-bar-operation {
+    display: flex;
+    align-items: center;
+    padding-right: 8px;
+  }
+
+  /* 以下为颜色定义 */
+  &.success {
+    background-color: $successColor;
+    color: white;
+
+    i.icon {
+      color: white !important;
+    }
+  }
+  &.danger {
+    background-color: $dangerColor;
+    color: white;
+
+    i.icon {
+      color: white !important;
+    }
+  }
+  &.warning {
+    background-color: $warningColor;
+    color: white;
+
+    i.icon {
+      color: white !important;
+    }
+  }
+  &.info {
+    background-color: $infoColor;
+    color: white;
+
+    i.icon {
+      color: white !important;
+    }
+  }
+
+  &.am-notice-bar-fixed {
+    position: fixed;
+    top: 44px;
+    z-index: 99999;
+  }
+  &.am-notice-bar-fixed-bottom {
+    position: fixed;
+    bottom: 0px;
+    z-index: 99999;
+  }
+}
+

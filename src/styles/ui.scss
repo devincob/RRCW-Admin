@@ -1,0 +1,71 @@
+.el-table--mini {
+  th {
+    padding: 6px 0;
+  }
+  th.is-sortable {
+    padding: 1px 0;
+  }
+  td .cell {
+    height: 23px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .el-button--mini, .el-button--mini.is-round {
+    padding: 3px 7px;
+  }
+  .el-button+.el-button {
+    margin-left: 5px;
+  }
+  .el-table__empty-block {
+    min-height: 300px;
+  }
+}
+
+.el-card-mini {
+  .el-card__header {
+    padding: 12px;
+    .el-button {
+      font-size: 12px;
+      padding: 2px 0;
+    }
+  }
+  .el-range-editor--mini {
+    width: 240px;
+    .el-range-input {
+      width: 36%;
+    }
+    .el-range__close-icon, .el-range__icon {
+      width: 20px;
+    }
+  }
+}
+
+.el-input--mini .el-input__inner {
+  padding: 0 10px;
+}
+.el-date-editor.el-input--mini .el-input__inner{
+  padding-left: 30px;
+}
+
+.el-form-item--mini.el-form-item:not(.is-error),
+.el-form-item--small.el-form-item:not(.is-error) {
+  margin-bottom: 10px;
+}
+
+.el-picker-panel.el-date-range-picker.el-popper {
+  width: 500px;
+  .el-picker-panel__content {
+    padding: 5px;
+  }
+  .el-picker-panel__body {
+    min-width: 500px;
+    .el-date-table td {
+      padding: 1px 0;
+    }
+  }
+}
+
+.orders-date-picker.el-picker-panel.el-date-range-picker.el-popper{
+  width: 650px;
+}

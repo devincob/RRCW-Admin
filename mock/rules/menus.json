@@ -1,0 +1,28 @@
+[
+  {"menuId": 1, "parentMenuId": 0, "menuName": "客户管理", "icon": "el-icon-menu"},
+  {"menuId": 11, "parentMenuId": 1, "menuName": "新增客户", "icon": "el-icon-menu", "menuLink": "/customerManagement/addCustomer"},
+  {"menuId": 111, "parentMenuId": 1, "menuName": "客户列表", "icon": "el-icon-menu", "menuLink": "/customerManagement/customerList"},
+
+  {"menuId": 2, "parentMenuId": 0, "menuName": "公司管理", "icon": "el-icon-menu"},
+  {"menuId": 22, "parentMenuId": 2, "menuName": "新增公司", "icon": "el-icon-menu", "menuLink": "/company/create"},
+  {"menuId": 222, "parentMenuId": 2, "menuName": "公司列表", "icon": "el-icon-menu", "menuLink": "/company/list"},
+
+  {"menuId": 3, "parentMenuId": 0, "menuName": "订单管理", "icon": "el-icon-menu"},
+  {"menuId": 33, "parentMenuId": 3, "menuName": "新增开户订单", "icon": "el-icon-menu", "menuLink": "/order/account-order-create"},
+  {"menuId": 333, "parentMenuId": 3, "menuName": "开户订单列表", "icon": "el-icon-menu", "menuLink": "/order/account-orders"},
+  {"menuId": 3333, "parentMenuId": 3, "menuName": "新增开票订单", "icon": "el-icon-menu", "menuLink": "/order/invoice-order-create"},
+  {"menuId": 33333, "parentMenuId": 3, "menuName": "开票订单列表", "icon": "el-icon-menu", "menuLink": "/order/invoice-orders"},
+
+  {"menuId": 4, "parentMenuId": 0, "menuName": "税源地管理", "icon": "el-icon-menu"},
+  {"menuId": 44, "parentMenuId": 4, "menuName": "新增税源地", "icon": "el-icon-menu", "menuLink": "/taxSourceManagement/addTaxSource"},
+  {"menuId": 444, "parentMenuId": 4, "menuName": "税源地列表", "icon": "el-icon-menu", "menuLink": "/taxSourceManagement/taxSourceList"},
+
+  {"menuId": 5, "parentMenuId": 0, "menuName": "商品管理", "icon": "el-icon-menu"},
+  {"menuId": 55, "parentMenuId": 5, "menuName": "新增商品", "icon": "el-icon-menu", "menuLink": "/goods/create"},
+  {"menuId": 555, "parentMenuId": 5, "menuName": "商品列表", "icon": "el-icon-menu", "menuLink": "/goods/list"},
+
+  {"menuId": 19, "parentMenuId": 0, "menuName": "系统设置", "icon": "el-icon-location"},
+  {"menuId": 20, "parentMenuId": 19, "menuName": "账号管理", "icon": "el-icon-location", "menuLink": "/privileges/accounts"},
+  {"menuId": 21, "parentMenuId": 19, "menuName": "角色权限管理", "icon": "el-icon-location", "menuLink": "/privileges/roles"},
+  {"menuId": 22, "parentMenuId": 19, "menuName": "系统日志", "icon": "el-icon-location", "menuLink": "/privileges/logs"}
+]
