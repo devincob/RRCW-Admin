@@ -17,13 +17,17 @@
         <x-empty v-if="loading" no-icon no-title text="正在获取数据" slot="empty"/>
 
         <el-table-column label="商品编号" prop="goodsId" width="80"/>
-        <el-table-column label="名称" prop="goodsName" width="100"/>
+        <el-table-column label="名称" prop="goodsName"/>
         <el-table-column label="纳税性质" prop="userType">
           <span slot-scope="scope">{{userTypeText[scope.row.taxType]}}</span>
         </el-table-column>
         <el-table-column label="开票服务费率" prop="invoiceServiceRatio" min-width="100"/>
-        <el-table-column label="开户服务费" prop="serviceCharge"/>
-        <el-table-column label="开户押金" prop="deposit"/>
+        <el-table-column label="开户服务费" prop="serviceCharge">
+          <span slot-scope="scope">{{scope.row.serviceCharge | currency}}</span>
+        </el-table-column>
+        <el-table-column label="开户押金" prop="deposit">
+          <span slot-scope="scope">{{scope.row.deposit | currency}}</span>
+        </el-table-column>
         <el-table-column label="状态" prop="status">
           <span slot-scope="scope" :class="{'text-danger': scope.row.status === 'D', 'text-success': scope.row.status === 'N'}">{{statusText[scope.row.status]}}</span>
         </el-table-column>

@@ -1,5 +1,5 @@
 <template>
-  <x-page breadcrumb="auto" style="padding:24px 12px;" title="人人财务交易管理系统">
+  <x-page breadcrumb="auto" class="index-page" style="padding:24px 12px;" title="人人财务交易管理系统">
     <el-row>
       <el-col :span="6" style="padding-right: 12px;padding-left: 12px;">
         <IndexStatCard title="今日新增开户订单" popover="今日内新提交的开户订单数量" :valueCount="stat.aoCount"/>
@@ -37,7 +37,12 @@
             <el-table-column prop="realDepositFee" label="押金">
               <span slot-scope="scope">{{scope.row.realDepositFee | currency}}</span>
             </el-table-column>
-            <el-table-column prop="workflowName" label="状态" :render-header="renderAccountStatusHeader"/>
+            <el-table-column prop="workflowName" label="状态" :render-header="renderAccountStatusHeader">
+              <template slot-scope="scope">
+                {{scope.row.workflowName}}
+                <el-button type="text" @click="onRemoveOrder(scope.row, 'AO')" v-if="scope.row.workflowId === 0" size="mini">删除</el-button>
+              </template>
+            </el-table-column>
             <!--<el-table-column prop="createTime" label="下单日期"/>-->
           </el-table>
         </el-card>
@@ -56,6 +61,14 @@
               </div>
             </el-table-column>
             <el-table-column prop="customerName" label="客户姓名"/>
+            <el-table-column prop="companyName" label="站点名称">
+              <span slot-scope="scope" :title="scope.row.companyName">{{scope.row.companyName}}</span>
+            </el-table-column>
+            <!--<el-table-column prop="companyName" label="站点名称" min-width="200">-->
+              <!--<company-details-dialog slot-scope="scope" :company-id="scope.row.companyId">-->
+                <!--<span>{{scope.row.companyName}}</span>-->
+              <!--</company-details-dialog>-->
+            <!--</el-table-column>-->
             <el-table-column prop="sourceTaxName" label="税源地"/>
             <el-table-column prop="goodsName" label="商品"/>
             <el-table-column prop="totalAmount" label="发票类型">
@@ -64,7 +77,12 @@
             <el-table-column prop="realDepositFee" label="开票金额">
               <span slot-scope="scope">{{scope.row.invoiceAmount | currency}}</span>
             </el-table-column>
-            <el-table-column prop="workflowName" label="状态" :render-header="renderInvoiceStatusHeader"/>
+            <el-table-column prop="workflowName" label="状态" :render-header="renderInvoiceStatusHeader">
+              <template slot-scope="scope">
+                {{scope.row.workflowName}}
+                <el-button type="text" @click="onRemoveOrder(scope.row, 'IO')" v-if="scope.row.workflowId === 0" size="mini">删除</el-button>
+              </template>
+            </el-table-column>
             <!--<el-table-column prop="createTime" label="下单日期"/>-->
           </el-table>
         </el-card>
@@ -74,9 +92,11 @@
 </template>
 <script>
 import IndexStatCard from '../components/IndexStatCard'
+import CompanyDetailsDialog from '../components/ExpressInfoDialog'
 
 export default {
   components: {
+    CompanyDetailsDialog,
     IndexStatCard
   },
   name: 'index',
@@ -97,6 +117,9 @@ export default {
   methods: {
     onPageShow () {
       this.loadStat()
+      this.loadList()
+    },
+    loadList(){
       this.$$main.indexAOForHandle().then(res => {
         this.tableData = res
       })
@@ -153,6 +176,23 @@ O订单完成`.replace(/\n/g, '<br>')}</span>
             <i class="el-icon-question" style="font-size: 16px;cursor: pointer;color: #303133" slot="reference"></i>
           </el-popover></span>`
       })
+    },
+    async onRemoveOrder(row, type){
+      const opt = await this.$confirm('确定要删除草稿吗？', '删除提示')
+      if (opt === 'confirm') {
+        const loader = this.$loading()
+        try {
+          const res = await (type === 'AO' ? this.$$main.orderAODelete({orderId: row.orderId}) : this.$$main.orderIODelete({orderId: row.orderId}))
+          loader.close()
+          if (res) {
+            this.$message.success('已删除草稿')
+            this.loadList()
+          }
+        } catch (e) {
+          loader.close()
+          this.$message.error(e.message)
+        }
+      }
     }
   },
   mounted(){
@@ -165,5 +205,8 @@ O订单完成`.replace(/\n/g, '<br>')}</span>
   }
   .my-card-table .el-table--mini .el-table__empty-block {
     min-height: 100px;
+  }
+  .index-page .el-table--mini .el-button--mini {
+    padding: 0;
   }
 </style>

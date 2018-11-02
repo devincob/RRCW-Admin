@@ -37,10 +37,14 @@
             <el-input v-model="ruleForm.birthday" placeholder="生日格式：1999-01-01"></el-input>
           </el-col>
         </el-form-item>
-        <el-form-item label="客户来源"  prop="source">
-          <el-select v-model="ruleForm.source" placeholder="请选择客户来源">
-            <el-option label="直属" value="D"></el-option>
-            <el-option label="渠道" value="C"></el-option>
+        <el-form-item label="渠道商列表"  prop="source">
+          <el-select v-model="ruleForm.source" placeholder="请选择客户来源" @change="selectChannel">
+            <el-option
+              v-for="(item, index) in channelList"
+              :key=index
+              :label="item.channelName"
+              :value="item.channelId">
+            </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="客户状态" prop="status">
@@ -90,12 +94,12 @@ const findParentDeptId = (list, deptId) => {
     }
   }
   if (ids.length > 3) {
-    ids.pop()
+    ids.shift()
   }
   return ids
 }
 export default {
-  customerName: 'add_customer',
+  name: 'add_customer',
   data() {
     return {
       selectedOptions: null,
@@ -104,6 +108,7 @@ export default {
       fullScreenLoading: false,
       pageText: '',
       roles: [],
+      channelList: [],
       ruleForm: {
         customerId: 0,
         customerName: '',
@@ -112,7 +117,7 @@ export default {
         liveAddress: '',
         workAddress: '',
         birthday: '',
-        source: '', // 来源(直属:D;渠道:C)
+        source: 0, // 来源(直属:0;渠道:...)
         status: '',
         deptId: '',
         belongAdminUserId: '', // 所属商务编号
@@ -179,25 +184,34 @@ export default {
         })
         detialInfo.birthday = detialInfo.showBirthday
         this.ruleForm = detialInfo
+        this.ruleForm.source = detialInfo.source
         this.ruleForm.birthday = detialInfo.birthday === '' ? '' : this.$utils.dateFormat(detialInfo.birthday, 'yyyy-MM-dd')
         this.selectedOptions = findParentDeptId(this.deptList, detialInfo.deptId)
-        this.loadRoles()
       } catch (e) {
         e && e.message && this.$message.error(e.message)
       } finally {
         this.fullScreenLoading = false
       }
     },
+    async loadChannel(e) { // 所属商务人员列表
+      try {
+        this.channelList = [{channelId: 0, channelName: '直客'}, ...await this.$$main.commonListChannel({})]
+      } catch (e) {
+        e && e.message && this.$message.error(e.message)
+      }
+    },
     async loadRoles(e) { // 所属商务人员列表
       try {
-        const roles = await this.$$main.commonListBelongAdminUser({})
-        this.roles = roles
+        this.roles = await this.$$main.commonListBelongAdminUser({})
       } catch (e) {
         e && e.message && this.$message.error(e.message)
       }
     },
     selectBelong(e) { // 所属商务人员列表
       this.ruleForm.belongAdminUserId = e
+    },
+    selectChannel(e) { // 所属渠道商列表列表
+      this.ruleForm.source = e
     },
     async submitModify() {
       try {
@@ -237,7 +251,7 @@ export default {
         liveAddress: '',
         workAddress: '',
         birthday: '',
-        source: '', // 来源(直属:D;渠道:C)
+        source: 0, // 来源(直属:D;渠道:C)
         status: '',
         deptId: '',
         belongAdminUserId: '', // 所属商务编号
@@ -252,6 +266,7 @@ export default {
   },
   mounted() {
     this.loadRoles()// 获取所属商务人员列表
+    this.loadChannel()// 获取渠道列表
     const customerId = Number(this.$route.query.customer_id || 0)
     if (customerId === 0) {
       this.pageText = '新增客户'
@@ -260,7 +275,7 @@ export default {
     }
     this.$$main.commonListDept().then(res => { //  处理所属部门列表
       this.deptList = res
-      const list = res.map(item => {
+      const list = res && res.map(item => {
         return {
           id: item.deptId,
           pid: item.parentDeptId,
@@ -268,7 +283,7 @@ export default {
           value: item.deptId
         }
       })
-      this.depts = this.$utils.listToTree(list, 'id', 'pid', 'children', 24576)
+      this.depts = this.$utils.listToTree(list, 'id', 'pid', 'children', list[0].id)
       if (customerId !== 0) {
         this.loadDetails(customerId)
       }

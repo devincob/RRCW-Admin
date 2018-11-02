@@ -71,7 +71,7 @@
         style="width: 100%;">
         <el-table-column fixed prop="orderNo" label="订单号" min-width="210">
           <template slot-scope="scope">
-            <router-link v-if="scope.row.workflowId === 0" :to="`/order/account-order-create?orderid=${scope.row.orderId}`">
+            <router-link v-if="scope.row.workflowId === 0" :to="`/order/account-order-create?orderid=${scope.row.orderId}`" target="_blank">
               {{scope.row.orderNo}}
             </router-link>
             <router-link v-else :to="`/order/account-order-details?orderid=${scope.row.orderId}`" target="_blank">
@@ -98,10 +98,10 @@
         <el-table-column prop="totalAmount" label="交易费" min-width="120" :formatter="(row) => `${$options.filters['currency'](row.totalAmount, '', 2)}`"/>
         <el-table-column prop="realDepositFee" label="押金" min-width="120" :formatter="(row) => `${$options.filters['currency'](row.realDepositFee, '', 2)}`"/>
         <el-table-column prop="handleAdminUserName" label="待处理人" min-width="120"/>
-        <el-table-column prop="createTime" label="创建时间" min-width="150"/>
+        <el-table-column prop="workflowName" label="状态" :render-header="renderStatusHeader" min-width="120"/>
         <el-table-column prop="submitTime" label="商务提交时间" min-width="150"/>
         <el-table-column prop="orderCompletedTime" label="订单完成时间" min-width="150"/>
-        <el-table-column prop="workflowName" label="状态" :render-header="renderStatusHeader" min-width="120"/>
+        <el-table-column prop="createTime" label="创建时间" min-width="150"/>
       </el-table>
       <div class="text-right">
         <el-pagination

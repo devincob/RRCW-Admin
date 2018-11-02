@@ -3,7 +3,7 @@
     <CPicker title="站点详情" :visible.sync="visibleDialog">
       <div v-if="companyInfo && companyInfo.companyId">
         <div v-if="loading">
-          loading...
+          正在加载中...
         </div>
         <table v-else class="details-table">
           <tr>
@@ -34,7 +34,7 @@
             <td class="td-label">税源地</td>
             <td>{{companyInfo.sourceTaxName}}</td>
             <td class="td-label">站点类型</td>
-            <td>{{companyInfo.companyTypeId}}</td>
+            <td>{{companyInfo.companyTypeName}}</td>
           </tr>
           <tr>
             <td class="td-label">营业执照</td>

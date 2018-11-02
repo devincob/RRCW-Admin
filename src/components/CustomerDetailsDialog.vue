@@ -4,7 +4,7 @@
       <el-tabs v-model="activeName" @tab-click="loadDetail">
         <el-tab-pane label="客户详情" name="first">
           <div v-if="loading">
-            loading...
+            正在加载中...
           </div>
           <div v-else-if="customerInfo && customerInfo.customerId">
             <table class="details-table">
@@ -62,7 +62,7 @@
         </el-tab-pane>
         <el-tab-pane label="发票详情" name="second">
           <div v-if="loading">
-            loading...
+            正在加载中...
           </div>
           <div v-else-if="invoiceInfo && invoiceInfo.length">
             <table  class="details-table" v-for="(item, index) in invoiceInfo" :key="index">
@@ -91,12 +91,12 @@
             </table>
           </div>
           <div v-else>
-            发票不存在...
+            发票信息不存在或您无权查看该发票信息
           </div>
         </el-tab-pane>
         <el-tab-pane label="快递详情" name="third">
           <div v-if="loading">
-            loading...
+            正在加载中...
           </div>
           <div v-else-if="deliveryInfo && deliveryInfo.length">
             <table  class="details-table" v-for="(item, index) in deliveryInfo" :key="index">
@@ -119,7 +119,7 @@
             </table>
           </div>
           <div v-else>
-            快递不存在...
+            快递信息不存在或您无权查看该快递信息
           </div>
         </el-tab-pane>
       </el-tabs>

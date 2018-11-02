@@ -6,25 +6,17 @@
             <el-input v-model="form.orderNo" placeholder="系统自动生成" readonly/>
             <el-button type="text" size="mini" style="margin-left: 10px;" @click="orderLogListDialogDisplay = true" v-if="orderId && orderId !== ''">查看操作记录</el-button>
           </el-form-item>
-          <el-form-item prop="customerId">
-            <label slot="label"><span class="red-text">* </span>客户</label>
-            <el-select
-              v-model="form.customerId"
-              @change="onCustomerChange"
-              filterable
-              placeholder="请输入客户名"
-              no-match-text="未搜索到该用户">
-              <el-option
-                v-for="item in customerList"
-                :key="item.customerId"
-                :label="item.customerName"
-                :value="item.customerId">
-              </el-option>
-            </el-select>
-          </el-form-item>
           <el-form-item prop="companyId">
             <label slot="label"><span class="red-text">* </span>站点</label>
-            <el-select v-model="form.companyId" @change="onCompanyChange" :placeholder="form.customerId ? '请选择站点' : '请先选择客户'">
+            <el-select
+              v-model="form.companyId"
+              placeholder="请选择站点"
+              @change="onCompanyChange"
+              filterable
+              remote
+              reserve-keyword
+              :remote-method="queryCompanyList"
+              :loading="loadingCompanyList">
               <el-option
                 v-for="item in companyList"
                 :key="item.companyId"
@@ -32,6 +24,10 @@
                 :value="item.companyId">
               </el-option>
             </el-select>
+          </el-form-item>
+          <el-form-item prop="customerId">
+            <label slot="label"><span class="red-text">* </span>客户</label>
+            <el-input v-model="form.customerName" placeholder="客户" readonly/>
           </el-form-item>
           <el-form-item prop="sourceTaxId">
             <label slot="label"><span class="red-text">* </span>税源地</label>
@@ -203,6 +199,7 @@ export default {
       isShowButton: false,
       customerTimeout: null,
       customerList: [], // 客户列表
+      loadingCompanyList: false,
       companyList: [], // 站点列表
       invoices: [] // 项目列表
     }
@@ -210,12 +207,6 @@ export default {
   watch: {
     orderLogListDialogDisplay(val){
       val && this.queryOrderLogList()
-    },
-    'form.customerId': {
-      handler(val){
-        this.queryCompanyList()
-      },
-      deep: true
     },
     'form.invoiceTypeName': {
       handler(val){
@@ -268,7 +259,7 @@ export default {
     async onPageShow(){
       this.clearForm()
       this.orderId = (this.$route.query && this.$route.query.orderid) || ''
-      this.queryCustomerList()
+      await this.queryCompanyList()
       this.orderId && this.orderId !== '' && this.queryOrderInfo()
     },
     async queryOrderLogList(){
@@ -345,13 +336,16 @@ export default {
         this.customerList = []
       }
     },
-    async queryCompanyList(){
+    async queryCompanyList(query){
       try {
-        this.companyList = await this.$$main.commonListCompany({
-          customerId: this.form.customerId
+        this.loadingCompanyList = true
+        this.companyList = await this.$$main.commonListBelongCompany({
+          companyName: query
         })
       } catch (e) {
         this.companyList = []
+      } finally {
+        this.loadingCompanyList = false
       }
     },
     onInvoiceChoose(res){
@@ -428,6 +422,7 @@ export default {
           type: 'success'
         })
         this.queryOrderInfo()
+        this.$router.push(`/order/invoice-order-details?orderid=${this.orderId}`)
       } catch (e) {
         e.message && this.$message.error(e.message)
       } finally {
@@ -462,16 +457,14 @@ export default {
         invoiceContractUrl: ''
       }
     },
-    onCustomerChange(){
-      this.form.companyId = null
-      this.onCompanyChange(0)
-    },
     async onCompanyChange(companyId){
       this.form.serviceFeeDiscount = null
       this.form.sourceTaxId = null
       this.form.sourceTaxName = null
       this.form.goodsId = null
       this.form.goodsName = null
+      this.form.customerId = null
+      this.form.customerName = null
       this.form.invoiceTypeName = null
       this.form.invoiceContent = null
       this.form.invoiceCompanyName = ''
@@ -492,6 +485,8 @@ export default {
           this.form.sourceTaxName = res.sourceTaxName
           this.form.goodsId = res.goodsId
           this.form.goodsName = res.goodsName
+          this.form.customerId = res.customerId
+          this.form.customerName = res.customerName
           this.form.invoiceServiceRatio = res.invoiceServiceRatio
           this.invoiceTypeList = res.invoiceTypeNames || []
           this.invoiceTypeList && this.invoiceTypeList.length === 1 && (this.form.invoiceTypeName = this.invoiceTypeList[0])

@@ -411,34 +411,19 @@
             <td>{{info.orderInfo.idCardReturnAddress || '-'}}</td>
           </tr>
           <tr>
-            <td>发票快递地址</td>
+            <td>押金单快递地址</td>
             <td>{{info.orderInfo.invoiceExpressAddress || '-'}}</td>
             <td>材料交付快递地址</td>
             <td>{{info.orderInfo.fileExpressAddress || '-'}}</td>
           </tr>
           <tr>
-            <td>税管家站点服务协议</td>
+            <td>税管家相关服务协议</td>
             <td>
               <el-button size="mini" type="text" v-if="info.orderInfo && info.orderInfo.serviceAgreementUrl" @click="onPreviewClick(info.orderInfo.serviceAgreementUrl)">查看</el-button>
               <span v-else>-</span>
             </td>
-            <td>产品订单</td>
-            <td>
-              <el-button size="mini" type="text" v-if="info.orderInfo && info.orderInfo.productOrderUrl" @click="onPreviewClick(info.orderInfo.productOrderUrl)">查看</el-button>
-              <span v-else>-</span>
-            </td>
-          </tr>
-          <tr>
-            <td>授权委托书</td>
-            <td>
-              <el-button size="mini" type="text" v-if="info.orderInfo && info.orderInfo.authorisedUrl" @click="onPreviewClick(info.orderInfo.authorisedUrl)">查看</el-button>
-              <span v-else>-</span>
-            </td>
-            <td>税管家诚信纳税承若书</td>
-            <td>
-              <el-button size="mini" type="text" v-if="info.orderInfo && info.orderInfo.promiseUrl" @click="onPreviewClick(info.orderInfo.promiseUrl)">查看</el-button>
-              <span v-else>-</span>
-            </td>
+            <td></td>
+            <td></td>
           </tr>
           <tr>
             <td>是否加急</td>
@@ -447,10 +432,16 @@
             <td>{{info.orderInfo.priorityReason || '-'}}</td>
           </tr>
           <tr>
-            <td>下单时间</td>
-            <td>{{info.orderInfo.showCreateTime || '-'}}</td>
+            <td>商务提交时间</td>
+            <td>{{info.orderInfo.showSubmitTime || '-'}}</td>
             <td>押金减免</td>
             <td>{{info.orderInfo.depositRemissionAmount | currency('', 2) || '-'}}元</td>
+          </tr>
+          <tr>
+            <td>创建时间</td>
+            <td>{{info.orderInfo.showCreateTime || '-'}}</td>
+            <td>创建人</td>
+            <td>{{info.orderInfo.createAdminUserName || '-'}}</td>
           </tr>
           <tr>
             <td>交易费折扣</td>
@@ -524,7 +515,7 @@
                     <x-image v-if="item.billImgUrl" :src="item.billImgUrl" class="avatar"/>
                     <i v-else class="el-icon-plus avatar-uploader-icon" style="display: block"></i>
                   </el-upload>
-                  <el-button type="text" @click="onPreviewClick(item.billImgUrl)" size="mini" v-if="item.billImgUrl">查看原图</el-button>
+                  <el-button type="text" @click="onPreviewClick(item.billImgUrl)" size="mini" v-if="item.billImgUrl">查看原文件</el-button>
                 </div>
               </el-form-item>
             </el-col>
@@ -613,7 +604,7 @@
               <x-image v-if="companyRegisterInfoForm.investorIdCardFrontUrl" :src="companyRegisterInfoForm.investorIdCardFrontUrl" class="avatar"/>
               <i v-else class="el-icon-plus avatar-uploader-icon" style="display: block">正面</i>
             </el-upload>
-            <el-button type="text" @click="onPreviewClick(companyRegisterInfoForm.investorIdCardFrontUrl)" size="mini" v-if="companyRegisterInfoForm.investorIdCardFrontUrl">查看原图</el-button>
+            <el-button type="text" @click="onPreviewClick(companyRegisterInfoForm.investorIdCardFrontUrl)" size="mini" v-if="companyRegisterInfoForm.investorIdCardFrontUrl">查看原文件</el-button>
           </div>
           <div class="ml-10">
             <el-upload
@@ -626,7 +617,7 @@
               <x-image v-if="companyRegisterInfoForm.investorIdCardBackUrl" :src="companyRegisterInfoForm.investorIdCardBackUrl" class="avatar"/>
               <i v-else class="el-icon-plus avatar-uploader-icon">反面</i>
             </el-upload>
-            <el-button type="text" @click="onPreviewClick(companyRegisterInfoForm.investorIdCardBackUrl)" size="mini" v-if="companyRegisterInfoForm.investorIdCardBackUrl">查看原图</el-button>
+            <el-button type="text" @click="onPreviewClick(companyRegisterInfoForm.investorIdCardBackUrl)" size="mini" v-if="companyRegisterInfoForm.investorIdCardBackUrl">查看原文件</el-button>
           </div>
         </el-form-item>
         <el-form-item label="投资人邮箱" prop="investorEmail">
@@ -650,7 +641,7 @@
               <x-image v-if="companyRegisterInfoForm.financePersonIdCardFrontUrl" :src="companyRegisterInfoForm.financePersonIdCardFrontUrl" class="avatar"/>
               <i v-else class="el-icon-plus avatar-uploader-icon" style="display: block">正面</i>
             </el-upload>
-            <el-button type="text" @click="onPreviewClick(companyRegisterInfoForm.financePersonIdCardFrontUrl)" size="mini" v-if="companyRegisterInfoForm.financePersonIdCardFrontUrl">查看原图</el-button>
+            <el-button type="text" @click="onPreviewClick(companyRegisterInfoForm.financePersonIdCardFrontUrl)" size="mini" v-if="companyRegisterInfoForm.financePersonIdCardFrontUrl">查看原文件</el-button>
           </div>
           <div class="ml-10">
             <el-upload
@@ -663,7 +654,7 @@
               <x-image v-if="companyRegisterInfoForm.financePersonIdCardBackUrl" :src="companyRegisterInfoForm.financePersonIdCardBackUrl" class="avatar"/>
               <i v-else class="el-icon-plus avatar-uploader-icon">反面</i>
             </el-upload>
-            <el-button type="text" @click="onPreviewClick(companyRegisterInfoForm.financePersonIdCardBackUrl)" size="mini" v-if="companyRegisterInfoForm.financePersonIdCardBackUrl">查看原图</el-button>
+            <el-button type="text" @click="onPreviewClick(companyRegisterInfoForm.financePersonIdCardBackUrl)" size="mini" v-if="companyRegisterInfoForm.financePersonIdCardBackUrl">查看原文件</el-button>
           </div>
         </el-form-item>
         <el-form-item label="财务人员身份证号" prop="financePersonIdCardNo">
@@ -702,7 +693,7 @@
             :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (registrationProcessForm.checkNameCompletedUrl = res.body.imageUrl) }">
             <el-button type="text" size="mini">上传材料</el-button>
           </el-upload>
-          <el-button type="text" size="mini" @click="displayImage(registrationProcessForm.checkNameCompletedUrl)" v-if="registrationProcessForm.checkNameCompletedUrl">查看</el-button>
+          <el-button type="text" size="mini" @click="displayImage(registrationProcessForm.checkNameCompletedUrl)" v-if="registrationProcessForm.checkNameCompletedUrl">查看原文件</el-button>
         </el-form-item>
         <el-form-item label="营业执照发放时间" prop="licenseTime">
           <el-date-picker
@@ -720,7 +711,7 @@
             :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (registrationProcessForm.licenseUrl = res.body.imageUrl) }">
             <el-button type="text" size="mini">上传材料</el-button>
           </el-upload>
-          <el-button type="text" size="mini" @click="displayImage(registrationProcessForm.licenseUrl)" v-if="registrationProcessForm.licenseUrl">查看</el-button>
+          <el-button type="text" size="mini" @click="displayImage(registrationProcessForm.licenseUrl)" v-if="registrationProcessForm.licenseUrl">查看原文件</el-button>
         </el-form-item>
         <el-form-item label="银行开户时间" prop="bankOpenAccountTime">
           <el-date-picker
@@ -738,7 +729,7 @@
             :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (registrationProcessForm.bankOpenAccountUrl = res.body.imageUrl) }">
             <el-button type="text" size="mini">上传材料</el-button>
           </el-upload>
-          <el-button type="text" size="mini" @click="displayImage(registrationProcessForm.bankOpenAccountUrl)" v-if="registrationProcessForm.bankOpenAccountUrl">查看</el-button>
+          <el-button type="text" size="mini" @click="displayImage(registrationProcessForm.bankOpenAccountUrl)" v-if="registrationProcessForm.bankOpenAccountUrl">查看原文件</el-button>
         </el-form-item>
         <el-form-item label="银行开户完成时间" prop="bankOpenAccountCompletedTime">
           <el-date-picker
@@ -756,7 +747,7 @@
             :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (registrationProcessForm.bankOpenAccountCompletedUrl = res.body.imageUrl) }">
             <el-button type="text" size="mini">上传材料</el-button>
           </el-upload>
-          <el-button type="text" size="mini" @click="displayImage(registrationProcessForm.bankOpenAccountCompletedUrl)" v-if="registrationProcessForm.bankOpenAccountCompletedUrl">查看</el-button>
+          <el-button type="text" size="mini" @click="displayImage(registrationProcessForm.bankOpenAccountCompletedUrl)" v-if="registrationProcessForm.bankOpenAccountCompletedUrl">查看原文件</el-button>
         </el-form-item>
         <el-form-item label="核税完成时间" prop="checkTaxCompletedTime">
           <el-date-picker
@@ -774,7 +765,7 @@
             :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (registrationProcessForm.checkTaxCompletedUrl = res.body.imageUrl) }">
             <el-button type="text" size="mini">上传材料</el-button>
           </el-upload>
-          <el-button type="text" size="mini" @click="displayImage(registrationProcessForm.checkTaxCompletedUrl)" v-if="registrationProcessForm.checkTaxCompletedUrl">查看</el-button>
+          <el-button type="text" size="mini" @click="displayImage(registrationProcessForm.checkTaxCompletedUrl)" v-if="registrationProcessForm.checkTaxCompletedUrl">查看原文件</el-button>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -832,7 +823,7 @@
                   <x-image v-if="companyAttachmentForm.ukeyImgUrl" :src="companyAttachmentForm.ukeyImgUrl" class="avatar"/>
                   <i v-else class="el-icon-plus avatar-uploader-icon" style="display: block"></i>
                 </el-upload>
-                <el-button type="text" @click="onPreviewClick(companyAttachmentForm.ukeyImgUrl)" size="mini" v-if="companyAttachmentForm.ukeyImgUrl">查看原图</el-button>
+                <el-button type="text" @click="onPreviewClick(companyAttachmentForm.ukeyImgUrl)" size="mini" v-if="companyAttachmentForm.ukeyImgUrl">查看原文件</el-button>
               </div>
             </el-form-item>
           </el-col>
@@ -849,7 +840,7 @@
                   <x-image v-if="companyAttachmentForm.stampImgUrl" :src="companyAttachmentForm.stampImgUrl" class="avatar"/>
                   <i v-else class="el-icon-plus avatar-uploader-icon" style="display: block"></i>
                 </el-upload>
-                <el-button type="text" @click="onPreviewClick(companyAttachmentForm.stampImgUrl)" size="mini" v-if="companyAttachmentForm.stampImgUrl">查看原图</el-button>
+                <el-button type="text" @click="onPreviewClick(companyAttachmentForm.stampImgUrl)" size="mini" v-if="companyAttachmentForm.stampImgUrl">查看原文件</el-button>
               </div>
             </el-form-item>
           </el-col>
@@ -872,7 +863,7 @@
                   <x-image v-if="companyAttachmentForm.licenseImgUrl" :src="companyAttachmentForm.licenseImgUrl" class="avatar"/>
                   <i v-else class="el-icon-plus avatar-uploader-icon" style="display: block"></i>
                 </el-upload>
-                <el-button type="text" @click="onPreviewClick(companyAttachmentForm.licenseImgUrl)" size="mini" v-if="companyAttachmentForm.licenseImgUrl">查看原图</el-button>
+                <el-button type="text" @click="onPreviewClick(companyAttachmentForm.licenseImgUrl)" size="mini" v-if="companyAttachmentForm.licenseImgUrl">查看原文件</el-button>
               </div>
             </el-form-item>
           </el-col>
@@ -889,7 +880,7 @@
                   <x-image v-if="companyAttachmentForm.taxAgreementPDFUrl" :src="companyAttachmentForm.taxAgreementPDFUrl" class="avatar"/>
                   <i v-else class="el-icon-plus avatar-uploader-icon" style="display: block"></i>
                 </el-upload>
-                <el-button type="text" @click="onPreviewClick(companyAttachmentForm.taxAgreementPDFUrl)" size="mini" v-if="companyAttachmentForm.taxAgreementPDFUrl">查看原图</el-button>
+                <el-button type="text" @click="onPreviewClick(companyAttachmentForm.taxAgreementPDFUrl)" size="mini" v-if="companyAttachmentForm.taxAgreementPDFUrl">查看原文件</el-button>
               </div>
             </el-form-item>
           </el-col>
@@ -925,7 +916,7 @@
               <x-image v-if="expressForm.expressImgUrl" :src="expressForm.expressImgUrl" class="avatar"/>
               <i v-else class="el-icon-plus avatar-uploader-icon" style="display: block"></i>
             </el-upload>
-            <el-button type="text" @click="onPreviewClick(expressForm.expressImgUrl)" size="mini" v-if="expressForm.expressImgUrl">查看原图</el-button>
+            <el-button type="text" @click="onPreviewClick(expressForm.expressImgUrl)" size="mini" v-if="expressForm.expressImgUrl">查看原文件</el-button>
           </div>
         </el-form-item>
       </el-form>
@@ -1237,6 +1228,14 @@ export default {
       }
     },
     displayImage(src){
+      if (!src || src === '') {
+        return
+      }
+      let urlFormat = src.split('.')
+      if (['pdf', 'doc', 'docx'].indexOf(urlFormat[1]) !== -1){
+        this.onPreviewClick(src)
+        return
+      }
       let displaySrc = this.getUploadImageUrl(src, 'middle')
       const h = this.$createElement
       this.$msgbox({
@@ -1251,7 +1250,7 @@ export default {
                 this.onPreviewClick(src)
               }
             }
-          }, '查看原图'),
+          }, '查看原文件'),
           h('img', {
             attrs: {
               src: displaySrc

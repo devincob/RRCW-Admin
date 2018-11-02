@@ -6,7 +6,10 @@
         <a v-if="info.orderInfo && info.orderInfo.workflowId >= 2000" :href="`${$config.getImageUrlPath()}/file/Payment_bill_${info.orderInfo.orderNo}.pdf`" target="_blank">
           <el-button type="text" size="mini" style="margin-left: 5px;padding-top: 2px;">下载付款单</el-button>
         </a>
-        <a v-if="info.orderInfo && info.orderInfo.workflowId > 2110" :href="`${$config.getImageUrlPath()}/file/Supplier_Order_${info.orderInfo.orderNo}.pdf`" target="_blank">
+        <!--<a v-if="info.orderInfo && info.orderInfo.workflowId > 2110" :href="`${$config.getImageUrlPath()}/file/Supplier_Order_${info.orderInfo.orderNo}.pdf`" target="_blank">-->
+          <!--<el-button type="text" size="mini" style="margin-left: 5px;padding-top: 2px;">下载供应商下单表</el-button>-->
+        <!--</a>-->
+        <a v-if="info.orderInfo && info.orderInfo.workflowId > 2110" :href="`${$config.getImageUrlPath()}/file/Supplier_Order_${info.orderInfo.orderNo}.xls`" target="_blank">
           <el-button type="text" size="mini" style="margin-left: 5px;padding-top: 2px;">下载供应商下单表</el-button>
         </a>
         <span style="color: red;margin-left: 10px;" v-if="info && info.status">订单状态 ：{{info.status || '-'}}， 待处理人 ：{{info.handleAdminRoleName || '-'}} {{info.handleAdminUserName || '-'}}。</span>
@@ -226,8 +229,14 @@
           <td>{{info.orderInfo.serviceFeeDiscount || '-'}}</td>
         </tr>
         <tr>
-          <td>下单时间</td>
+          <td>创建时间</td>
           <td>{{info.orderInfo.showCreateTime || '-'}}</td>
+          <td>创建人</td>
+          <td>{{info.orderInfo.createAdminUserName || '-'}}</td>
+        </tr>
+        <tr>
+          <td>商务提交时间</td>
+          <td>{{info.orderInfo.showSubmitTime || '-'}}</td>
           <td>订单状态</td>
           <td style="color: red">{{info.orderInfo.workflowName || '-'}}</td>
         </tr>
@@ -294,7 +303,7 @@
                     <x-image v-if="item.billImgUrl" :src="item.billImgUrl" class="avatar"/>
                     <i v-else class="el-icon-plus avatar-uploader-icon" style="display: block"></i>
                   </el-upload>
-                  <el-button type="text" @click="onPreviewClick(item.billImgUrl)" size="mini" v-if="item.billImgUrl">查看原图</el-button>
+                  <el-button type="text" @click="onPreviewClick(item.billImgUrl)" size="mini" v-if="item.billImgUrl">查看原文件</el-button>
                 </div>
               </el-form-item>
             </el-col>
@@ -334,7 +343,7 @@
                   <x-image v-if="invoiceForm.invoiceImgUrl" :src="invoiceForm.invoiceImgUrl" class="avatar"/>
                   <i v-else class="el-icon-plus avatar-uploader-icon" style="display: block"></i>
                 </el-upload>
-                <el-button type="text" @click="onPreviewClick(invoiceForm.invoiceImgUrl)" size="mini" v-if="invoiceForm.invoiceImgUrl">查看原图</el-button>
+                <el-button type="text" @click="onPreviewClick(invoiceForm.invoiceImgUrl)" size="mini" v-if="invoiceForm.invoiceImgUrl">查看原文件</el-button>
               </div>
             </el-form-item>
           </el-col>
@@ -351,7 +360,7 @@
                   <x-image v-if="invoiceForm.expressImgUrl" :src="invoiceForm.expressImgUrl" class="avatar"/>
                   <i v-else class="el-icon-plus avatar-uploader-icon" style="display: block"></i>
                 </el-upload>
-                <el-button type="text" @click="onPreviewClick(invoiceForm.expressImgUrl)" size="mini" v-if="invoiceForm.expressImgUrl">查看原图</el-button>
+                <el-button type="text" @click="onPreviewClick(invoiceForm.expressImgUrl)" size="mini" v-if="invoiceForm.expressImgUrl">查看原文件</el-button>
               </div>
             </el-form-item>
           </el-col>
@@ -580,6 +589,14 @@ export default {
       }
     },
     displayImage(src){
+      if (!src || src === '') {
+        return
+      }
+      let urlFormat = src.split('.')
+      if (['pdf', 'doc', 'docx'].indexOf(urlFormat[1]) !== -1){
+        this.onPreviewClick(src)
+        return
+      }
       let displaySrc = this.getUploadImageUrl(src, 'middle')
       const h = this.$createElement
       this.$msgbox({
@@ -594,7 +611,7 @@ export default {
                 this.onPreviewClick(src)
               }
             }
-          }, '查看原图'),
+          }, '查看原文件'),
           h('img', {
             attrs: {
               src: displaySrc

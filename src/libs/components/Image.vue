@@ -19,7 +19,12 @@ export default {
   },
   data() {
     return {
-      img: this.src || this.dataSrc
+      img: this.src || this.dataSrc,
+      formats: {
+        'pdf': require('../../assets/images/pdf-placeholder.png'),
+        'doc': require('../../assets/images/word-placeholder.png'),
+        'docx': require('../../assets/images/word-placeholder.png')
+      }
     }
   },
   computed: {
@@ -33,7 +38,8 @@ export default {
     },
     realSrc(src) {
       if (src && src.substr(0, 4) !== 'http' && src[0] === '/') {
-        return this.getUploadImageUrl(src, this.size)
+        let urlFormat = src.split('.')
+        return ['pdf', 'doc', 'docx'].indexOf(urlFormat[1]) !== -1 ? this.formats[urlFormat[1]] : this.getUploadImageUrl(src, this.size)
       }
       return src || this.$config.errorImage
     }

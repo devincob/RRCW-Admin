@@ -181,19 +181,41 @@ export default {
       if (data.children) {
         data.children.forEach(d => {
           tree.setChecked(d.id, node.checked)
+          if (d.children) {
+            d.children.forEach(c => {
+              tree.setChecked(c.id, node.checked)
+            })
+          }
         })
       }
       if (data.pid) {
+        const parent = tree.getNode(data.pid)
         if (node.checked){
           tree.setChecked(data.pid, node.checked)
+          if (parent.data.pid) {
+            tree.setChecked(parent.data.pid, node.checked)
+          }
         } else {
-          const parent = tree.getNode(data.pid)
           const childNodes = parent.childNodes
           let i = childNodes.length
           childNodes.forEach(item => {
             if (!item.checked) i--
           })
           if (!i) tree.setChecked(data.pid, node.checked)
+          if (parent.parent && parent.parent.childNodes) {
+            let checkedCount = 0
+            parent.parent.childNodes.forEach(item => {
+              if (item.checked) checkedCount++
+              if (item.childNodes && item.childNodes.length) {
+                item.childNodes.forEach(it => {
+                  if (it.checked) checkedCount++
+                })
+              }
+            })
+            if (!checkedCount) {
+              tree.setChecked(parent.parent.data.id, node.checked)
+            }
+          }
         }
       }
     },

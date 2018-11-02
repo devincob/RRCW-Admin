@@ -20,6 +20,13 @@
             <el-option v-for="item in goodsList" :key="item.goodsId" :label="item.goodsName" :value="item.goodsId"></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="状态：" prop="goodsId">
+          <el-select v-model="searchForm.status" filterable placeholder="请选择状态" style="width: 200px">
+            <el-option label="全部" value=""></el-option>
+            <el-option label="正常" value="N"></el-option>
+            <el-option label="禁用" value="D"></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="queryAccountOrders">搜索</el-button>
           <el-button type="danger" @click="clearQueryParams">清空</el-button>
@@ -102,7 +109,8 @@ export default {
         customerName: '',
         companyName: '',
         sourceTaxId: '',
-        goodsId: ''
+        goodsId: '',
+        status: ''
       },
       sourceTaxList: [],
       goodsList: [],

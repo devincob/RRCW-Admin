@@ -84,6 +84,21 @@ const globalRules = {
       }]
     }
   },
+  'POST /Channel/List.json delay:1000': req => {
+    const pageSize = req.body.pageSize || 10
+    return {
+      'totalCount': '@integer(30, 200)',
+      [`datas|${pageSize}`]: [{
+        'channelId': '2678',
+        'channelName': '@cname',
+        'channelContact': '@cname',
+        'othersName': '@cname',
+        'channelPhone': /1[345789]\d{9}/,
+        'channelRatio': '@integer(1, 100)',
+        'channelStatus|1': ['N', 'D']
+      }]
+    }
+  },
   'POST /SA/User/AdminOperation.json delay:2000': true,
   'POST /Finance/CStatisList.json delay:2000': req => {
     const pageSize = req.body.pageSize || 10
@@ -185,58 +200,58 @@ const globalRules = {
       }]
     }
   },
-  'POST /Common/ListDept.json delay:2000': req => {
-    return {
-      datas: [{
-        //  部门编号(人工填入)
-        'deptId': 24576,
-        // 上级部分编号
-        'parentDeptId': 0,
-        // 部门名称
-        'deptName': '总部',
-        // 部门负责人
-        'deptUserId': 0,
-        'deptLevel': 1
-      },
-      {'deptId': 26112,
-        'parentDeptId': 24576,
-        'deptName': '华南大区',
-        'deptUserId': 0,
-        'deptLevel': 2
-      },
-      {'deptId': 26111,
-        'parentDeptId': 24576,
-        'deptName': '华东大区',
-        'deptUserId': 0,
-        'deptLevel': 2
-      },
-      {'deptId': 26496,
-        'parentDeptId': 26112,
-        'deptName': '成都分公司',
-        'deptUserId': '@integer(1, 10)',
-        'deptLevel': 3
-      },
-      {'deptId': 26497,
-        'parentDeptId': 26112,
-        'deptName': '重庆分公司',
-        'deptUserId': '@integer(1, 10)',
-        'deptLevel': 3
-      },
-      {'deptId': 26508,
-        'parentDeptId': 26496,
-        'deptName': '成都东运营部',
-        'deptUserId': 0,
-        'deptLevel': 4
-      },
-      {'deptId': 26509,
-        'parentDeptId': 26496,
-        'deptName': '成都西运营部',
-        'deptUserId': 0,
-        'deptLevel': 4
-      }
-      ]
-    }
-  },
+  // 'POST /Common/ListDept.json delay:2000': req => {
+  //   return {
+  //     datas: [{
+  //       //  部门编号(人工填入)
+  //       'deptId': 24576,
+  //       // 上级部分编号
+  //       'parentDeptId': 0,
+  //       // 部门名称
+  //       'deptName': '总部',
+  //       // 部门负责人
+  //       'deptUserId': 0,
+  //       'deptLevel': 1
+  //     },
+  //     {'deptId': 26112,
+  //       'parentDeptId': 24576,
+  //       'deptName': '华南大区',
+  //       'deptUserId': 0,
+  //       'deptLevel': 2
+  //     },
+  //     {'deptId': 26111,
+  //       'parentDeptId': 24576,
+  //       'deptName': '华东大区',
+  //       'deptUserId': 0,
+  //       'deptLevel': 2
+  //     },
+  //     {'deptId': 26496,
+  //       'parentDeptId': 26112,
+  //       'deptName': '成都分公司',
+  //       'deptUserId': '@integer(1, 10)',
+  //       'deptLevel': 3
+  //     },
+  //     {'deptId': 26497,
+  //       'parentDeptId': 26112,
+  //       'deptName': '重庆分公司',
+  //       'deptUserId': '@integer(1, 10)',
+  //       'deptLevel': 3
+  //     },
+  //     {'deptId': 26508,
+  //       'parentDeptId': 26496,
+  //       'deptName': '成都东运营部',
+  //       'deptUserId': 0,
+  //       'deptLevel': 4
+  //     },
+  //     {'deptId': 26509,
+  //       'parentDeptId': 26496,
+  //       'deptName': '成都西运营部',
+  //       'deptUserId': 0,
+  //       'deptLevel': 4
+  //     }
+  //     ]
+  //   }
+  // },
   'POST /Common/ListDistict.json delay:2000': req => {
     return {
       datas: [{
@@ -374,6 +389,10 @@ const globalRules = {
     isSuccess: true,
     body: true
   },
+  'POST /Channel/Update.json delay:500': {
+    isSuccess: true,
+    body: true
+  },
   'POST /SourceTax/List.json delay:2000': req => {
     const pageSize = req.body.pageSize || 10
     return {
@@ -447,6 +466,18 @@ const globalRules = {
         'createAdminUserId': '@integer(1, 200)',
         //  创建时间
         'showCreateTime': '@datetime'
+      }
+    }
+  },
+  'POST /Channel/Detail.json delay:2000': req => {
+    return {
+      datas: {
+        'channelId': '2678',
+        'ChannelName': '@cname(2, 3)',
+        'channelContact': '@cname(2, 3)',
+        'channelPhone': '@integer(1, 99999999999)',
+        'channelRatio': '@integer(1, 30)',
+        'ChannelStatus|1': ['N', 'D']
       }
     }
   },

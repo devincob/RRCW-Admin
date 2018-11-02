@@ -71,7 +71,7 @@
         style="width: 100%;">
         <el-table-column fixed prop="orderNo" label="订单号" min-width="210">
           <template slot-scope="scope">
-            <router-link v-if="scope.row.workflowId === 0" :to="`/order/invoice-order-create?orderid=${scope.row.orderId}`">
+            <router-link v-if="scope.row.workflowId === 0" :to="`/order/invoice-order-create?orderid=${scope.row.orderId}`" target="_blank">
               {{scope.row.orderNo}}
             </router-link>
             <router-link v-else :to="`/order/invoice-order-details?orderid=${scope.row.orderId}`" target="_blank">
@@ -84,6 +84,11 @@
           <customer-details-dialog slot-scope="scope" :customer-id="scope.row.customerId">
             {{scope.row.customerName}}
           </customer-details-dialog>
+        </el-table-column>
+        <el-table-column prop="companyName" label="站点名称" min-width="200">
+          <company-details-dialog slot-scope="scope" :company-id="scope.row.companyId">
+            <span>{{scope.row.companyName}}</span>
+          </company-details-dialog>
         </el-table-column>
         <el-table-column label="税源地" prop="sourceTaxName" min-width="120">
           <tax-source-details-dialog slot-scope="scope" :source-tax-id="scope.row.sourceTaxId">
@@ -98,10 +103,10 @@
         <el-table-column prop="invoiceAmount" label="开票金额" min-width="120" :formatter="(row) => `${$options.filters['currency'](row.invoiceAmount, '', 2)}`"/>
         <el-table-column prop="invoiceTypeName" label="发票类型" min-width="150"/>
         <el-table-column prop="handleAdminUserName" label="待处理人" min-width="120"/>
-        <el-table-column prop="createTime" label="创建时间" min-width="150"/>
+        <el-table-column prop="workflowName" label="状态" :render-header="renderStatusHeader" min-width="120"/>
         <el-table-column prop="submitTime" label="商务提交时间" min-width="150"/>
         <el-table-column prop="orderCompletedTime" label="订单完成时间" min-width="150"/>
-        <el-table-column prop="workflowName" label="状态" :render-header="renderStatusHeader" min-width="120"/>
+        <el-table-column prop="createTime" label="创建时间" min-width="150"/>
       </el-table>
       <div class="text-right">
         <el-pagination
@@ -123,9 +128,10 @@
 import TaxSourceDetailsDialog from '../../components/TaxSourceDetailsDialog'
 import CustomerDetailsDialog from '../../components/CustomerDetailsDialog'
 import GoodsDetailsDialog from '../../components/GoodsDetailsDialog'
+import CompanyDetailsDialog from '../../components/CompanyDetailsDialog'
 export default {
   name: 'invoice-orders',
-  components: {TaxSourceDetailsDialog, CustomerDetailsDialog, GoodsDetailsDialog},
+  components: {TaxSourceDetailsDialog, CustomerDetailsDialog, GoodsDetailsDialog, CompanyDetailsDialog},
   data() {
     return {
       form: {

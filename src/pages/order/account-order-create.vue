@@ -173,8 +173,8 @@
           <express-info-dialog :customer-id="form.customerId" class="ml-5" @onChoose="(res) => {onExpressChoose(res, 'idCardReturnAddress')}">选择快递信息</express-info-dialog>
         </el-form-item>
         <el-form-item prop="invoiceExpressAddress" class="account-upload">
-          <label slot="label"><span class="red-text">* </span>发票快递地址</label>
-          <el-input v-model="form.invoiceExpressAddress" placeholder="发票快递地址" readonly/>
+          <label slot="label"><span class="red-text">* </span>押金单快递地址</label>
+          <el-input v-model="form.invoiceExpressAddress" placeholder="押金单快递地址" readonly/>
           <express-info-dialog :customer-id="form.customerId" class="ml-5" @onChoose="(res) => {onExpressChoose(res, 'invoiceExpressAddress')}">选择快递信息</express-info-dialog>
         </el-form-item>
         <el-form-item prop="fileExpressAddress" class="account-upload">
@@ -193,52 +193,10 @@
               :on-error="closeLoading"
               :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (form.serviceAgreementUrl = res.body.imageUrl) }">
               <x-image v-if="form.serviceAgreementUrl" :src="form.serviceAgreementUrl" class="avatar"/>
-              <i v-else class="el-icon-plus avatar-uploader-icon" style="display: block;font-size: 18px;">站点服务协议</i>
+              <i v-else class="el-icon-plus avatar-uploader-icon" style="display: block;font-size: 18px;">相关服务协议</i>
             </el-upload>
             <a :href="$config.getImageUrlPath()+'/file/RRCW-File.docx'" target="_blank"><el-button type="text" size="mini">下载模板</el-button></a>
             <el-button type="text" @click="onPreviewClick(form.serviceAgreementUrl)" size="mini" v-if="form.serviceAgreementUrl">查看原图</el-button>
-          </div>
-          <div>
-            <el-upload
-              class="avatar-uploader productOrder"
-              :action="$$main.getUrl('/Common/ImageUpload')"
-              :show-file-list="false"
-              :before-upload="() => {openLoading('.productOrder')}"
-              :on-error="closeLoading"
-              :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (form.productOrderUrl = res.body.imageUrl) }">
-              <x-image v-if="form.productOrderUrl" :src="form.productOrderUrl" class="avatar"/>
-              <i v-else class="el-icon-plus avatar-uploader-icon" style="display: block;font-size: 18px;">产品订单</i>
-            </el-upload>
-            <a :href="$config.getImageUrlPath()+'/file/RRCW-File.docx'" target="_blank"><el-button type="text" size="mini">下载模板</el-button></a>
-            <el-button type="text" @click="onPreviewClick(form.productOrderUrl)" size="mini" v-if="form.productOrderUrl">查看原图</el-button>
-          </div>
-          <div>
-            <el-upload
-              class="avatar-uploader authorised"
-              :action="$$main.getUrl('/Common/ImageUpload')"
-              :show-file-list="false"
-              :before-upload="() => {openLoading('.authorised')}"
-              :on-error="closeLoading"
-              :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (form.authorisedUrl = res.body.imageUrl) }">
-              <x-image v-if="form.authorisedUrl" :src="form.authorisedUrl" class="avatar"/>
-              <i v-else class="el-icon-plus avatar-uploader-icon" style="display: block;font-size: 18px;">授权委托书</i>
-            </el-upload>
-            <a :href="$config.getImageUrlPath()+'/file/RRCW-File.docx'" target="_blank"><el-button type="text" size="mini">下载模板</el-button></a>
-            <el-button type="text" @click="onPreviewClick(form.authorisedUrl)" size="mini" v-if="form.authorisedUrl">查看原图</el-button>
-          </div>
-          <div>
-            <el-upload
-              class="avatar-uploader promise"
-              :action="$$main.getUrl('/Common/ImageUpload')"
-              :show-file-list="false"
-              :before-upload="() => {openLoading('.promise')}"
-              :on-error="closeLoading"
-              :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (form.promiseUrl = res.body.imageUrl) }">
-              <x-image v-if="form.promiseUrl" :src="form.promiseUrl" class="avatar"/>
-              <i v-else class="el-icon-plus avatar-uploader-icon" style="display: block;font-size: 18px;">诚信纳税承若书</i>
-            </el-upload>
-            <a :href="$config.getImageUrlPath()+'/file/RRCW-File.docx'" target="_blank"><el-button type="text" size="mini">下载模板</el-button></a>
-            <el-button type="text" @click="onPreviewClick(form.promiseUrl)" size="mini" v-if="form.promiseUrl">查看原图</el-button>
           </div>
         </el-form-item>
         <el-form-item label="是否需要特殊审批" prop="isNeedApproval">
@@ -655,6 +613,7 @@ export default {
           type: 'success'
         })
         this.queryOrderInfo()
+        this.$router.push(`/order/account-order-details?orderid=${this.orderId}`)
       } catch (e) {
         e.message && this.$message.error(e.message)
       } finally {

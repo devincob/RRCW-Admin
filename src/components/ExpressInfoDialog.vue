@@ -49,7 +49,7 @@
             </tr>
             <tr>
               <td colspan="4">
-                <el-button type="text" size="mini" @click="onChoose(item, index)">选择</el-button>
+                <el-button type="primary" size="mini" @click="onChoose(item, index)">选择</el-button>
                 <el-popover
                   placement="top"
                   width="160"

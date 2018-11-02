@@ -3,7 +3,7 @@
     <CPicker title="商品详情" :visible.sync="visibleDialog">
       <div v-if="goods && goods.goodsId">
         <div v-if="loading">
-          loading...
+          正在加载中...
         </div>
         <table v-else class="details-table">
           <tr>
@@ -22,11 +22,11 @@
             <td class="td-label">开票服务费费率</td>
             <td>{{goods.invoiceServiceRatio}}</td>
             <td class="td-label">开户服务费</td>
-            <td>{{goods.serviceCharge}}</td>
+            <td>{{goods.serviceCharge | currency}}</td>
           </tr>
           <tr>
             <td class="td-label">开户押金</td>
-            <td>{{goods.deposit}}</td>
+            <td>{{goods.deposit | currency}}</td>
             <td class="td-label">状态</td>
             <td>{{statusText[goods.status]}}</td>
           </tr>

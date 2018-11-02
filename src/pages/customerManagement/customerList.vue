@@ -26,21 +26,8 @@
                 @sort-change="onSortChange"
                 size="mini"
                 style="width: 100%;border-top:1px #eee solid">
-        <el-table-column label="客户编号" align="center"  width="80" fixed>
-          <template slot-scope="scope">
-            <router-link target="_blank"
-               :to="`/customerManagement/addCustomer?customer_id=${scope.row.customerId}`"
-               type="success" size="mini"
-               style="text-decoration: underline; color: deepskyblue;cursor: pointer;"
-               v-html="scope.row.customerId">
-            </router-link>
-          </template>
-        </el-table-column>
-        <el-table-column label="客户来源" prop="source" align="center"  width="100">
-          <span slot-scope="scope">
-            {{sourceText[scope.row.source]}}
-          </span>
-        </el-table-column>
+        <el-table-column label="客户编号" align="center" prop="customerId"  width="80" fixed />
+        <el-table-column label="客户来源" prop="channelName" align="center"  width="100" />
         <el-table-column label="姓名" prop="customerName" align="center"  width="100"/>
         <el-table-column label="手机号" prop="phone" align="center"  width="150"/>
         <el-table-column label="邮箱" prop="email" align="center"  width="150"/>
@@ -119,8 +106,7 @@ export default {
         sortType: 'D',
         sortName: 'createTime'
       },
-      statusText: {N: '正常', D: '禁用'},
-      sourceText: {C: '渠道', D: '直属'}
+      statusText: {N: '正常', D: '禁用'}
     }
   },
   watch: {

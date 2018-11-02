@@ -2,7 +2,7 @@
   <div>
     <CPicker title="税源地详情" :visible.sync="visibleDialog">
       <div v-if="loading">
-        loading...
+        正在加载中...
       </div>
       <div v-else-if="sourceTaxInfo && sourceTaxInfo.sourceTaxId">
         <table  class="details-table">
@@ -45,7 +45,7 @@
         </table>
       </div>
       <div v-else>
-        税源地不存在...
+        税源地不存在或您无权查看该发票信息
       </div>
     </CPicker>
     <el-button type="text" size="mini" @click="visibleDialog=true">

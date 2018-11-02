@@ -77,7 +77,7 @@
         <el-form-item label="电子邮箱" prop="userMail" :rules="{required: true, message: '电子邮箱为必填项'}">
           <el-input v-model="dialogForm.userMail" placeholder="联系邮箱"/>
         </el-form-item>
-        <el-form-item label="部门" prop="deptId" :rules="{required: true, message: '角色为必选项'}">
+        <el-form-item label="部门" prop="deptId" :rules="{required: true, message: '部门为必选项'}">
           <el-cascader
             v-model="selectedOptions"
             :show-all-levels="false"
@@ -120,13 +120,13 @@ const findParentDeptId = (list, deptId) => {
   const s = list.filter(item => item.deptId === deptId)
   let ids = []
   if (s && s.length) {
-    ids.push(s[0].deptId)
+    ids.push(deptId)
     if (s[0].parentDeptId) {
       ids = [...findParentDeptId(list, s[0].parentDeptId), ...ids]
     }
   }
   if (ids.length > 3) {
-    ids.pop()
+    ids.shift()
   }
   return ids
 }
@@ -173,6 +173,7 @@ export default {
       }
     },
     selectedOptions(val){
+      console.log(val, val[val.length - 1])
       this.dialogForm.deptId = val[val.length - 1]
     }
   },
@@ -305,7 +306,7 @@ export default {
           value: item.deptId
         }
       })
-      this.depts = this.$utils.listToTree(list, 'id', 'pid', 'children', 24576)
+      this.depts = this.$utils.listToTree(list, 'id', 'pid', 'children', list[0].id)
     })
   }
 }

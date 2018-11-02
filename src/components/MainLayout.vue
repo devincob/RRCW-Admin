@@ -54,7 +54,26 @@
                   <span>{{menu.title}}</span>
                 </template>
                 <template v-for="child in menu.children">
-                  <el-menu-item
+                  <template v-if="child.children">
+                    <el-menu-item-group :title="child.title" :key="child.id">
+                      <template v-for="c in child.children">
+                        <el-menu-item v-show="!c.disabled" :key="c.id" :index="c.path">
+                          {{c.title}}
+                        </el-menu-item>
+                      </template>
+                    </el-menu-item-group>
+                    <!--<el-submenu v-show="!child.disabled" :key="child.id" :index="child.path">-->
+                      <!--<template slot="title">-->
+                        <!--<span>{{child.title}}</span>-->
+                      <!--</template>-->
+                      <!--<template v-for="c in child.children">-->
+                        <!--<el-menu-item v-show="!c.disabled"-->
+                                      <!--:key="c.id" :index="c.path">{{c.title}}-->
+                        <!--</el-menu-item>-->
+                      <!--</template>-->
+                    <!--</el-submenu>-->
+                  </template>
+                  <el-menu-item v-else
                     v-show="!child.disabled"
                     :key="child.id" :index="child.path">{{child.title}}
                   </el-menu-item>
