@@ -67,9 +67,11 @@
         element-loading-text="拼命加载中..."
         element-loading-spinner="el-icon-loading"
         element-loading-background="rgba(255, 255, 255, 0.8)"
+        :border="true"
+        :highlight-current-row="true"
         size="mini"
         style="width: 100%;">
-        <el-table-column fixed prop="orderNo" label="订单号" min-width="210">
+        <el-table-column  prop="orderNo" label="订单号" min-width="210">
           <template slot-scope="scope">
             <router-link v-if="scope.row.workflowId === 0" :to="`/order/account-order-create?orderid=${scope.row.orderId}`" target="_blank">
               {{scope.row.orderNo}}
@@ -80,7 +82,7 @@
             <el-tag size="mini" v-if="scope.row.isPriority === 'Y'" type="danger">急</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="customerName" label="客户姓名" min-width="120">
+        <el-table-column prop="customerName" label="客户姓名" min-width="100">
           <customer-details-dialog slot-scope="scope" :customer-id="scope.row.customerId">
             {{scope.row.customerName}}
           </customer-details-dialog>
@@ -90,18 +92,18 @@
             {{scope.row.sourceTaxName}}
           </tax-source-details-dialog>
         </el-table-column>
-        <el-table-column prop="goodsName" label="商品" min-width="120">
+        <el-table-column prop="goodsName" label="商品" width="120">
           <goods-details-dialog slot-scope="scope" :goods-id="scope.row.goodsId">
             {{scope.row.goodsName}}
           </goods-details-dialog>
         </el-table-column>
-        <el-table-column prop="totalAmount" label="交易费" min-width="120" :formatter="(row) => `${$options.filters['currency'](row.totalAmount, '', 2)}`"/>
-        <el-table-column prop="realDepositFee" label="押金" min-width="120" :formatter="(row) => `${$options.filters['currency'](row.realDepositFee, '', 2)}`"/>
-        <el-table-column prop="handleAdminUserName" label="待处理人" min-width="120"/>
-        <el-table-column prop="workflowName" label="状态" :render-header="renderStatusHeader" min-width="120"/>
-        <el-table-column prop="submitTime" label="商务提交时间" min-width="150"/>
-        <el-table-column prop="orderCompletedTime" label="订单完成时间" min-width="150"/>
-        <el-table-column prop="createTime" label="创建时间" min-width="150"/>
+        <el-table-column prop="totalAmount" label="交易费" width="100" align="right" :formatter="(row) => `${$options.filters['currency'](row.totalAmount, '', 2)}`"/>
+        <el-table-column prop="realDepositFee" label="押金" width="100" align="right" :formatter="(row) => `${$options.filters['currency'](row.realDepositFee, '', 2)}`"/>
+        <el-table-column prop="handleAdminUserName" label="待处理人" align="center" width="100"/>
+        <el-table-column prop="workflowName" label="状态" :render-header="renderStatusHeader" width="120"/>
+        <el-table-column prop="submitTime" label="商务提交时间" width="150"/>
+        <el-table-column prop="orderCompletedTime" label="订单完成时间" width="150"/>
+        <el-table-column prop="createTime" label="创建时间" width="150"/>
       </el-table>
       <div class="text-right">
         <el-pagination

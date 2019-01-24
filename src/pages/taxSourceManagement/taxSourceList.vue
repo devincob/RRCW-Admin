@@ -1,16 +1,17 @@
 <template>
   <x-page breadcrumb="auto" title="税源地列表">
-    <el-card class="el-card-mini no-border-radius no-box-shadow" body-style="padding: 10px">
+    <el-card class="el-card-mini no-box-shadow" style="min-width:800px;min-height:1000px">
       <el-table :data="users"
                 v-loading="loading"
                 element-loading-text="拼命加载中..."
                 element-loading-spinner="el-icon-loading"
                 element-loading-background="rgba(255, 255, 255, 0.8)"
-                stripe
+                :border="true"
+                :highlight-current-row="true"
                 @sort-change="onSortChange"
                 size="mini"
                 style="width: 100%;border-top:1px #eee solid">
-        <el-table-column align="center" label="税源地编号" prop="sourceTaxId" width="100" fixed>
+        <el-table-column align="center" label="编号" prop="sourceTaxId" width="50" >
           <template slot-scope="scope">
             <router-link target="_blank"
                          :to="`/taxSourceManagement/addTaxSource?sourceTax_id=${scope.row.sourceTaxId}`"
@@ -20,8 +21,8 @@
             </router-link>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="名称" prop="sourceTaxName"/>
-        <el-table-column align="center" label="城市">
+        <el-table-column align="left" label="名称" prop="sourceTaxName" min-width="150"/>
+        <el-table-column align="left" label="城市" width="120">
           <span slot-scope="scope">
             {{scope.row.provinceName}}{{scope.row.cityName}}
           </span>
@@ -29,7 +30,7 @@
         <el-table-column align="center" label="法人年龄上限" prop="legalAge"  width="100"/>
         <el-table-column align="center" label="联系人" prop="contact"  width="100"/>
         <el-table-column align="center" label="联系人手机" prop="phone" width="100"/>
-        <el-table-column align="center" label="是否需要财务身份证复印件" prop="isNeedFinanceID" width="200">
+        <el-table-column align="center" label="财务复印件" prop="isNeedFinanceID" width="100">
           <span slot-scope="scope" :class="{
                 'text-success':scope.row.isNeedFinanceID === 'N',
                 'text-danger':scope.row.isNeedFinanceID === 'Y'
@@ -37,11 +38,7 @@
             {{isNeedText[scope.row.isNeedFinanceID]}}
           </span>
         </el-table-column>
-        <el-table-column align="center" label="增值税返税比率" prop="zzsRatio" width="100"/>
-        <el-table-column align="center" label="个税返税比率" prop="grsdsRatio" width="100"/>
-        <el-table-column align="center" label="附加税返税比率" prop="fjsRatio" width="100"/>
-        <el-table-column align="center" label="印花税返税比率" prop="yhsRatio" width="100"/>
-        <el-table-column align="center" label="状态" prop="status" width="100">
+          <el-table-column align="center" label="状态" prop="status" width="100">
           <span slot-scope="scope" :class="{
                 'text-success':scope.row.status === 'N',
                 'text-danger':scope.row.status === 'D'
@@ -49,7 +46,11 @@
             {{statusText[scope.row.status]}}
           </span>
         </el-table-column>
-        <el-table-column align="center" label="创建时间" prop="showCreateTime"/>
+        <el-table-column align="center" label="增值税返比" prop="zzsRatio" width="100"/>
+        <el-table-column align="center" label="个税返比" prop="grsdsRatio" width="100"/>
+        <el-table-column align="center" label="附加税返比" prop="fjsRatio" width="100"/>
+        <el-table-column align="center" label="印花税返比" prop="yhsRatio" width="100"/>
+        <el-table-column align="center" label="创建时间" prop="showCreateTime" width="150"/>
         <el-table-column label="操作" fixed="right" width="150" align="center" header-align="center">
           <template slot-scope="scope">
             <el-button type="text" size="mini" class="no-padding" @click="onDisabledClick(scope.row)"

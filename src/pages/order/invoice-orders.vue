@@ -7,7 +7,7 @@
             <el-input placeholder="请输入订单号" v-model="form.orderNo" style="width: 200px"/>
           </el-form-item>
           <el-form-item label="税源地">
-            <el-select placeholder="岗位" v-model="form.sourceTaxId" style="width: 120px">
+            <el-select placeholder="税源地" v-model="form.sourceTaxId" style="width: 120px">
               <el-option label="全部" value=""/>
               <el-option
                 v-for="item in sourceTaxList"
@@ -18,7 +18,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="商品">
-            <el-select placeholder="岗位" v-model="form.goodsId" style="width: 120px">
+            <el-select placeholder="商品" v-model="form.goodsId" style="width: 120px">
               <el-option label="全部" value=""/>
               <el-option
                 v-for="item in goodsList"
@@ -26,6 +26,33 @@
                 :label="item.goodsName"
                 :value="item.goodsId">
               </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="所属商务">
+            <el-select placeholder="所属商务" v-model="form.createAdminUserId" style="width: 120px">
+              <el-option label="全部" value=""/>
+              <el-option
+                v-for="item in businessList"
+                :key="item.adminUserId"
+                :label="item.userName"
+                :value="item.adminUserId">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="订单状态">
+            <el-select placeholder="订单状态" v-model="form.workflowId" style="width: 120px">
+              <el-option label="全部" value=""/>
+              <el-option label="草稿" value="-1"/>
+              <el-option label="待直属领导审批" value="2000"/>
+              <el-option label="待CEO审批" value="2010"/>
+              <el-option label="待跟单处理" value="2060"/>
+              <el-option label="待客服确认" value="2080"/>
+              <el-option label="待财务收款" value="2090"/>
+              <el-option label="待交易员处理" value="2110"/>
+              <el-option label="待交易员更新处理" value="2120"/>
+              <el-option label="待跟单确认处理" value="2130"/>
+              <el-option label="待客服回访" value="2140"/>
+              <el-option label="已完成" value="5000"/>
             </el-select>
           </el-form-item>
           <el-form-item label="商务提交时间">
@@ -68,8 +95,10 @@
         element-loading-spinner="el-icon-loading"
         element-loading-background="rgba(255, 255, 255, 0.8)"
         size="mini"
+        :border="true"
+        :highlight-current-row="true"
         style="width: 100%;">
-        <el-table-column fixed prop="orderNo" label="订单号" min-width="210">
+        <el-table-column  prop="orderNo" label="订单号" min-width="210">
           <template slot-scope="scope">
             <router-link v-if="scope.row.workflowId === 0" :to="`/order/invoice-order-create?orderid=${scope.row.orderId}`" target="_blank">
               {{scope.row.orderNo}}
@@ -100,12 +129,13 @@
             {{scope.row.goodsName}}
           </goods-details-dialog>
         </el-table-column>
-        <el-table-column prop="invoiceAmount" label="开票金额" min-width="120" :formatter="(row) => `${$options.filters['currency'](row.invoiceAmount, '', 2)}`"/>
-        <el-table-column prop="invoiceTypeName" label="发票类型" min-width="150"/>
-        <el-table-column prop="handleAdminUserName" label="待处理人" min-width="120"/>
+        <el-table-column prop="invoiceAmount" align="right" label="开票金额" min-width="120" :formatter="(row) => `${$options.filters['currency'](row.invoiceAmount, '', 2)}`"/>
+        <el-table-column prop="invoiceTypeName" align="center" label="发票类型" min-width="150"/>
+        <el-table-column prop="handleAdminUserName" align="center" label="待处理人" min-width="120"/>
         <el-table-column prop="workflowName" label="状态" :render-header="renderStatusHeader" min-width="120"/>
         <el-table-column prop="submitTime" label="商务提交时间" min-width="150"/>
         <el-table-column prop="orderCompletedTime" label="订单完成时间" min-width="150"/>
+        <el-table-column prop="bussinessName" label="创建人" min-width="120"/>
         <el-table-column prop="createTime" label="创建时间" min-width="150"/>
       </el-table>
       <div class="text-right">
@@ -141,6 +171,9 @@ export default {
         sourceTaxId: '',
         // 商品编号
         goodsId: '',
+        workflowId: '',
+        // 所属商务
+        createAdminUserId: '',
         // 订单好
         orderNo: '',
         // 客户姓名
@@ -158,6 +191,7 @@ export default {
       sourceTaxList: [], // 税源地列表
       goodsList: [], // 商品列表
       orderList: [],
+      businessList: [],
       loading: false,
       pickerOptions: {
         shortcuts: [{
@@ -230,6 +264,7 @@ export default {
     onPageShow(){
       this.querySourceTaxList()
       this.queryGoodsList()
+      this.queryBusinessList()
       this.clearQueryParams()
     },
     async querySourceTaxList(){
@@ -244,6 +279,13 @@ export default {
         this.goodsList = await this.$$main.commonListGoods()
       } catch (e) {
         this.goodsList = []
+      }
+    },
+    async queryBusinessList(){
+      try {
+        this.businessList = await this.$$main.commonListBelongAdminUser()
+      } catch (e) {
+        this.businessList = []
       }
     },
     async queryInvoiceOrders(){
@@ -267,6 +309,8 @@ export default {
         pageSize: 20,
         sourceTaxId: '',
         goodsId: '',
+        createAdminUserId: '',
+        workflowId: '',
         orderNo: '',
         customerName: '',
         submitTime: '',

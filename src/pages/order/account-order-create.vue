@@ -1,6 +1,10 @@
 <template>
   <x-page breadcrumb="auto" title="新增开户订单">
     <el-card class="box-card">
+             <div slot="header"><span
+              style="font-size: 14px;"
+              class="text-bold"
+            >新增开户订单</span></div>
       <el-form ref="form" :model="form" :rules="formRules" label-width="170px" size="small">
         <el-form-item label="订单号" prop="orderNo">
           <el-input v-model="form.orderNo" placeholder="系统自动生成" readonly/>
@@ -102,7 +106,8 @@
               <x-image v-if="form.investorIdCardFrontUrl" :src="form.investorIdCardFrontUrl" class="avatar"/>
               <i v-else class="el-icon-plus avatar-uploader-icon" style="display: block">正面</i>
             </el-upload>
-            <el-button type="text" @click="onPreviewClick(form.investorIdCardFrontUrl)" size="mini" v-if="form.investorIdCardFrontUrl">查看原图</el-button>
+            <el-button type="text" @click="onPreviewClick(form.investorIdCardFrontUrl)" size="mini" v-if="form.investorIdCardFrontUrl">查看原文件</el-button>
+            <preview-button type="text" size="mini" :src="form.investorIdCardFrontUrl" v-if="form.investorIdCardFrontUrl">预览原文件</preview-button>
           </div>
           <div class="ml-10">
             <el-upload
@@ -115,7 +120,8 @@
               <x-image v-if="form.investorIdCardBackUrl" :src="form.investorIdCardBackUrl" class="avatar"/>
               <i v-else class="el-icon-plus avatar-uploader-icon">反面</i>
             </el-upload>
-            <el-button type="text" @click="onPreviewClick(form.investorIdCardBackUrl)" size="mini" v-if="form.investorIdCardBackUrl">查看原图</el-button>
+            <el-button type="text" @click="onPreviewClick(form.investorIdCardBackUrl)" size="mini" v-if="form.investorIdCardBackUrl">查看原文件</el-button>
+            <preview-button type="text" size="mini" :src="form.investorIdCardBackUrl" v-if="form.investorIdCardBackUrl">预览原文件</preview-button>
           </div>
           </el-form-item>
         <el-form-item prop="investorIdCardNo">
@@ -147,7 +153,8 @@
               <x-image v-if="form.financePersonIdCardFrontUrl" :src="form.financePersonIdCardFrontUrl" class="avatar"/>
               <i v-else class="el-icon-plus avatar-uploader-icon" style="display: block">正面</i>
             </el-upload>
-            <el-button type="text" @click="onPreviewClick(form.financePersonIdCardFrontUrl)" size="mini" v-if="form.financePersonIdCardFrontUrl">查看原图</el-button>
+            <el-button type="text" @click="onPreviewClick(form.financePersonIdCardFrontUrl)" size="mini" v-if="form.financePersonIdCardFrontUrl">查看原文件</el-button>
+            <preview-button type="text" size="mini" :src="form.financePersonIdCardFrontUrl" v-if="form.financePersonIdCardFrontUrl">预览原文件</preview-button>
           </div>
           <div class="ml-10">
             <el-upload
@@ -160,7 +167,8 @@
               <x-image v-if="form.financePersonIdCardBackUrl" :src="form.financePersonIdCardBackUrl" class="avatar"/>
               <i v-else class="el-icon-plus avatar-uploader-icon">反面</i>
             </el-upload>
-            <el-button type="text" @click="onPreviewClick(form.financePersonIdCardBackUrl)" size="mini" v-if="form.financePersonIdCardBackUrl">查看原图</el-button>
+            <el-button type="text" @click="onPreviewClick(form.financePersonIdCardBackUrl)" size="mini" v-if="form.financePersonIdCardBackUrl">查看原文件</el-button>
+            <preview-button type="text" size="mini" :src="form.financePersonIdCardBackUrl" v-if="form.financePersonIdCardBackUrl">预览原文件</preview-button>
           </div>
         </el-form-item>
         <el-form-item prop="financePersonIdCardNo">
@@ -196,7 +204,8 @@
               <i v-else class="el-icon-plus avatar-uploader-icon" style="display: block;font-size: 18px;">相关服务协议</i>
             </el-upload>
             <a :href="$config.getImageUrlPath()+'/file/RRCW-File.docx'" target="_blank"><el-button type="text" size="mini">下载模板</el-button></a>
-            <el-button type="text" @click="onPreviewClick(form.serviceAgreementUrl)" size="mini" v-if="form.serviceAgreementUrl">查看原图</el-button>
+            <el-button type="text" @click="onPreviewClick(form.serviceAgreementUrl)" size="mini" v-if="form.serviceAgreementUrl">查看原文件</el-button>
+            <preview-button type="text" size="mini" :src="form.serviceAgreementUrl" v-if="form.serviceAgreementUrl">预览原文件</preview-button>
           </div>
         </el-form-item>
         <el-form-item label="是否需要特殊审批" prop="isNeedApproval">
@@ -248,9 +257,10 @@
 
 <script>
 import ExpressInfoDialog from '../../components/ExpressInfoDialog'
+import PreviewButton from '../../components/PreviewButton'
 export default {
   name: 'account-order-create',
-  components: {ExpressInfoDialog},
+  components: {ExpressInfoDialog, PreviewButton},
   data() {
     const validateDepositRemissionAmount = (rule, value, callback) => {
       if (value < 0) {
@@ -626,7 +636,7 @@ export default {
     openLoading(target) {
       this.uploadLoading = this.$loading({
         lock: true,
-        text: '图片上传中',
+        text: '文件上传中',
         spinner: 'el-icon-loading',
         target: target
       })

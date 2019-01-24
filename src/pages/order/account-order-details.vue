@@ -1,128 +1,329 @@
 <template>
-  <x-page breadcrumb="auto" title="开户订单详情">
-    <div style="width: 100%">
+  <x-page
+    breadcrumb="auto"
+    title="开户订单详情"
+  >
+    <div style="min-width:800px;max-width:1024px">
       <el-row style="margin-bottom: 10px;">
-        <el-col :span="13">
-          <el-button type="text" size="mini" style="margin-left: 5px;padding-top: 2px;" @click="orderLogListDialogDisplay = true">查看操作记录</el-button>
-          <a v-if="info.orderInfo && info.orderInfo.workflowId >= 1000" :href="`${$config.getImageUrlPath()}/file/Payment_bill_${info.orderInfo.orderNo}.pdf`" target="_blank">
-            <el-button type="text" size="mini" style="margin-left: 5px;padding-top: 2px;">下载付款单</el-button>
-          </a>
-          <a v-if="info.orderInfo && info.orderInfo.workflowId > 1100" :href="`${$config.getImageUrlPath()}/file/Supplier_Order_${info.orderInfo.orderNo}.pdf`" target="_blank">
-            <el-button type="text" size="mini" style="margin-left: 5px;padding-top: 2px;">下载供应商下单表</el-button>
-          </a>
-          <span style="color: red;margin-left: 10px;" v-if="info && info.status">订单状态 ：{{info.status || '-'}}， 待处理人 ：{{info.handleAdminRoleName || '-'}} {{info.handleAdminUserName || '-'}}。</span>
+        <el-col :span="24">
+          <el-button
+            type="text"
+            size="mini"
+            @click="orderLogListDialogDisplay = true"
+          >查看操作记录</el-button>
+          <preview-button
+            v-if="info.orderInfo && info.orderInfo.workflowId >= 1000"
+            type="text"
+            size="mini"
+            always-show
+            :src="`/file/Payment_bill_${info.orderInfo.orderNo}.pdf`"
+          >下载付款单</preview-button>
+          <preview-button
+            v-if="info.orderInfo && info.orderInfo.workflowId > 1100"
+            type="text"
+            size="mini"
+            always-show
+            :src="`/file/Supplier_Order_${info.orderInfo.orderNo}.pdf`"
+          >下载供应商下单表</preview-button>
+          <span
+            style="color: red;margin-left: 10px;"
+            v-if="info && info.status"
+          >订单状态 ：{{info.status || '-'}}， 待处理人 ：{{info.handleAdminRoleName || '-'}} {{info.handleAdminUserName || '-'}}。</span>
         </el-col>
-        <el-col :span="11" v-if="info.isShowButton" class="header-buttons">
+      </el-row>
+      <el-row v-if="info.isShowButton">
+        <el-col
+          :span="24"
+          class="header-buttons"
+          style="margin-bottom: 10px;"
+        >
           <div v-if="[1000, 1010, 1020, 1030].indexOf(info.orderInfo.workflowId) !== -1">
-            <el-button type="primary" size="mini" @click="displayNextDialog('审批通过')">审批通过</el-button>
-            <el-button size="mini" @click="displayRejectDialog()">驳回</el-button>
-            <el-button size="mini" @click="displayRejectDialog('驳回至创建人的', 'restart')">驳回至创建人</el-button>
+            <el-button
+              type="primary"
+              size="mini"
+              @click="displayNextDialog('审批通过')"
+            >审批通过</el-button>
+            <el-button
+              size="mini"
+              @click="displayRejectDialog()"
+            >驳回</el-button>
+            <el-button
+              size="mini"
+              @click="displayRejectDialog('驳回至创建人的', 'restart')"
+            >驳回至创建人</el-button>
           </div>
           <div v-if="[1040, 1050].indexOf(info.orderInfo.workflowId) !== -1">
-            <el-button type="primary" size="mini" @click="displayNextDialog('审核通过')">审核通过</el-button>
-            <el-button size="mini" @click="displayRejectDialog()">驳回</el-button>
-            <el-button size="mini" @click="displayRejectDialog('驳回至创建人的', 'restart')">驳回至创建人</el-button>
+            <el-button
+              type="primary"
+              size="mini"
+              @click="displayNextDialog('审核通过')"
+            >审核通过</el-button>
+            <el-button
+              size="mini"
+              @click="displayRejectDialog()"
+            >驳回</el-button>
+            <el-button
+              size="mini"
+              @click="displayRejectDialog('驳回至创建人的', 'restart')"
+            >驳回至创建人</el-button>
           </div>
           <div v-if="info.orderInfo.workflowId === 1060">
-            <el-button type="primary" size="mini" @click="displayNextDialog('通知客服确认信息')">材料已留档，通知客服确认信息</el-button>
-            <el-button size="mini" @click="displayRejectDialog()">驳回</el-button>
-            <el-button size="mini" @click="displayRejectDialog('驳回至创建人的', 'restart')">驳回至创建人</el-button>
+            <el-button
+              type="primary"
+              size="mini"
+              @click="displayNextDialog('通知客服确认信息')"
+            >材料已留档，通知客服确认信息</el-button>
+            <el-button
+              size="mini"
+              @click="displayRejectDialog()"
+            >驳回</el-button>
+            <el-button
+              size="mini"
+              @click="displayRejectDialog('驳回至创建人的', 'restart')"
+            >驳回至创建人</el-button>
           </div>
           <div v-if="info.orderInfo.workflowId === 1070">
-            <el-button type="primary" size="mini" @click="displayNextDialog()">已确认，提交订单</el-button>
-            <el-button size="mini" @click="displayRejectDialog('暂未确认', 'wait')">暂未确认</el-button>
-            <el-button size="mini" @click="displayRejectDialog()">驳回</el-button>
-            <el-button size="mini" @click="displayRejectDialog('驳回至创建人的', 'restart')">驳回至创建人</el-button>
+            <el-button
+              type="primary"
+              size="mini"
+              @click="displayNextDialog()"
+            >已确认，提交订单</el-button>
+            <el-button
+              size="mini"
+              @click="displayRejectDialog('暂未确认', 'wait')"
+            >暂未确认</el-button>
+            <el-button
+              size="mini"
+              @click="displayRejectDialog()"
+            >驳回</el-button>
+            <el-button
+              size="mini"
+              @click="displayRejectDialog('驳回至创建人的', 'restart')"
+            >驳回至创建人</el-button>
           </div>
           <div v-if="info.orderInfo.workflowId === 1080">
-            <el-button type="primary" size="mini" @click="displayNextDialog()">提交订单</el-button>
-            <el-button size="mini" @click="bankReceiptDialogDisplay = true">录入收款信息</el-button>
-            <el-button size="mini" @click="displayRejectDialog()">驳回</el-button>
-            <el-button size="mini" @click="displayRejectDialog('驳回至创建人的', 'restart')">驳回至创建人</el-button>
+            <el-button
+              type="primary"
+              size="mini"
+              @click="displayNextDialog()"
+            >提交订单</el-button>
+            <el-button
+              size="mini"
+              @click="bankReceiptDialogDisplay = true"
+            >录入收款信息</el-button>
+            <el-button
+              size="mini"
+              @click="displayRejectDialog()"
+            >驳回</el-button>
+            <el-button
+              size="mini"
+              @click="displayRejectDialog('驳回至创建人的', 'restart')"
+            >驳回至创建人</el-button>
           </div>
           <div v-if="info.orderInfo.workflowId === 1090">
-            <el-button type="primary" size="mini" @click="displayNextDialog()">所有材料已审核完毕，提交订单</el-button>
-            <el-button size="mini" @click="displayRejectDialog()">驳回</el-button>
-            <el-button size="mini" @click="displayRejectDialog('驳回至创建人的', 'restart')">驳回至创建人</el-button>
+            <el-button
+              type="primary"
+              size="mini"
+              @click="displayNextDialog()"
+            >所有材料已审核完毕，提交订单</el-button>
+            <el-button
+              size="mini"
+              @click="displayRejectDialog()"
+            >驳回</el-button>
+            <el-button
+              size="mini"
+              @click="displayRejectDialog('驳回至创建人的', 'restart')"
+            >驳回至创建人</el-button>
           </div>
           <div v-if="info.orderInfo.workflowId === 1100">
-            <el-button type="primary" size="mini" @click="displayNextDialog()">提交订单</el-button>
-            <el-button size="mini" @click="companyRegisterInfoDialogDisplay = true">填写站点注册信息</el-button>
-            <el-button size="mini" @click="displayRejectDialog()">驳回</el-button>
-            <el-button size="mini" @click="displayRejectDialog('驳回至创建人的', 'restart')">驳回至创建人</el-button>
+            <el-button
+              type="primary"
+              size="mini"
+              @click="displayNextDialog()"
+            >提交订单</el-button>
+            <el-button
+              size="mini"
+              @click="companyRegisterInfoDialogDisplay = true"
+            >填写站点注册信息</el-button>
+            <el-button
+              size="mini"
+              @click="displayRejectDialog()"
+            >驳回</el-button>
+            <el-button
+              size="mini"
+              @click="displayRejectDialog('驳回至创建人的', 'restart')"
+            >驳回至创建人</el-button>
           </div>
           <div v-if="info.orderInfo.workflowId === 1110">
-            <el-button type="primary" size="mini" @click="displayNextDialog()">确认无误，提交订单</el-button>
-            <el-button size="mini" @click="companyRegisterInfoDialogDisplay = true">修改站点注册信息</el-button>
-            <el-button size="mini" @click="displayRejectDialog()">驳回</el-button>
-            <el-button size="mini" @click="displayRejectDialog('驳回至创建人的', 'restart')">驳回至创建人</el-button>
+            <el-button
+              type="primary"
+              size="mini"
+              @click="displayNextDialog()"
+            >确认无误，提交订单</el-button>
+            <el-button
+              size="mini"
+              @click="companyRegisterInfoDialogDisplay = true"
+            >修改站点注册信息</el-button>
+            <el-button
+              size="mini"
+              @click="displayRejectDialog()"
+            >驳回</el-button>
+            <el-button
+              size="mini"
+              @click="displayRejectDialog('驳回至创建人的', 'restart')"
+            >驳回至创建人</el-button>
           </div>
           <div v-if="info.orderInfo.workflowId === 1120">
-            <el-button type="primary" size="mini" @click="displayNextDialog('交付供应商')">交付供应商</el-button>
-            <el-button size="mini" @click="displayRejectDialog()">驳回</el-button>
-            <el-button size="mini" @click="displayRejectDialog('驳回至创建人的', 'restart')">驳回至创建人</el-button>
+            <el-button
+              type="primary"
+              size="mini"
+              @click="displayNextDialog('交付供应商')"
+            >交付供应商</el-button>
+            <el-button
+              size="mini"
+              @click="displayRejectDialog()"
+            >驳回</el-button>
+            <el-button
+              size="mini"
+              @click="displayRejectDialog('驳回至创建人的', 'restart')"
+            >驳回至创建人</el-button>
           </div>
           <div v-if="info.orderInfo.workflowId === 1130">
-            <el-button type="primary" size="mini" @click="displayNextDialog()">提交订单</el-button>
-            <el-button size="mini" @click="registrationProcessDialogDisplay = true">更新站点注册进度</el-button>
-            <el-button size="mini" @click="displayRejectDialog()">驳回</el-button>
-            <el-button size="mini" @click="displayRejectDialog('驳回至创建人的', 'restart')">驳回至创建人</el-button>
+            <el-button
+              type="primary"
+              size="mini"
+              @click="displayNextDialog()"
+            >提交订单</el-button>
+            <el-button
+              size="mini"
+              @click="registrationProcessDialogDisplay = true"
+            >更新站点注册进度</el-button>
+            <el-button
+              size="mini"
+              @click="displayRejectDialog()"
+            >驳回</el-button>
+            <el-button
+              size="mini"
+              @click="displayRejectDialog('驳回至创建人的', 'restart')"
+            >驳回至创建人</el-button>
           </div>
           <div v-if="info.orderInfo.workflowId === 1140">
-            <el-button type="primary" size="mini" @click="displayNextDialog()">验货完成，提交订单</el-button>
-            <el-button size="mini" @click="companyAttachmentDialogDisplay = true">录入货物信息</el-button>
-            <el-button size="mini" @click="displayRejectDialog()">驳回</el-button>
-            <el-button size="mini" @click="displayRejectDialog('驳回至创建人的', 'restart')">驳回至创建人</el-button>
+            <el-button
+              type="primary"
+              size="mini"
+              @click="displayNextDialog()"
+            >验货完成，提交订单</el-button>
+            <el-button
+              size="mini"
+              @click="companyAttachmentDialogDisplay = true"
+            >录入货物信息</el-button>
+            <el-button
+              size="mini"
+              @click="displayRejectDialog()"
+            >驳回</el-button>
+            <el-button
+              size="mini"
+              @click="displayRejectDialog('驳回至创建人的', 'restart')"
+            >驳回至创建人</el-button>
           </div>
           <div v-if="info.orderInfo.workflowId === 1150">
-            <el-button type="primary" size="mini" @click="displayNextDialog()">提交订单</el-button>
-            <el-button size="mini" @click="expressDialogDisplay = true">录入物流信息</el-button>
-            <el-button size="mini" @click="displayRejectDialog()">驳回</el-button>
-            <el-button size="mini" @click="displayRejectDialog('驳回至创建人的', 'restart')">驳回至创建人</el-button>
+            <el-button
+              type="primary"
+              size="mini"
+              @click="displayNextDialog()"
+            >提交订单</el-button>
+            <el-button
+              size="mini"
+              @click="expressDialogDisplay = true"
+            >录入物流信息</el-button>
+            <el-button
+              size="mini"
+              @click="displayRejectDialog()"
+            >驳回</el-button>
+            <el-button
+              size="mini"
+              @click="displayRejectDialog('驳回至创建人的', 'restart')"
+            >驳回至创建人</el-button>
           </div>
           <div v-if="info.orderInfo.workflowId === 1160">
-            <el-button type="primary" size="mini" @click="displayNextDialog()">已存档，提交订单</el-button>
-            <el-button size="mini" @click="displayRejectDialog()">驳回</el-button>
-            <el-button size="mini" @click="displayRejectDialog('驳回至创建人的', 'restart')">驳回至创建人</el-button>
+            <el-button
+              type="primary"
+              size="mini"
+              @click="displayNextDialog()"
+            >已存档，提交订单</el-button>
+            <el-button
+              size="mini"
+              @click="displayRejectDialog()"
+            >驳回</el-button>
+            <el-button
+              size="mini"
+              @click="displayRejectDialog('驳回至创建人的', 'restart')"
+            >驳回至创建人</el-button>
           </div>
           <div v-if="info.orderInfo.workflowId === 1170">
-            <el-button type="primary" size="mini" @click="displayNextDialog()">提交订单</el-button>
-            <el-button size="mini" @click="customerServiceRecordDialogDisplay = true">录入回访结果</el-button>
-            <el-button size="mini" @click="displayRejectDialog('暂无结果', 'wait')">暂无结果</el-button>
-            <el-button size="mini" @click="displayRejectDialog()">驳回</el-button>
-            <el-button size="mini" @click="displayRejectDialog('驳回至创建人的', 'restart')">驳回至创建人</el-button>
+            <el-button
+              type="primary"
+              size="mini"
+              @click="displayNextDialog()"
+            >提交订单</el-button>
+            <el-button
+              size="mini"
+              @click="customerServiceRecordDialogDisplay = true"
+            >录入回访结果</el-button>
+            <el-button
+              size="mini"
+              @click="displayRejectDialog('暂无结果', 'wait')"
+            >暂无结果</el-button>
+            <el-button
+              size="mini"
+              @click="displayRejectDialog()"
+            >驳回</el-button>
+            <el-button
+              size="mini"
+              @click="displayRejectDialog('驳回至创建人的', 'restart')"
+            >驳回至创建人</el-button>
           </div>
         </el-col>
       </el-row>
-      <el-card class="box-card" v-if="info.orderInfo && info.orderInfo.workflowId > 1160">
-        <div slot="header">
-          <div>客服回访信息</div>
-        </div>
-        <table>
-          <tr>
-            <td>服务结果是否满意</td>
-            <td>
-              <div v-if="info.customerServiceRecord && info.customerServiceRecord.evalValue" style="display: flex">
-                <el-rate
-                  style="margin-top: 5px;"
-                  v-model="customerServiceRecordForm.displayEval"
-                  disabled
-                  text-color="#ff9900">
-                </el-rate>
-                {{info.customerServiceRecord.evalValue}}分
-              </div>
-              <span v-else>-</span>
-            </td>
-            <td>客户反馈</td>
-            <td>{{info.customerServiceRecord && info.customerServiceRecord.feedback || '-'}}</td>
-          </tr>
-        </table>
-      </el-card>
-      <el-card class="box-card" v-if="info.orderInfo && info.orderInfo.workflowId > 1140">
+      <!--<el-card-->
+        <!--class="box-card"-->
+        <!--v-if="info.orderInfo && info.orderInfo.workflowId > 1160"-->
+      <!--&gt;-->
+        <!--<div slot="header">-->
+          <!--<div>客服回访信息</div>-->
+        <!--</div>-->
+        <!--<table class="detail-table">-->
+          <!--<tr>-->
+            <!--<td>服务结果是否满意</td>-->
+            <!--<td>-->
+              <!--<div-->
+                <!--v-if="info.customerServiceRecord && info.customerServiceRecord.evalValue"-->
+                <!--style="display: flex"-->
+              <!--&gt;-->
+                <!--<el-rate-->
+                  <!--style="margin-top: 5px;"-->
+                  <!--v-model="customerServiceRecordForm.displayEval"-->
+                  <!--disabled-->
+                  <!--text-color="#ff9900"-->
+                <!--&gt;-->
+                <!--</el-rate>-->
+                <!--{{info.customerServiceRecord.evalValue}}分-->
+              <!--</div>-->
+              <!--<span v-else>-</span>-->
+            <!--</td>-->
+            <!--<td>客户反馈</td>-->
+            <!--<td>{{info.customerServiceRecord && info.customerServiceRecord.feedback || '-'}}</td>-->
+          <!--</tr>-->
+        <!--</table>-->
+      <!--</el-card>-->
+      <el-card
+        class="box-card"
+        v-if="info.orderInfo && info.orderInfo.workflowId > 1140"
+      >
         <div slot="header">
           <span>交付物流信息</span>
         </div>
-        <table>
+        <table class="detail-table">
           <tr>
             <td>快递单号</td>
             <td>{{info.accountOrderExpress && info.accountOrderExpress.expressNo || '-'}}</td>
@@ -132,17 +333,33 @@
           <tr>
             <td>上传快递回单</td>
             <td>
-              <el-button size="mini" type="text" v-if="info.accountOrderExpress && info.accountOrderExpress.expressImgUrl" @click="displayImage(info.accountOrderExpress.expressImgUrl)">预览</el-button>
+              <preview-button
+                v-if="info.accountOrderExpress && info.accountOrderExpress.expressImgUrl"
+                always-show
+                show-preview-dialog
+                size="mini"
+                type="text"
+                :src="info.accountOrderExpress.expressImgUrl"
+              >查看</preview-button>
+              <preview-button
+                v-if="info.accountOrderExpress && info.accountOrderExpress.expressImgUrl"
+                size="mini"
+                type="text"
+                :src="info.accountOrderExpress.expressImgUrl"
+              >预览</preview-button>
               <span v-else>-</span>
             </td>
           </tr>
         </table>
       </el-card>
-      <el-card class="box-card" v-if="info.orderInfo && info.orderInfo.workflowId > 1130">
+      <el-card
+        class="box-card"
+        v-if="info.orderInfo && info.orderInfo.workflowId > 1130"
+      >
         <div slot="header">
           <span>货物信息</span>
         </div>
-        <table>
+        <table class="detail-table">
           <tr>
             <td>站点名称</td>
             <td>{{info.companyAttachment && info.companyAttachment.companyName || '-'}}</td>
@@ -164,34 +381,89 @@
           <tr>
             <td>上传网银U盾（序列号）</td>
             <td>
-              <el-button size="mini" type="text" v-if="info.companyAttachment && info.companyAttachment.ukeyImgUrl" @click="displayImage(info.companyAttachment.ukeyImgUrl)">预览</el-button>
+              <preview-button
+                v-if="info.companyAttachment && info.companyAttachment.ukeyImgUrl"
+                always-show
+                show-preview-dialog
+                size="mini"
+                type="text"
+                :src="info.companyAttachment.ukeyImgUrl"
+              >查看</preview-button>
+              <preview-button
+                v-if="info.companyAttachment && info.companyAttachment.ukeyImgUrl"
+                size="mini"
+                type="text"
+                :src="info.companyAttachment.ukeyImgUrl"
+              >预览</preview-button>
               <span v-else>-</span>
             </td>
             <td>上传公章照片</td>
             <td>
-              <el-button size="mini" type="text" v-if="info.companyAttachment && info.companyAttachment.stampImgUrl" @click="displayImage(info.companyAttachment.stampImgUrl)">预览</el-button>
+              <preview-button
+                v-if="info.companyAttachment && info.companyAttachment.stampImgUrl"
+                always-show
+                show-preview-dialog
+                size="mini"
+                type="text"
+                :src="info.companyAttachment.stampImgUrl"
+              >查看</preview-button>
+              <preview-button
+                v-if="info.companyAttachment && info.companyAttachment.stampImgUrl"
+                size="mini"
+                type="text"
+                :src="info.companyAttachment.stampImgUrl"
+              >预览</preview-button>
               <span v-else>-</span>
             </td>
           </tr>
           <tr>
             <td>上传营业执照</td>
             <td>
-              <el-button size="mini" type="text" v-if="info.companyAttachment && info.companyAttachment.licenseImgUrl" @click="displayImage(info.companyAttachment.licenseImgUrl)">预览</el-button>
+              <preview-button
+                v-if="info.companyAttachment && info.companyAttachment.licenseImgUrl"
+                always-show
+                show-preview-dialog
+                size="mini"
+                type="text"
+                :src="info.companyAttachment.licenseImgUrl"
+              >查看</preview-button>
+              <preview-button
+                v-if="info.companyAttachment && info.companyAttachment.licenseImgUrl"
+                size="mini"
+                type="text"
+                :src="info.companyAttachment.licenseImgUrl"
+              >预览</preview-button>
               <span v-else>-</span>
             </td>
             <td>上传国地税三方协议PDF</td>
             <td>
-              <el-button size="mini" type="text" v-if="info.companyAttachment && info.companyAttachment.taxAgreementPDFUrl" @click="displayImage(info.companyAttachment.taxAgreementPDFUrl)">预览</el-button>
+              <preview-button
+                v-if="info.companyAttachment && info.companyAttachment.taxAgreementPDFUrl"
+                always-show
+                show-preview-dialog
+                size="mini"
+                type="text"
+                :src="info.companyAttachment.taxAgreementPDFUrl"
+              >查看</preview-button>
+              <preview-button
+                v-if="info.companyAttachment && info.companyAttachment.taxAgreementPDFUrl"
+                size="mini"
+                type="text"
+                :src="info.companyAttachment.taxAgreementPDFUrl"
+              >预览</preview-button>
               <span v-else>-</span>
             </td>
           </tr>
         </table>
       </el-card>
-      <el-card class="box-card" v-if="info.orderInfo && info.orderInfo.workflowId > 1120">
+      <el-card
+        class="box-card"
+        v-if="info.orderInfo && info.orderInfo.workflowId > 1120"
+      >
         <div slot="header">
           <span>进度信息</span>
         </div>
-        <table>
+        <table class="detail-table">
           <tr>
             <td>下单时间</td>
             <td>{{info.processInfo && info.processInfo.showConfirmOrderTime || '-'}}</td>
@@ -202,40 +474,108 @@
             <td>核名完成时间</td>
             <td>
               {{info.processInfo && info.processInfo.showCheckNameCompletedTime || '-'}}
-              <el-button type="text" size="mini" @click="displayImage(info.processInfo.checkNameCompletedUrl)" v-if="info.processInfo && info.processInfo.checkNameCompletedUrl">查看材料</el-button>
+              <preview-button
+                v-if="info.processInfo && info.processInfo.checkNameCompletedUrl"
+                always-show
+                show-preview-dialog
+                size="mini"
+                type="text"
+                :src="info.processInfo.checkNameCompletedUrl"
+              >查看</preview-button>
+              <preview-button
+                v-if="info.processInfo && info.processInfo.checkNameCompletedUrl"
+                size="mini"
+                type="text"
+                :src="info.processInfo.checkNameCompletedUrl"
+              >预览</preview-button>
             </td>
             <td>营业执照发放时间</td>
             <td>
               {{info.processInfo && info.processInfo.showLicenseTime || '-'}}
-              <el-button type="text" size="mini" @click="displayImage(info.processInfo.licenseUrl)" v-if="info.processInfo && info.processInfo.licenseUrl">查看材料</el-button>
+              <preview-button
+                v-if="info.processInfo && info.processInfo.licenseUrl"
+                always-show
+                show-preview-dialog
+                size="mini"
+                type="text"
+                :src="info.processInfo.licenseUrl"
+              >查看</preview-button>
+              <preview-button
+                v-if="info.processInfo && info.processInfo.licenseUrl"
+                size="mini"
+                type="text"
+                :src="info.processInfo.licenseUrl"
+              >预览</preview-button>
             </td>
           </tr>
           <tr>
             <td>银行开户时间</td>
             <td>
               {{info.processInfo && info.processInfo.showBankOpenAccountTime || '-'}}
-              <el-button type="text" size="mini" @click="displayImage(info.processInfo.bankOpenAccountUrl)" v-if="info.processInfo && info.processInfo.bankOpenAccountUrl">查看材料</el-button>
+              <preview-button
+                v-if="info.processInfo && info.processInfo.bankOpenAccountUrl"
+                always-show
+                show-preview-dialog
+                size="mini"
+                type="text"
+                :src="info.processInfo.bankOpenAccountUrl"
+              >查看</preview-button>
+              <preview-button
+                v-if="info.processInfo && info.processInfo.bankOpenAccountUrl"
+                size="mini"
+                type="text"
+                :src="info.processInfo.bankOpenAccountUrl"
+              >预览</preview-button>
             </td>
             <td>银行开户完成时间</td>
             <td>
               {{info.processInfo && info.processInfo.showBankOpenAccountCompletedTime || '-'}}
-              <el-button type="text" size="mini" @click="displayImage(info.processInfo.bankOpenAccountCompletedUrl)" v-if="info.processInfo && info.processInfo.bankOpenAccountCompletedUrl">查看材料</el-button>
+              <preview-button
+                v-if="info.processInfo && info.processInfo.bankOpenAccountCompletedUrl"
+                always-show
+                show-preview-dialog
+                size="mini"
+                type="text"
+                :src="info.processInfo.bankOpenAccountCompletedUrl"
+              >查看</preview-button>
+              <preview-button
+                v-if="info.processInfo && info.processInfo.bankOpenAccountCompletedUrl"
+                size="mini"
+                type="text"
+                :src="info.processInfo.bankOpenAccountCompletedUrl"
+              >预览</preview-button>
             </td>
           </tr>
           <tr>
             <td>核税完成时间</td>
             <td>
               {{info.processInfo && info.processInfo.showCheckTaxCompletedTime || '-'}}
-              <el-button type="text" size="mini" @click="displayImage(info.processInfo.checkTaxCompletedUrl)" v-if="info.processInfo && info.processInfo.checkTaxCompletedUrl">查看材料</el-button>
+              <preview-button
+                v-if="info.processInfo && info.processInfo.checkTaxCompletedUrl"
+                always-show
+                show-preview-dialog
+                size="mini"
+                type="text"
+                :src="info.processInfo.checkTaxCompletedUrl"
+              >查看</preview-button>
+              <preview-button
+                v-if="info.processInfo && info.processInfo.checkTaxCompletedUrl"
+                size="mini"
+                type="text"
+                :src="info.processInfo.checkTaxCompletedUrl"
+              >预览</preview-button>
             </td>
           </tr>
         </table>
       </el-card>
-      <el-card class="box-card" v-if="info.orderInfo && info.orderInfo.workflowId > 1090">
+      <el-card
+        class="box-card"
+        v-if="info.orderInfo && info.orderInfo.workflowId > 1090"
+      >
         <div slot="header">
           <span>注册信息</span>
         </div>
-        <table>
+        <table class="detail-table">
           <tr>
             <td>供应商</td>
             <td>{{info.companyRegInfo && info.companyRegInfo.supplierName || '-'}}</td>
@@ -254,7 +594,10 @@
             <td>纳税性质</td>
             <td>{{info.companyRegInfo && info.companyRegInfo.showTaxTypeName || '-'}}</td>
           </tr>
-          <tr class="scope-operation" style="margin-top: 2px">
+          <tr
+            class="scope-operation"
+            style="margin-top: 2px"
+          >
             <td>经营范围</td>
             <td colspan="3">{{info.companyRegInfo && info.companyRegInfo.businessScope || '-'}}</td>
           </tr>
@@ -267,8 +610,22 @@
           <tr>
             <td>投资人身份证</td>
             <td>
-              <el-button size="mini" type="text" v-if="info.companyRegInfo && info.companyRegInfo.investorIdCardFrontUrl" @click="displayImage(info.companyRegInfo.investorIdCardFrontUrl)">正面预览</el-button>
-              <el-button size="mini" type="text" v-if="info.companyRegInfo && info.companyRegInfo.investorIdCardBackUrl" @click="displayImage(info.companyRegInfo.investorIdCardBackUrl)">反面预览</el-button>
+              <preview-button
+                v-if="info.companyRegInfo && info.companyRegInfo.investorIdCardFrontUrl"
+                always-show
+                show-preview-dialog
+                size="mini"
+                type="text"
+                :src="info.companyRegInfo.investorIdCardFrontUrl"
+              >正面预览</preview-button>
+              <preview-button
+                v-if="info.companyRegInfo && info.companyRegInfo.investorIdCardBackUrl"
+                always-show
+                show-preview-dialog
+                size="mini"
+                type="text"
+                :src="info.companyRegInfo.investorIdCardBackUrl"
+              >反面预览</preview-button>
               <span v-if="!info.companyRegInfo || (!info.companyRegInfo.investorIdCardFrontUrl && !info.companyRegInfo.investorIdCardBackUrl)">-</span>
             </td>
             <td>投资人身份证号码</td>
@@ -289,26 +646,49 @@
           <tr>
             <td>财务人员身份证</td>
             <td>
-              <el-button size="mini" type="text" v-if="info.companyRegInfo && info.companyRegInfo.financePersonIdCardFrontUrl" @click="displayImage(info.companyRegInfo.financePersonIdCardFrontUrl)">正面预览</el-button>
-              <el-button size="mini" type="text" v-if="info.companyRegInfo && info.companyRegInfo.financePersonIdCardBackUrl" @click="displayImage(info.companyRegInfo.financePersonIdCardBackUrl)">反面预览</el-button>
+              <preview-button
+                v-if="info.companyRegInfo && info.companyRegInfo.financePersonIdCardFrontUrl"
+                always-show
+                show-preview-dialog
+                size="mini"
+                type="text"
+                :src="info.companyRegInfo.financePersonIdCardFrontUrl"
+              >正面预览</preview-button>
+              <preview-button
+                v-if="info.companyRegInfo && info.companyRegInfo.financePersonIdCardBackUrl"
+                always-show
+                show-preview-dialog
+                size="mini"
+                type="text"
+                :src="info.companyRegInfo.financePersonIdCardBackUrl"
+              >反面预览</preview-button>
               <span v-if="!info.companyRegInfo || (!info.companyRegInfo.financePersonIdCardFrontUrl && !info.companyRegInfo.financePersonIdCardBackUrl)">-</span>
             </td>
             <td>财务人员身份证号</td>
             <td>{{info.companyRegInfo && info.companyRegInfo.financePersonIdCardNo || '-'}}</td>
           </tr>
-          <tr class="scope-operation" style="margin-top: 5px;">
+          <tr
+            class="scope-operation"
+            style="margin-top: 5px;"
+          >
             <td>备注</td>
             <td colspan="3">{{info.companyRegInfo && info.companyRegInfo.remark || '-'}}</td>
           </tr>
         </table>
       </el-card>
-      <el-card class="box-card" v-if="info.orderInfo && info.orderInfo.workflowId > 1070">
+      <el-card
+        class="box-card"
+        v-if="info.orderInfo && info.orderInfo.workflowId > 1070"
+      >
         <div slot="header">
           <span>财务收款信息</span>
         </div>
-        <div v-for="(item, index) in (info.bankReceipts || 1)" :key="index">
+        <div
+          v-for="(item, index) in (info.bankReceipts || 1)"
+          :key="index"
+        >
           <br v-if="index > 0">
-          <table>
+          <table class="detail-table">
             <tr>
               <td>收款方式</td>
               <td>{{bankTypes[item.bankType || 'N']}}</td>
@@ -324,7 +704,20 @@
             <tr>
               <td>回单截图</td>
               <td>
-                <el-button size="mini" type="text" v-if="item.billImgUrl" @click="displayImage(item.billImgUrl)">预览</el-button>
+                <preview-button
+                  v-if="item.billImgUrl"
+                  always-show
+                  show-preview-dialog
+                  size="mini"
+                  type="text"
+                  :src="item.billImgUrl"
+                >查看</preview-button>
+                <preview-button
+                  v-if="item.billImgUrl"
+                  size="mini"
+                  type="text"
+                  :src="item.billImgUrl"
+                >预览</preview-button>
                 <span v-else>-</span>
               </td>
               <td></td>
@@ -333,11 +726,15 @@
           </table>
         </div>
       </el-card>
-      <el-card class="box-card" style="padding-bottom: 20px;" v-if="info.orderInfo && info.orderInfo.orderId">
+      <el-card
+        class="box-card"
+        style="padding-bottom: 20px;"
+        v-if="info.orderInfo && info.orderInfo.orderId"
+      >
         <div slot="header">
           <span>开户订单详情</span>
         </div>
-        <table>
+        <table class="detail-table">
           <tr>
             <td>订单号</td>
             <td>{{info.orderInfo.orderNo || '-'}}</td>
@@ -381,8 +778,22 @@
           <tr>
             <td>投资人身份证</td>
             <td>
-              <el-button size="mini" type="text" v-if="info.orderInfo.investorIdCardFrontUrl" @click="displayImage(info.orderInfo.investorIdCardFrontUrl)">正面预览</el-button>
-              <el-button size="mini" type="text" v-if="info.orderInfo.investorIdCardBackUrl" @click="displayImage(info.orderInfo.investorIdCardBackUrl)">反面预览</el-button>
+              <preview-button
+                v-if="info.orderInfo.investorIdCardFrontUrl"
+                always-show
+                show-preview-dialog
+                size="mini"
+                type="text"
+                :src="info.orderInfo.investorIdCardFrontUrl"
+              >正面预览</preview-button>
+              <preview-button
+                v-if="info.orderInfo.investorIdCardBackUrl"
+                always-show
+                show-preview-dialog
+                size="mini"
+                type="text"
+                :src="info.orderInfo.investorIdCardBackUrl"
+              >反面预览</preview-button>
               <span v-if="!info.orderInfo.investorIdCardFrontUrl && !info.orderInfo.investorIdCardBackUrl">-</span>
             </td>
             <td>投资人身份证号码</td>
@@ -399,8 +810,22 @@
             <td>{{info.orderInfo.financePersonMobile || '-'}}</td>
             <td>财务人员身份证</td>
             <td>
-              <el-button size="mini" type="text" v-if="info.orderInfo.financePersonIdCardFrontUrl" @click="displayImage(info.orderInfo.financePersonIdCardFrontUrl)">正面预览</el-button>
-              <el-button size="mini" type="text" v-if="info.orderInfo.financePersonIdCardBackUrl" @click="displayImage(info.orderInfo.financePersonIdCardBackUrl)">反面预览</el-button>
+              <preview-button
+                v-if="info.orderInfo.financePersonIdCardFrontUrl"
+                always-show
+                show-preview-dialog
+                size="mini"
+                type="text"
+                :src="info.orderInfo.financePersonIdCardFrontUrl"
+              >正面预览</preview-button>
+              <preview-button
+                v-if="info.orderInfo.financePersonIdCardBackUrl"
+                always-show
+                show-preview-dialog
+                size="mini"
+                type="text"
+                :src="info.orderInfo.financePersonIdCardBackUrl"
+              >反面预览</preview-button>
               <span v-if="!info.orderInfo.financePersonIdCardFrontUrl && !info.orderInfo.financePersonIdCardBackUrl">-</span>
             </td>
           </tr>
@@ -419,7 +844,20 @@
           <tr>
             <td>税管家相关服务协议</td>
             <td>
-              <el-button size="mini" type="text" v-if="info.orderInfo && info.orderInfo.serviceAgreementUrl" @click="onPreviewClick(info.orderInfo.serviceAgreementUrl)">查看</el-button>
+              <preview-button
+                type="text"
+                size="mini"
+                always-show
+                show-preview-dialog
+                :src="info.orderInfo.serviceAgreementUrl"
+                v-if="info.orderInfo && info.orderInfo.serviceAgreementUrl"
+              >查看</preview-button>
+              <preview-button
+                type="text"
+                size="mini"
+                :src="info.orderInfo.serviceAgreementUrl"
+                v-if="info.orderInfo && info.orderInfo.serviceAgreementUrl"
+              >预览</preview-button>
               <span v-else>-</span>
             </td>
             <td></td>
@@ -450,20 +888,27 @@
             <td style="color: red">{{info.orderInfo.workflowName || '-'}}</td>
           </tr>
           <tr>
-            <td colspan="4">
-              <div class="mini-item">
-                <p v-if="info.orderInfo.tradeFee">交易费：<span>+{{info.orderInfo.tradeFee | currency}}</span></p>
-                <p v-if="info.orderInfo.depositFee">押金：<span>+{{info.orderInfo.depositFee | currency}}</span></p>
-                <p v-if="info.orderInfo.depositRemissionAmount">押金减免：<span>-{{info.orderInfo.depositRemissionAmount | currency}}</span></p>
-                <p v-if="info.orderInfo.tradeFeeDiscountAmount">交易费折扣：<span>-{{info.orderInfo.tradeFeeDiscountAmount | currency}}</span></p>
-                <p v-if="info.orderInfo.totalAmount">合计：<span>{{info.orderInfo.totalAmount | currency}}</span></p>
+            <td colspan="4" class="amountComputed">
+              <div class="title">
+                <div v-if="info.orderInfo.tradeFee">交易费：</div>
+                <div v-if="info.orderInfo.depositFee">押金：</div>
+                <div v-if="info.orderInfo.depositRemissionAmount">押金减免：</div>
+                <div v-if="info.orderInfo.tradeFeeDiscountAmount">交易费折扣：</div>
+                <div>合计：</div>
+              </div>
+              <div class="amount">
+                <div v-if="info.orderInfo.tradeFee">+{{info.orderInfo.tradeFee | currency}}</div>
+                <div v-if="info.orderInfo.depositFee">+{{info.orderInfo.depositFee | currency}}</div>
+                <div v-if="info.orderInfo.depositRemissionAmount">-{{info.orderInfo.depositRemissionAmount | currency}}</div>
+                <div v-if="info.orderInfo.tradeFeeDiscountAmount">-{{info.orderInfo.tradeFeeDiscountAmount | currency}}</div>
+                <div>{{info.orderInfo.totalAmount || 0 | currency}}</div>
               </div>
             </td>
           </tr>
         </table>
       </el-card>
       <!--<el-card class="box-card finish-info">-->
-        <!--订单已完成，共耗时30天4小时（2018-05-02~2018-05-20）。-->
+      <!--订单已完成，共耗时30天4小时（2018-05-02~2018-05-20）。-->
       <!--</el-card>-->
     </div>
     <el-dialog
@@ -471,39 +916,84 @@
       :visible.sync="bankReceiptDialogDisplay"
       :close-on-click-modal="false"
       width="800px"
-      center>
-      <el-form ref="bankReceiptForm" :model="bankReceiptForm" label-width="100px" size="small">
-        <div style="border: 1px solid #cecece;padding: 15px 0;margin-bottom: 5px;" v-for="(item, index) in bankReceiptList" :key="index">
+      center
+    >
+      <el-form
+        ref="bankReceiptForm"
+        :model="bankReceiptForm"
+        label-width="100px"
+        size="small"
+      >
+        <div
+          style="border: 1px solid #cecece;padding: 15px 0;margin-bottom: 5px;"
+          v-for="(item, index) in bankReceiptList"
+          :key="index"
+        >
           <el-row>
-            <el-col :span="11" :offset="1">
-              <el-form-item label="收款方式" prop="bankNo">
-                <el-select v-model="item.bankType" placeholder="请选择" style="width: 100%">
+            <el-col
+              :span="11"
+              :offset="1"
+            >
+              <el-form-item
+                label="收款方式"
+                prop="bankNo"
+              >
+                <el-select
+                  v-model="item.bankType"
+                  placeholder="请选择"
+                  style="width: 100%"
+                >
                   <el-option
                     v-for="item in bankTypeList"
                     :key="item.key"
                     :label="item.value"
-                    :value="item.key">
+                    :value="item.key"
+                  >
                   </el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="流水号" prop="bankBillNo">
-                <el-input v-model="item.bankBillNo" placeholder="流水号"/>
+              <el-form-item
+                label="流水号"
+                prop="bankBillNo"
+              >
+                <el-input
+                  v-model="item.bankBillNo"
+                  placeholder="流水号"
+                />
               </el-form-item>
-              <el-form-item label="到账时间" prop="inDate">
+              <el-form-item
+                label="到账时间"
+                prop="inDate"
+              >
                 <el-date-picker
                   style="width: 100%;"
                   v-model="item.inDate"
                   type="datetime"
                   value-format="yyyy/MM/dd HH:mm:ss"
-                  placeholder="到账时间">
+                  placeholder="到账时间"
+                >
                 </el-date-picker>
               </el-form-item>
-              <el-form-item label="收款金额" prop="inAmount">
-                <el-input v-model="item.inAmount" placeholder="到账金额" style="width: 92%"/> 元
+              <el-form-item
+                label="收款金额"
+                prop="inAmount"
+              >
+                <el-input
+                  v-model="item.inAmount"
+                  placeholder="到账金额"
+                  style="width: 92%"
+                /> 元
               </el-form-item>
             </el-col>
-            <el-col :span="10" :offset="1">
-              <el-form-item label="上传回单截图" prop="billImgUrl" class="account-upload">
+            <el-col
+              :span="10"
+              :offset="1"
+            >
+              <el-form-item
+                label="上传回单截图"
+                prop="billImgUrl"
+                class="account-upload"
+              >
                 <div>
                   <el-upload
                     :class="['avatar-uploader', `billImgUrl${item.bankReceiptId}`]"
@@ -511,25 +1001,65 @@
                     :show-file-list="false"
                     :before-upload="() => {openLoading(`.billImgUrl${item.bankReceiptId}`)}"
                     :on-error="closeLoading"
-                    :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (item.billImgUrl = res.body.imageUrl) }">
-                    <x-image v-if="item.billImgUrl" :src="item.billImgUrl" class="avatar"/>
-                    <i v-else class="el-icon-plus avatar-uploader-icon" style="display: block"></i>
+                    :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (item.billImgUrl = res.body.imageUrl) }"
+                  >
+                    <x-image
+                      v-if="item.billImgUrl"
+                      :src="item.billImgUrl"
+                      class="avatar"
+                    />
+                    <i
+                      v-else
+                      class="el-icon-plus avatar-uploader-icon"
+                      style="display: block"
+                    ></i>
                   </el-upload>
-                  <el-button type="text" @click="onPreviewClick(item.billImgUrl)" size="mini" v-if="item.billImgUrl">查看原文件</el-button>
+                  <preview-button
+                    type="text"
+                    size="mini"
+                    always-show
+                    new-window-open
+                    :src="item.billImgUrl"
+                    v-if="item.billImgUrl"
+                  >查看原文件</preview-button>
+                  <preview-button
+                    type="text"
+                    size="mini"
+                    :src="item.billImgUrl"
+                    v-if="item.billImgUrl"
+                  >预览原文件</preview-button>
                 </div>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
-            <el-col :span="23" style="text-align: right">
-              <el-button size="mini" type="primary" @click="editBankReceipt(item, index)">保存</el-button>
-              <el-button size="mini" type="danger" @click="delectBankReceipt(item, index)">删除</el-button>
+            <el-col
+              :span="23"
+              style="text-align: right"
+            >
+              <el-button
+                size="mini"
+                type="primary"
+                @click="editBankReceipt(item, index)"
+              >保存</el-button>
+              <el-button
+                size="mini"
+                type="danger"
+                @click="delectBankReceipt(item, index)"
+              >删除</el-button>
             </el-col>
           </el-row>
         </div>
         <el-row style="margin-top: 15px;">
-          <el-col :span="24" style="text-align: center">
-            <el-button size="mini" type="text" @click="addBankReceipt"><i class="el-icon-circle-plus-outline"></i>添加收款信息</el-button>
+          <el-col
+            :span="24"
+            style="text-align: center"
+          >
+            <el-button
+              size="mini"
+              type="text"
+              @click="addBankReceipt"
+            ><i class="el-icon-circle-plus-outline"></i>添加收款信息</el-button>
           </el-col>
         </el-row>
       </el-form>
@@ -540,59 +1070,152 @@
       :close-on-click-modal="false"
       width="600px"
       custom-class="company-register-info-dialog"
-      center>
-      <el-form ref="companyRegisterInfoForm" :model="companyRegisterInfoForm" label-width="130px" size="small">
-        <el-form-item label="供应商" prop="companyTypeName">
-          <el-select style="width: 100%" v-model="companyRegisterInfoForm.supplierId" placeholder="请选择供应商">
+      center
+    >
+      <el-form
+        ref="companyRegisterInfoForm"
+        :model="companyRegisterInfoForm"
+        label-width="130px"
+        size="small"
+      >
+        <el-form-item
+          label="供应商"
+          prop="companyTypeName"
+        >
+          <el-select
+            style="width: 100%"
+            v-model="companyRegisterInfoForm.supplierId"
+            placeholder="请选择供应商"
+          >
             <el-option
               v-for="item in sourceTaxSupplierList"
               :key="item.supplierId"
               :label="item.supplierName"
-              :value="item.supplierId">
+              :value="item.supplierId"
+            >
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item prop="companyName" v-for="(name, index) in companyRegisterInfoForm.companyNames" :key="index">
-          <label slot="label" v-show="index === 0">站点名称<span style="color: red" v-if="info && info.orderInfo && info.orderInfo.isAdjustment !== 'Y'">(不可调剂)</span></label>
+        <el-form-item
+          prop="companyName"
+          v-for="(name, index) in companyRegisterInfoForm.companyNames"
+          :key="index"
+        >
+          <label
+            slot="label"
+            v-show="index === 0"
+          >站点名称<span
+              style="color: red"
+              v-if="info && info.orderInfo && info.orderInfo.isAdjustment !== 'Y'"
+            >(不可调剂)</span></label>
           <el-row>
             <el-col :span="20">
-              <el-input v-model="name.value" placeholder="站点名称"/>
+              <el-input
+                v-model="name.value"
+                placeholder="站点名称"
+              />
             </el-col>
             <el-col :span="4">
-              <el-button type="text" size="mini" style="margin-left: 5px" @click.prevent="removeCompanyName(name)" v-if="companyRegisterInfoForm.companyNames && companyRegisterInfoForm.companyNames.length > 1">删除</el-button>
-              <el-button type="text" size="mini" style="margin-left: 5px" @click.prevent="addCompanyName()" v-if="companyRegisterInfoForm.companyNames && companyRegisterInfoForm.companyNames.length < 10 &&companyRegisterInfoForm.companyNames.length === index + 1">增加</el-button>
+              <el-button
+                type="text"
+                size="mini"
+                style="margin-left: 5px"
+                @click.prevent="removeCompanyName(name)"
+                v-if="companyRegisterInfoForm.companyNames && companyRegisterInfoForm.companyNames.length > 1"
+              >删除</el-button>
+              <el-button
+                type="text"
+                size="mini"
+                style="margin-left: 5px"
+                @click.prevent="addCompanyName()"
+                v-if="companyRegisterInfoForm.companyNames && companyRegisterInfoForm.companyNames.length < 10 &&companyRegisterInfoForm.companyNames.length === index + 1"
+              >增加</el-button>
             </el-col>
           </el-row>
         </el-form-item>
-        <el-form-item label="站点类型" prop="companyTypeName">
-          <el-select style="width: 100%" v-model="companyRegisterInfoForm.companyTypeId" @change="onCompanyTypeChange" placeholder="请选择站点类型">
+        <el-form-item
+          label="站点类型"
+          prop="companyTypeName"
+        >
+          <el-select
+            style="width: 100%"
+            v-model="companyRegisterInfoForm.companyTypeId"
+            @change="onCompanyTypeChange"
+            placeholder="请选择站点类型"
+          >
             <el-option
               v-for="item in companyTypeList"
               :key="item.companyTypeId"
               :label="item.companyTypeName"
-              :value="item.companyTypeId">
+              :value="item.companyTypeId"
+            >
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="经营范围" prop="businessScope">
-          <el-input v-model="companyRegisterInfoForm.businessScope" placeholder="经营范围" type="textarea" :autosize="{ minRows: 2, maxRows: 2}" readonly/>
+        <el-form-item
+          label="经营范围"
+          prop="businessScope"
+        >
+          <el-input
+            v-model="companyRegisterInfoForm.businessScope"
+            placeholder="经营范围"
+            type="textarea"
+            :autosize="{ minRows: 2, maxRows: 2}"
+            readonly
+          />
         </el-form-item>
-        <el-form-item label="注册资本" prop="registeredCapital" class="flex-content">
-          <el-input v-model="companyRegisterInfoForm.registeredCapital" placeholder="注册资本" readonly/><span>万元</span>
+        <el-form-item
+          label="注册资本"
+          prop="registeredCapital"
+          class="flex-content"
+        >
+          <el-input
+            v-model="companyRegisterInfoForm.registeredCapital"
+            placeholder="注册资本"
+            readonly
+          /><span>万元</span>
         </el-form-item>
-        <el-form-item label="纳税性质" prop="showTaxTypeName">
-          <el-input v-model="companyRegisterInfoForm.showTaxTypeName" placeholder="纳税性质" readonly/>
+        <el-form-item
+          label="纳税性质"
+          prop="showTaxTypeName"
+        >
+          <el-input
+            v-model="companyRegisterInfoForm.showTaxTypeName"
+            placeholder="纳税性质"
+            readonly
+          />
         </el-form-item>
-        <el-form-item label="投资人姓名" prop="investorName">
-          <el-input v-model="companyRegisterInfoForm.investorName" placeholder="投资人姓名"/>
+        <el-form-item
+          label="投资人姓名"
+          prop="investorName"
+        >
+          <el-input
+            v-model="companyRegisterInfoForm.investorName"
+            placeholder="投资人姓名"
+          />
         </el-form-item>
-        <el-form-item label="投资人手机" prop="investorMobile">
-          <el-input v-model="companyRegisterInfoForm.investorMobile" placeholder="投资人手机"/>
+        <el-form-item
+          label="投资人手机"
+          prop="investorMobile"
+        >
+          <el-input
+            v-model="companyRegisterInfoForm.investorMobile"
+            placeholder="投资人手机"
+          />
         </el-form-item>
-        <el-form-item label="投资人身份证号码" prop="investorIdCardNo">
-          <el-input v-model="companyRegisterInfoForm.investorIdCardNo" placeholder="投资人身份证号码"/>
+        <el-form-item
+          label="投资人身份证号码"
+          prop="investorIdCardNo"
+        >
+          <el-input
+            v-model="companyRegisterInfoForm.investorIdCardNo"
+            placeholder="投资人身份证号码"
+          />
         </el-form-item>
-        <el-form-item label="上传投资人身份证" class="account-upload">
+        <el-form-item
+          label="上传投资人身份证"
+          class="account-upload"
+        >
           <div>
             <el-upload
               class="avatar-uploader investorIdCardFront"
@@ -600,11 +1223,33 @@
               :show-file-list="false"
               :before-upload="() => {openLoading('.investorIdCardFront')}"
               :on-error="closeLoading"
-              :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (companyRegisterInfoForm.investorIdCardFrontUrl = res.body.imageUrl) }">
-              <x-image v-if="companyRegisterInfoForm.investorIdCardFrontUrl" :src="companyRegisterInfoForm.investorIdCardFrontUrl" class="avatar"/>
-              <i v-else class="el-icon-plus avatar-uploader-icon" style="display: block">正面</i>
+              :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (companyRegisterInfoForm.investorIdCardFrontUrl = res.body.imageUrl) }"
+            >
+              <x-image
+                v-if="companyRegisterInfoForm.investorIdCardFrontUrl"
+                :src="companyRegisterInfoForm.investorIdCardFrontUrl"
+                class="avatar"
+              />
+              <i
+                v-else
+                class="el-icon-plus avatar-uploader-icon"
+                style="display: block"
+              >正面</i>
             </el-upload>
-            <el-button type="text" @click="onPreviewClick(companyRegisterInfoForm.investorIdCardFrontUrl)" size="mini" v-if="companyRegisterInfoForm.investorIdCardFrontUrl">查看原文件</el-button>
+            <preview-button
+              type="text"
+              size="mini"
+              always-show
+              new-window-open
+              :src="companyRegisterInfoForm.investorIdCardFrontUrl"
+              v-if="companyRegisterInfoForm.investorIdCardFrontUrl"
+            >查看原文件</preview-button>
+            <preview-button
+              type="text"
+              size="mini"
+              :src="companyRegisterInfoForm.investorIdCardFrontUrl"
+              v-if="companyRegisterInfoForm.investorIdCardFrontUrl"
+            >预览原文件</preview-button>
           </div>
           <div class="ml-10">
             <el-upload
@@ -613,23 +1258,67 @@
               :show-file-list="false"
               :before-upload="() => {openLoading('.financePersonIdCard')}"
               :on-error="closeLoading"
-              :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (companyRegisterInfoForm.investorIdCardBackUrl = res.body.imageUrl) }">
-              <x-image v-if="companyRegisterInfoForm.investorIdCardBackUrl" :src="companyRegisterInfoForm.investorIdCardBackUrl" class="avatar"/>
-              <i v-else class="el-icon-plus avatar-uploader-icon">反面</i>
+              :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (companyRegisterInfoForm.investorIdCardBackUrl = res.body.imageUrl) }"
+            >
+              <x-image
+                v-if="companyRegisterInfoForm.investorIdCardBackUrl"
+                :src="companyRegisterInfoForm.investorIdCardBackUrl"
+                class="avatar"
+              />
+              <i
+                v-else
+                class="el-icon-plus avatar-uploader-icon"
+              >反面</i>
             </el-upload>
-            <el-button type="text" @click="onPreviewClick(companyRegisterInfoForm.investorIdCardBackUrl)" size="mini" v-if="companyRegisterInfoForm.investorIdCardBackUrl">查看原文件</el-button>
+            <preview-button
+              type="text"
+              size="mini"
+              always-show
+              new-window-open
+              :src="companyRegisterInfoForm.investorIdCardBackUrl"
+              v-if="companyRegisterInfoForm.investorIdCardBackUrl"
+            >查看原文件</preview-button>
+            <preview-button
+              type="text"
+              size="mini"
+              :src="companyRegisterInfoForm.investorIdCardBackUrl"
+              v-if="companyRegisterInfoForm.investorIdCardBackUrl"
+            >预览原文件</preview-button>
           </div>
         </el-form-item>
-        <el-form-item label="投资人邮箱" prop="investorEmail">
-          <el-input v-model="companyRegisterInfoForm.investorEmail" placeholder="投资人邮箱"/>
+        <el-form-item
+          label="投资人邮箱"
+          prop="investorEmail"
+        >
+          <el-input
+            v-model="companyRegisterInfoForm.investorEmail"
+            placeholder="投资人邮箱"
+          />
         </el-form-item>
-        <el-form-item label="财务人员姓名" prop="financePersonName">
-          <el-input v-model="companyRegisterInfoForm.financePersonName" placeholder="财务人员姓名"/>
+        <el-form-item
+          label="财务人员姓名"
+          prop="financePersonName"
+        >
+          <el-input
+            v-model="companyRegisterInfoForm.financePersonName"
+            placeholder="财务人员姓名"
+          />
         </el-form-item>
-        <el-form-item label="财务人员手机" prop="financePersonMobile">
-          <el-input v-model="companyRegisterInfoForm.financePersonMobile" placeholder="财务人员手机"/>
+        <el-form-item
+          label="财务人员手机"
+          prop="financePersonMobile"
+        >
+          <el-input
+            v-model="companyRegisterInfoForm.financePersonMobile"
+            placeholder="财务人员手机"
+          />
         </el-form-item>
-        <el-form-item label="上传财务人员身份证" prop="investorEmail" class="account-upload" v-show="companyRegisterInfoForm.isNeedFinanceID === 'Y'">
+        <el-form-item
+          label="上传财务人员身份证"
+          prop="investorEmail"
+          class="account-upload"
+          v-show="companyRegisterInfoForm.isNeedFinanceID === 'Y'"
+        >
           <div>
             <el-upload
               class="avatar-uploader financePersonIdCardFront"
@@ -637,11 +1326,33 @@
               :show-file-list="false"
               :before-upload="() => {openLoading('.financePersonIdCardFront')}"
               :on-error="closeLoading"
-              :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (companyRegisterInfoForm.financePersonIdCardFrontUrl = res.body.imageUrl) }">
-              <x-image v-if="companyRegisterInfoForm.financePersonIdCardFrontUrl" :src="companyRegisterInfoForm.financePersonIdCardFrontUrl" class="avatar"/>
-              <i v-else class="el-icon-plus avatar-uploader-icon" style="display: block">正面</i>
+              :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (companyRegisterInfoForm.financePersonIdCardFrontUrl = res.body.imageUrl) }"
+            >
+              <x-image
+                v-if="companyRegisterInfoForm.financePersonIdCardFrontUrl"
+                :src="companyRegisterInfoForm.financePersonIdCardFrontUrl"
+                class="avatar"
+              />
+              <i
+                v-else
+                class="el-icon-plus avatar-uploader-icon"
+                style="display: block"
+              >正面</i>
             </el-upload>
-            <el-button type="text" @click="onPreviewClick(companyRegisterInfoForm.financePersonIdCardFrontUrl)" size="mini" v-if="companyRegisterInfoForm.financePersonIdCardFrontUrl">查看原文件</el-button>
+            <preview-button
+              type="text"
+              size="mini"
+              always-show
+              new-window-open
+              :src="companyRegisterInfoForm.financePersonIdCardFrontUrl"
+              v-if="companyRegisterInfoForm.financePersonIdCardFrontUrl"
+            >查看原文件</preview-button>
+            <preview-button
+              type="text"
+              size="mini"
+              :src="companyRegisterInfoForm.financePersonIdCardFrontUrl"
+              v-if="companyRegisterInfoForm.financePersonIdCardFrontUrl"
+            >预览原文件</preview-button>
           </div>
           <div class="ml-10">
             <el-upload
@@ -650,23 +1361,64 @@
               :show-file-list="false"
               :before-upload="() => {openLoading('.financePersonIdCardBack')}"
               :on-error="closeLoading"
-              :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (companyRegisterInfoForm.financePersonIdCardBackUrl = res.body.imageUrl) }">
-              <x-image v-if="companyRegisterInfoForm.financePersonIdCardBackUrl" :src="companyRegisterInfoForm.financePersonIdCardBackUrl" class="avatar"/>
-              <i v-else class="el-icon-plus avatar-uploader-icon">反面</i>
+              :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (companyRegisterInfoForm.financePersonIdCardBackUrl = res.body.imageUrl) }"
+            >
+              <x-image
+                v-if="companyRegisterInfoForm.financePersonIdCardBackUrl"
+                :src="companyRegisterInfoForm.financePersonIdCardBackUrl"
+                class="avatar"
+              />
+              <i
+                v-else
+                class="el-icon-plus avatar-uploader-icon"
+              >反面</i>
             </el-upload>
-            <el-button type="text" @click="onPreviewClick(companyRegisterInfoForm.financePersonIdCardBackUrl)" size="mini" v-if="companyRegisterInfoForm.financePersonIdCardBackUrl">查看原文件</el-button>
+            <preview-button
+              type="text"
+              size="mini"
+              always-show
+              new-window-open
+              :src="companyRegisterInfoForm.financePersonIdCardBackUrl"
+              v-if="companyRegisterInfoForm.financePersonIdCardBackUrl"
+            >查看原文件</preview-button>
+            <preview-button
+              type="text"
+              size="mini"
+              :src="companyRegisterInfoForm.financePersonIdCardBackUrl"
+              v-if="companyRegisterInfoForm.financePersonIdCardBackUrl"
+            >预览原文件</preview-button>
           </div>
         </el-form-item>
-        <el-form-item label="财务人员身份证号" prop="financePersonIdCardNo">
-          <el-input v-model="companyRegisterInfoForm.financePersonIdCardNo" placeholder="财务人员身份证号"/>
+        <el-form-item
+          label="财务人员身份证号"
+          prop="financePersonIdCardNo"
+        >
+          <el-input
+            v-model="companyRegisterInfoForm.financePersonIdCardNo"
+            placeholder="财务人员身份证号"
+          />
         </el-form-item>
-        <el-form-item label="备注" prop="remark">
-          <el-input v-model="companyRegisterInfoForm.remark" placeholder="备注" type="textarea" :autosize="{ minRows: 2, maxRows: 2}"/>
+        <el-form-item
+          label="备注"
+          prop="remark"
+        >
+          <el-input
+            v-model="companyRegisterInfoForm.remark"
+            placeholder="备注"
+            type="textarea"
+            :autosize="{ minRows: 2, maxRows: 2}"
+          />
         </el-form-item>
       </el-form>
-      <span slot="footer" class="dialog-footer">
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
         <el-button @click="companyRegisterInfoDialogDisplay = false">取消</el-button>
-        <el-button type="primary" @click="editCompanyRegisterInfo">确认</el-button>
+        <el-button
+          type="primary"
+          @click="editCompanyRegisterInfo"
+        >确认</el-button>
       </span>
     </el-dialog>
     <el-dialog
@@ -674,103 +1426,220 @@
       :visible.sync="registrationProcessDialogDisplay"
       :close-on-click-modal="false"
       custom-class="registration-process-dialog"
-      width="500px"
-      center>
-      <el-form ref="registrationProcessForm" :model="registrationProcessForm" label-width="130px" size="small">
-        <el-form-item label="核名完成时间" prop="checkNameCompletedTime">
+      width="560px"
+      center
+    >
+      <el-form
+        ref="registrationProcessForm"
+        :model="registrationProcessForm"
+        label-width="130px"
+        size="small"
+      >
+        <el-form-item
+          label="核名完成时间"
+          prop="checkNameCompletedTime"
+        >
           <el-date-picker
-            style="width: 100%;"
+            style="width: 210px !important;"
             v-model="registrationProcessForm.checkNameCompletedTime"
             type="datetime"
             value-format="yyyy/MM/dd HH:mm:ss"
-            placeholder="核名完成时间">
+            placeholder="核名完成时间"
+          >
           </el-date-picker>
           <el-upload
             :action="$$main.getUrl('/Common/ImageUpload')"
             :show-file-list="false"
             :before-upload="() => {openLoading()}"
             :on-error="closeLoading"
-            :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (registrationProcessForm.checkNameCompletedUrl = res.body.imageUrl) }">
-            <el-button type="text" size="mini">上传材料</el-button>
+            :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (registrationProcessForm.checkNameCompletedUrl = res.body.imageUrl) }"
+          >
+            <el-button
+              type="text"
+              size="mini"
+            >上传材料</el-button>
           </el-upload>
-          <el-button type="text" size="mini" @click="displayImage(registrationProcessForm.checkNameCompletedUrl)" v-if="registrationProcessForm.checkNameCompletedUrl">查看原文件</el-button>
+          <preview-button
+            v-if="registrationProcessForm.checkNameCompletedUrl"
+            always-show
+            show-preview-dialog
+            size="mini"
+            type="text"
+            :src="registrationProcessForm.checkNameCompletedUrl"
+          >查看原文件</preview-button>
+          <preview-button
+            v-if="registrationProcessForm.checkNameCompletedUrl"
+            size="mini"
+            type="text"
+            :src="registrationProcessForm.checkNameCompletedUrl"
+          >预览</preview-button>
         </el-form-item>
-        <el-form-item label="营业执照发放时间" prop="licenseTime">
+        <el-form-item
+          label="营业执照发放时间"
+          prop="licenseTime"
+        >
           <el-date-picker
-            style="width: 100%;"
+            style="width: 210px !important;"
             v-model="registrationProcessForm.licenseTime"
             type="datetime"
             value-format="yyyy/MM/dd HH:mm:ss"
-            placeholder="营业执照发放时间">
+            placeholder="营业执照发放时间"
+          >
           </el-date-picker>
           <el-upload
             :action="$$main.getUrl('/Common/ImageUpload')"
             :show-file-list="false"
             :before-upload="() => {openLoading()}"
             :on-error="closeLoading"
-            :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (registrationProcessForm.licenseUrl = res.body.imageUrl) }">
-            <el-button type="text" size="mini">上传材料</el-button>
+            :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (registrationProcessForm.licenseUrl = res.body.imageUrl) }"
+          >
+            <el-button
+              type="text"
+              size="mini"
+            >上传材料</el-button>
           </el-upload>
-          <el-button type="text" size="mini" @click="displayImage(registrationProcessForm.licenseUrl)" v-if="registrationProcessForm.licenseUrl">查看原文件</el-button>
+          <preview-button
+            v-if="registrationProcessForm.licenseUrl"
+            always-show
+            show-preview-dialog
+            size="mini"
+            type="text"
+            :src="registrationProcessForm.licenseUrl"
+          >查看原文件</preview-button>
+          <preview-button
+            v-if="registrationProcessForm.licenseUrl"
+            size="mini"
+            type="text"
+            :src="registrationProcessForm.licenseUrl"
+          >预览</preview-button>
         </el-form-item>
-        <el-form-item label="银行开户时间" prop="bankOpenAccountTime">
+        <el-form-item
+          label="银行开户时间"
+          prop="bankOpenAccountTime"
+        >
           <el-date-picker
-            style="width: 100%;"
+            style="width: 210px !important;"
             v-model="registrationProcessForm.bankOpenAccountTime"
             type="datetime"
             value-format="yyyy/MM/dd HH:mm:ss"
-            placeholder="银行开户时间">
+            placeholder="银行开户时间"
+          >
           </el-date-picker>
           <el-upload
             :action="$$main.getUrl('/Common/ImageUpload')"
             :show-file-list="false"
             :before-upload="() => {openLoading()}"
             :on-error="closeLoading"
-            :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (registrationProcessForm.bankOpenAccountUrl = res.body.imageUrl) }">
-            <el-button type="text" size="mini">上传材料</el-button>
+            :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (registrationProcessForm.bankOpenAccountUrl = res.body.imageUrl) }"
+          >
+            <el-button
+              type="text"
+              size="mini"
+            >上传材料</el-button>
           </el-upload>
-          <el-button type="text" size="mini" @click="displayImage(registrationProcessForm.bankOpenAccountUrl)" v-if="registrationProcessForm.bankOpenAccountUrl">查看原文件</el-button>
+          <preview-button
+            v-if="registrationProcessForm.bankOpenAccountUrl"
+            always-show
+            show-preview-dialog
+            size="mini"
+            type="text"
+            :src="registrationProcessForm.bankOpenAccountUrl"
+          >查看原文件</preview-button>
+          <preview-button
+            v-if="registrationProcessForm.bankOpenAccountUrl"
+            size="mini"
+            type="text"
+            :src="registrationProcessForm.bankOpenAccountUrl"
+          >预览</preview-button>
         </el-form-item>
-        <el-form-item label="银行开户完成时间" prop="bankOpenAccountCompletedTime">
+        <el-form-item
+          label="银行开户完成时间"
+          prop="bankOpenAccountCompletedTime"
+        >
           <el-date-picker
-            style="width: 100%;"
+            style="width: 210px !important;"
             v-model="registrationProcessForm.bankOpenAccountCompletedTime"
             type="datetime"
             value-format="yyyy/MM/dd HH:mm:ss"
-            placeholder="银行开户完成时间">
+            placeholder="银行开户完成时间"
+          >
           </el-date-picker>
           <el-upload
             :action="$$main.getUrl('/Common/ImageUpload')"
             :show-file-list="false"
             :before-upload="() => {openLoading()}"
             :on-error="closeLoading"
-            :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (registrationProcessForm.bankOpenAccountCompletedUrl = res.body.imageUrl) }">
-            <el-button type="text" size="mini">上传材料</el-button>
+            :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (registrationProcessForm.bankOpenAccountCompletedUrl = res.body.imageUrl) }"
+          >
+            <el-button
+              type="text"
+              size="mini"
+            >上传材料</el-button>
           </el-upload>
-          <el-button type="text" size="mini" @click="displayImage(registrationProcessForm.bankOpenAccountCompletedUrl)" v-if="registrationProcessForm.bankOpenAccountCompletedUrl">查看原文件</el-button>
+          <preview-button
+            v-if="registrationProcessForm.bankOpenAccountCompletedUrl"
+            always-show
+            show-preview-dialog
+            size="mini"
+            type="text"
+            :src="registrationProcessForm.bankOpenAccountCompletedUrl"
+          >查看原文件</preview-button>
+          <preview-button
+            v-if="registrationProcessForm.bankOpenAccountCompletedUrl"
+            size="mini"
+            type="text"
+            :src="registrationProcessForm.bankOpenAccountCompletedUrl"
+          >预览</preview-button>
         </el-form-item>
-        <el-form-item label="核税完成时间" prop="checkTaxCompletedTime">
+        <el-form-item
+          label="核税完成时间"
+          prop="checkTaxCompletedTime"
+        >
           <el-date-picker
-            style="width: 100%;"
+            style="width: 210px !important;"
             v-model="registrationProcessForm.checkTaxCompletedTime"
             type="datetime"
             value-format="yyyy/MM/dd HH:mm:ss"
-            placeholder="核税完成时间">
+            placeholder="核税完成时间"
+          >
           </el-date-picker>
           <el-upload
             :action="$$main.getUrl('/Common/ImageUpload')"
             :show-file-list="false"
             :before-upload="() => {openLoading()}"
             :on-error="closeLoading"
-            :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (registrationProcessForm.checkTaxCompletedUrl = res.body.imageUrl) }">
-            <el-button type="text" size="mini">上传材料</el-button>
+            :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (registrationProcessForm.checkTaxCompletedUrl = res.body.imageUrl) }"
+          >
+            <el-button
+              type="text"
+              size="mini"
+            >上传材料</el-button>
           </el-upload>
-          <el-button type="text" size="mini" @click="displayImage(registrationProcessForm.checkTaxCompletedUrl)" v-if="registrationProcessForm.checkTaxCompletedUrl">查看原文件</el-button>
+          <preview-button
+            v-if="registrationProcessForm.checkTaxCompletedUrl"
+            always-show
+            show-preview-dialog
+            size="mini"
+            type="text"
+            :src="registrationProcessForm.checkTaxCompletedUrl"
+          >查看原文件</preview-button>
+          <preview-button
+            v-if="registrationProcessForm.checkTaxCompletedUrl"
+            size="mini"
+            type="text"
+            :src="registrationProcessForm.checkTaxCompletedUrl"
+          >预览</preview-button>
         </el-form-item>
       </el-form>
-      <span slot="footer" class="dialog-footer">
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
         <el-button @click="registrationProcessDialogDisplay = false">取消</el-button>
-        <el-button type="primary" @click="editRegistrationProcess">确认</el-button>
+        <el-button
+          type="primary"
+          @click="editRegistrationProcess"
+        >确认</el-button>
       </span>
     </el-dialog>
     <el-dialog
@@ -779,38 +1648,71 @@
       :close-on-click-modal="false"
       custom-class="company-attachment-dialog"
       width="500px"
-      center>
-      <el-form ref="companyAttachmentForm" :model="companyAttachmentForm" label-width="0" size="small">
+      center
+    >
+      <el-form
+        ref="companyAttachmentForm"
+        :model="companyAttachmentForm"
+        label-width="0"
+        size="small"
+      >
         <el-form-item class="input-item">
           <span>站点名称</span>
-          <el-input v-model="companyAttachmentForm.companyName" placeholder="站点名称"/>
+          <el-input
+            v-model="companyAttachmentForm.companyName"
+            placeholder="站点名称"
+          />
         </el-form-item>
         <el-form-item class="input-item">
           <span>站点地址</span>
-          <el-input v-model="companyAttachmentForm.companyAddress" placeholder="站点地址"/>
+          <el-input
+            v-model="companyAttachmentForm.companyAddress"
+            placeholder="站点地址"
+          />
         </el-form-item>
         <el-form-item class="input-item">
           <span>公司电话</span>
-          <el-input v-model="companyAttachmentForm.companyPhone" placeholder="公司电话"/>
+          <el-input
+            v-model="companyAttachmentForm.companyPhone"
+            placeholder="公司电话"
+          />
         </el-form-item>
         <el-form-item class="input-item">
           <span>开户银行</span>
-          <el-input v-model="companyAttachmentForm.accountBank" placeholder="开户银行"/>
+          <el-input
+            v-model="companyAttachmentForm.accountBank"
+            placeholder="开户银行"
+          />
         </el-form-item>
         <el-form-item class="input-item">
           <span>开户银行账号</span>
-          <el-input v-model="companyAttachmentForm.accountBankAccount" placeholder="开户银行账号"/>
+          <el-input
+            v-model="companyAttachmentForm.accountBankAccount"
+            placeholder="开户银行账号"
+          />
         </el-form-item>
         <el-form-item class="input-item">
           <span>税号</span>
-          <el-input v-model="companyAttachmentForm.taxNo" placeholder="税号"/>
+          <el-input
+            v-model="companyAttachmentForm.taxNo"
+            placeholder="税号"
+          />
         </el-form-item>
         <el-row>
-          <el-col :span="11" :offset="1">上传网银U盾（序列号）</el-col>
-          <el-col :span="11" :offset="1">上传公章照片</el-col>
+          <el-col
+            :span="11"
+            :offset="1"
+          >上传网银U盾（序列号）</el-col>
+          <el-col
+            :span="11"
+            :offset="1"
+          >上传公章照片</el-col>
         </el-row>
         <el-row>
-          <el-col :span="11" :offset="1">
+          <el-col
+            :span="11"
+            :offset="1"
+          >
             <el-form-item class="account-upload">
               <div>
                 <el-upload
@@ -819,15 +1721,40 @@
                   :show-file-list="false"
                   :before-upload="() => {openLoading('.ukeyImg')}"
                   :on-error="closeLoading"
-                  :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (companyAttachmentForm.ukeyImgUrl = res.body.imageUrl) }">
-                  <x-image v-if="companyAttachmentForm.ukeyImgUrl" :src="companyAttachmentForm.ukeyImgUrl" class="avatar"/>
-                  <i v-else class="el-icon-plus avatar-uploader-icon" style="display: block"></i>
+                  :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (companyAttachmentForm.ukeyImgUrl = res.body.imageUrl) }"
+                >
+                  <x-image
+                    v-if="companyAttachmentForm.ukeyImgUrl"
+                    :src="companyAttachmentForm.ukeyImgUrl"
+                    class="avatar"
+                  />
+                  <i
+                    v-else
+                    class="el-icon-plus avatar-uploader-icon"
+                    style="display: block"
+                  ></i>
                 </el-upload>
-                <el-button type="text" @click="onPreviewClick(companyAttachmentForm.ukeyImgUrl)" size="mini" v-if="companyAttachmentForm.ukeyImgUrl">查看原文件</el-button>
+                <preview-button
+                  type="text"
+                  size="mini"
+                  always-show
+                  new-window-open
+                  :src="companyAttachmentForm.ukeyImgUrl"
+                  v-if="companyAttachmentForm.ukeyImgUrl"
+                >查看原文件</preview-button>
+                <preview-button
+                  type="text"
+                  size="mini"
+                  :src="companyAttachmentForm.ukeyImgUrl"
+                  v-if="companyAttachmentForm.ukeyImgUrl"
+                >预览原文件</preview-button>
               </div>
             </el-form-item>
           </el-col>
-          <el-col :span="11" :offset="1">
+          <el-col
+            :span="11"
+            :offset="1"
+          >
             <el-form-item class="account-upload">
               <div>
                 <el-upload
@@ -836,21 +1763,52 @@
                   :show-file-list="false"
                   :before-upload="() => {openLoading('.stampImg')}"
                   :on-error="closeLoading"
-                  :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (companyAttachmentForm.stampImgUrl = res.body.imageUrl) }">
-                  <x-image v-if="companyAttachmentForm.stampImgUrl" :src="companyAttachmentForm.stampImgUrl" class="avatar"/>
-                  <i v-else class="el-icon-plus avatar-uploader-icon" style="display: block"></i>
+                  :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (companyAttachmentForm.stampImgUrl = res.body.imageUrl) }"
+                >
+                  <x-image
+                    v-if="companyAttachmentForm.stampImgUrl"
+                    :src="companyAttachmentForm.stampImgUrl"
+                    class="avatar"
+                  />
+                  <i
+                    v-else
+                    class="el-icon-plus avatar-uploader-icon"
+                    style="display: block"
+                  ></i>
                 </el-upload>
-                <el-button type="text" @click="onPreviewClick(companyAttachmentForm.stampImgUrl)" size="mini" v-if="companyAttachmentForm.stampImgUrl">查看原文件</el-button>
+                <preview-button
+                  type="text"
+                  size="mini"
+                  always-show
+                  new-window-open
+                  :src="companyAttachmentForm.stampImgUrl"
+                  v-if="companyAttachmentForm.stampImgUrl"
+                >查看原文件</preview-button>
+                <preview-button
+                  type="text"
+                  size="mini"
+                  :src="companyAttachmentForm.stampImgUrl"
+                  v-if="companyAttachmentForm.stampImgUrl"
+                >预览原文件</preview-button>
               </div>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="11" :offset="1">上传营业执照</el-col>
-          <el-col :span="11" :offset="1">上传国地税三方协议PDF</el-col>
+          <el-col
+            :span="11"
+            :offset="1"
+          >上传营业执照</el-col>
+          <el-col
+            :span="11"
+            :offset="1"
+          >上传国地税三方协议PDF</el-col>
         </el-row>
         <el-row>
-          <el-col :span="11" :offset="1">
+          <el-col
+            :span="11"
+            :offset="1"
+          >
             <el-form-item class="account-upload">
               <div>
                 <el-upload
@@ -859,15 +1817,40 @@
                   :show-file-list="false"
                   :before-upload="() => {openLoading('.licenseImg')}"
                   :on-error="closeLoading"
-                  :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (companyAttachmentForm.licenseImgUrl = res.body.imageUrl) }">
-                  <x-image v-if="companyAttachmentForm.licenseImgUrl" :src="companyAttachmentForm.licenseImgUrl" class="avatar"/>
-                  <i v-else class="el-icon-plus avatar-uploader-icon" style="display: block"></i>
+                  :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (companyAttachmentForm.licenseImgUrl = res.body.imageUrl) }"
+                >
+                  <x-image
+                    v-if="companyAttachmentForm.licenseImgUrl"
+                    :src="companyAttachmentForm.licenseImgUrl"
+                    class="avatar"
+                  />
+                  <i
+                    v-else
+                    class="el-icon-plus avatar-uploader-icon"
+                    style="display: block"
+                  ></i>
                 </el-upload>
-                <el-button type="text" @click="onPreviewClick(companyAttachmentForm.licenseImgUrl)" size="mini" v-if="companyAttachmentForm.licenseImgUrl">查看原文件</el-button>
+                <preview-button
+                  type="text"
+                  size="mini"
+                  always-show
+                  new-window-open
+                  :src="companyAttachmentForm.licenseImgUrl"
+                  v-if="companyAttachmentForm.licenseImgUrl"
+                >查看原文件</preview-button>
+                <preview-button
+                  type="text"
+                  size="mini"
+                  :src="companyAttachmentForm.licenseImgUrl"
+                  v-if="companyAttachmentForm.licenseImgUrl"
+                >预览原文件</preview-button>
               </div>
             </el-form-item>
           </el-col>
-          <el-col :span="11" :offset="1">
+          <el-col
+            :span="11"
+            :offset="1"
+          >
             <el-form-item class="account-upload">
               <div>
                 <el-upload
@@ -876,19 +1859,47 @@
                   :show-file-list="false"
                   :before-upload="() => {openLoading('.taxAgreementPDF')}"
                   :on-error="closeLoading"
-                  :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (companyAttachmentForm.taxAgreementPDFUrl = res.body.imageUrl) }">
-                  <x-image v-if="companyAttachmentForm.taxAgreementPDFUrl" :src="companyAttachmentForm.taxAgreementPDFUrl" class="avatar"/>
-                  <i v-else class="el-icon-plus avatar-uploader-icon" style="display: block"></i>
+                  :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (companyAttachmentForm.taxAgreementPDFUrl = res.body.imageUrl) }"
+                >
+                  <x-image
+                    v-if="companyAttachmentForm.taxAgreementPDFUrl"
+                    :src="companyAttachmentForm.taxAgreementPDFUrl"
+                    class="avatar"
+                  />
+                  <i
+                    v-else
+                    class="el-icon-plus avatar-uploader-icon"
+                    style="display: block"
+                  ></i>
                 </el-upload>
-                <el-button type="text" @click="onPreviewClick(companyAttachmentForm.taxAgreementPDFUrl)" size="mini" v-if="companyAttachmentForm.taxAgreementPDFUrl">查看原文件</el-button>
+                <preview-button
+                  type="text"
+                  size="mini"
+                  always-show
+                  new-window-open
+                  :src="companyAttachmentForm.taxAgreementPDFUrl"
+                  v-if="companyAttachmentForm.taxAgreementPDFUrl"
+                >查看原文件</preview-button>
+                <preview-button
+                  type="text"
+                  size="mini"
+                  :src="companyAttachmentForm.taxAgreementPDFUrl"
+                  v-if="companyAttachmentForm.taxAgreementPDFUrl"
+                >预览原文件</preview-button>
               </div>
             </el-form-item>
           </el-col>
         </el-row>
       </el-form>
-      <span slot="footer" class="dialog-footer">
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
         <el-button @click="companyAttachmentDialogDisplay = false">取消</el-button>
-        <el-button type="primary" @click="editCompanyAttachment">确认</el-button>
+        <el-button
+          type="primary"
+          @click="editCompanyAttachment"
+        >确认</el-button>
       </span>
     </el-dialog>
     <el-dialog
@@ -896,15 +1907,36 @@
       :visible.sync="expressDialogDisplay"
       :close-on-click-modal="false"
       width="500px"
-      center>
-      <el-form ref="expressForm" :model="expressForm" label-width="120px" size="small">
-        <el-form-item label="快递单号" prop="bankNo">
-          <el-input v-model="expressForm.expressNo" placeholder="快递单号"/>
+      center
+    >
+      <el-form
+        ref="expressForm"
+        :model="expressForm"
+        label-width="120px"
+        size="small"
+      >
+        <el-form-item
+          label="快递单号"
+          prop="bankNo"
+        >
+          <el-input
+            v-model="expressForm.expressNo"
+            placeholder="快递单号"
+          />
         </el-form-item>
-        <el-form-item label="快递公司" prop="trainAmount">
-          <el-input v-model="expressForm.expressName" placeholder="快递公司"/>
+        <el-form-item
+          label="快递公司"
+          prop="trainAmount"
+        >
+          <el-input
+            v-model="expressForm.expressName"
+            placeholder="快递公司"
+          />
         </el-form-item>
-        <el-form-item label="快递单回单截图" class="account-upload">
+        <el-form-item
+          label="快递单回单截图"
+          class="account-upload"
+        >
           <div>
             <el-upload
               class="avatar-uploader expressImg"
@@ -912,17 +1944,45 @@
               :show-file-list="false"
               :before-upload="() => {openLoading('.expressImg')}"
               :on-error="closeLoading"
-              :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (expressForm.expressImgUrl = res.body.imageUrl) }">
-              <x-image v-if="expressForm.expressImgUrl" :src="expressForm.expressImgUrl" class="avatar"/>
-              <i v-else class="el-icon-plus avatar-uploader-icon" style="display: block"></i>
+              :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (expressForm.expressImgUrl = res.body.imageUrl) }"
+            >
+              <x-image
+                v-if="expressForm.expressImgUrl"
+                :src="expressForm.expressImgUrl"
+                class="avatar"
+              />
+              <i
+                v-else
+                class="el-icon-plus avatar-uploader-icon"
+                style="display: block"
+              ></i>
             </el-upload>
-            <el-button type="text" @click="onPreviewClick(expressForm.expressImgUrl)" size="mini" v-if="expressForm.expressImgUrl">查看原文件</el-button>
+            <preview-button
+              type="text"
+              size="mini"
+              always-show
+              new-window-open
+              :src="expressForm.expressImgUrl"
+              v-if="expressForm.expressImgUrl"
+            >查看原文件</preview-button>
+            <preview-button
+              type="text"
+              size="mini"
+              :src="expressForm.expressImgUrl"
+              v-if="expressForm.expressImgUrl"
+            >预览原文件</preview-button>
           </div>
         </el-form-item>
       </el-form>
-      <span slot="footer" class="dialog-footer">
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
         <el-button @click="expressDialogDisplay = false">取消</el-button>
-        <el-button type="primary" @click="editExpress">确认</el-button>
+        <el-button
+          type="primary"
+          @click="editExpress"
+        >确认</el-button>
       </span>
     </el-dialog>
     <el-dialog
@@ -930,23 +1990,48 @@
       :visible.sync="customerServiceRecordDialogDisplay"
       :close-on-click-modal="false"
       width="600px"
-      center>
-      <el-form ref="customerServiceRecordForm" :model="customerServiceRecordForm" label-width="120px" size="small">
-        <el-form-item label="评价等级" prop="bankNo" class="account-upload">
+      center
+    >
+      <el-form
+        ref="customerServiceRecordForm"
+        :model="customerServiceRecordForm"
+        label-width="120px"
+        size="small"
+      >
+        <el-form-item
+          label="评价等级"
+          prop="bankNo"
+          class="account-upload"
+        >
           <el-rate
             style="margin-top: 5px;"
             v-model="customerServiceRecordForm.eval"
-            allow-half>
+            allow-half
+          >
           </el-rate>
           {{customerServiceRecordForm.evalValue}}分
         </el-form-item>
-        <el-form-item label="客户反馈" prop="feedback">
-          <el-input v-model="customerServiceRecordForm.feedback" placeholder="客户反馈" type="textarea" :autosize="{ minRows: 2, maxRows: 2}"/>
+        <el-form-item
+          label="客户反馈"
+          prop="feedback"
+        >
+          <el-input
+            v-model="customerServiceRecordForm.feedback"
+            placeholder="客户反馈"
+            type="textarea"
+            :autosize="{ minRows: 2, maxRows: 2}"
+          />
         </el-form-item>
       </el-form>
-      <span slot="footer" class="dialog-footer">
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
         <el-button @click="customerServiceRecordDialogDisplay = false">取消</el-button>
-        <el-button type="primary" @click="editCustomerServiceRecord">确认</el-button>
+        <el-button
+          type="primary"
+          @click="editCustomerServiceRecord"
+        >确认</el-button>
       </span>
     </el-dialog>
     <el-dialog
@@ -954,23 +2039,43 @@
       :visible.sync="orderLogListDialogDisplay"
       width="900px"
       custom-class="order-log-list-dialog"
-      center>
+      center
+    >
       <el-table
         :data="orderLogList"
         size="mini"
-        style="width: 100%;">
-        <el-table-column prop="actionUserName" label="姓名" min-width="70"/>
-        <el-table-column prop="actionUserRoleName" label="角色" min-width="70"/>
-        <el-table-column prop="actionContent" label="操作内容" min-width="200"/>
-        <el-table-column prop="actionTime" label="操作时间" min-width="100"/>
+        style="width: 100%;"
+      >
+        <el-table-column
+          prop="actionUserName"
+          label="姓名"
+          min-width="70"
+        />
+        <el-table-column
+          prop="actionUserRoleName"
+          label="角色"
+          min-width="70"
+        />
+        <el-table-column
+          prop="actionContent"
+          label="操作内容"
+          min-width="200"
+        />
+        <el-table-column
+          prop="actionTime"
+          label="操作时间"
+          min-width="100"
+        />
       </el-table>
     </el-dialog>
   </x-page>
 </template>
 
 <script>
+import PreviewButton from '../../components/PreviewButton'
 export default {
   name: 'account-order-details',
+  components: { PreviewButton },
   data() {
     return {
       orderId: '',
@@ -1090,18 +2195,18 @@ export default {
     }
   },
   watch: {
-    orderLogListDialogDisplay(val){
+    orderLogListDialogDisplay(val) {
       val && this.queryOrderLogList()
     },
     'customerServiceRecordForm.eval': {
-      handler: function(val){
+      handler: function (val) {
         this.customerServiceRecordForm.evalValue = Number(val || 0) * 2
       },
       deep: true
     }
   },
   methods: {
-    async queryOrderLogList(){
+    async queryOrderLogList() {
       try {
         this.orderLogList = await this.$$main.orderLogList({
           orderId: this.orderId,
@@ -1111,7 +2216,7 @@ export default {
         e.message && this.$message.error(e.message)
       }
     },
-    async queryOrderInfo(){
+    async queryOrderInfo() {
       const loading = this.$loading({
         text: '正在操作',
         spinner: 'el-icon-loading'
@@ -1142,7 +2247,7 @@ export default {
         }
         let regInfo = this.info.companyRegInfo
         if (regInfo) {
-          if (regInfo.companyName && regInfo.companyName !== ''){
+          if (regInfo.companyName && regInfo.companyName !== '') {
             let arr = regInfo.companyName.split(',')
             regInfo.companyNames = arr.map((i) => {
               return {
@@ -1182,7 +2287,7 @@ export default {
             investorEmail: (orderInfo && orderInfo.investorEmail) || '', // 投资人邮箱
             financePersonName: (orderInfo && orderInfo.financePersonName) || '', // 财务人员姓名
             financePersonMobile: (orderInfo && orderInfo.financePersonMobile) || '', // 财务人员手机
-            isNeedFinanceID: (orderInfo && orderInfo.financePersonMobile) || 'N',
+            isNeedFinanceID: (orderInfo && orderInfo.isNeedFinanceID) || 'N',
             financePersonIdCardFrontUrl: (orderInfo && orderInfo.financePersonIdCardFrontUrl) || '', // 财务人员身份证正面URL
             financePersonIdCardBackUrl: (orderInfo && orderInfo.financePersonIdCardBackUrl) || '', // 财务人员身份证背面URL
             financePersonIdCardNo: (orderInfo && orderInfo.financePersonIdCardNo) || '', // 财务人员身份证号
@@ -1218,7 +2323,7 @@ export default {
         loading.close()
       }
     },
-    async querySourceTaxSupplierList(){
+    async querySourceTaxSupplierList() {
       try {
         this.sourceTaxSupplierList = await this.$$main.sourceTaxListSupplier({
           sourceTaxId: this.info.orderInfo.sourceTaxId
@@ -1227,45 +2332,7 @@ export default {
         e.message && this.$message.error(e.message)
       }
     },
-    displayImage(src){
-      if (!src || src === '') {
-        return
-      }
-      let urlFormat = src.split('.')
-      if (['pdf', 'doc', 'docx'].indexOf(urlFormat[1]) !== -1){
-        this.onPreviewClick(src)
-        return
-      }
-      let displaySrc = this.getUploadImageUrl(src, 'middle')
-      const h = this.$createElement
-      this.$msgbox({
-        showConfirmButton: false,
-        message: h('div', null, [
-          h('el-button', {
-            attrs: {
-              type: 'text'
-            },
-            on: {
-              click: () => {
-                this.onPreviewClick(src)
-              }
-            }
-          }, '查看原文件'),
-          h('img', {
-            attrs: {
-              src: displaySrc
-            },
-            style: {
-              width: '100%'
-            }
-          })
-        ])
-      })
-    },
-    onPreviewClick(src){
-      window.open(this.getUploadImageUrl(src, null))
-    },
-    displayNextDialog(actionName){
+    displayNextDialog(actionName) {
       this.$alert(`是否${actionName || '提交订单'}？`, '提示', {
         showCancelButton: true,
         confirmButtonText: '确定',
@@ -1274,7 +2341,7 @@ export default {
         }
       })
     },
-    async doOrderNext(){
+    async doOrderNext() {
       const loading = this.$loading({
         text: '正在操作',
         spinner: 'el-icon-loading'
@@ -1295,7 +2362,7 @@ export default {
         loading.close()
       }
     },
-    displayRejectDialog(text = '驳回', type){
+    displayRejectDialog(text = '驳回', type) {
       this.$prompt(`请输入${text}原因`, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -1303,16 +2370,16 @@ export default {
         inputPattern: /\S+/,
         inputErrorMessage: `请输入${text}原因`
       }).then(({ value }) => {
-        if (type === 'wait'){
+        if (type === 'wait') {
           this.doOrderWait(value)
-        } else if (type === 'restart'){
+        } else if (type === 'restart') {
           this.doOrderRejectRestart(value)
         } else {
           this.doOrderReject(value)
         }
       })
     },
-    async doOrderReject(reason){
+    async doOrderReject(reason) {
       const loading = this.$loading({
         text: '正在操作',
         spinner: 'el-icon-loading'
@@ -1334,7 +2401,7 @@ export default {
         loading.close()
       }
     },
-    async doOrderWait(reason){
+    async doOrderWait(reason) {
       const loading = this.$loading({
         text: '正在操作',
         spinner: 'el-icon-loading'
@@ -1356,7 +2423,7 @@ export default {
         loading.close()
       }
     },
-    async doOrderRejectRestart(reason){
+    async doOrderRejectRestart(reason) {
       const loading = this.$loading({
         text: '正在操作',
         spinner: 'el-icon-loading'
@@ -1378,7 +2445,7 @@ export default {
         loading.close()
       }
     },
-    addBankReceipt(){
+    addBankReceipt() {
       this.bankReceiptList.push({
         bankReceiptId: '', // 银行收款Id
         orderId: this.orderId, // 订单Id
@@ -1391,7 +2458,7 @@ export default {
         orderType: 'A' // 订单类型(A/I)
       })
     },
-    async editBankReceipt(form, index){
+    async editBankReceipt(form, index) {
       const loading = this.$loading({
         text: '正在操作',
         spinner: 'el-icon-loading'
@@ -1409,7 +2476,7 @@ export default {
         loading.close()
       }
     },
-    async delectBankReceipt(form, index){
+    async delectBankReceipt(form, index) {
       if (!form.bankReceiptId || form.bankReceiptId === '') {
         this.bankReceiptList.splice(index, 1)
         return
@@ -1432,14 +2499,14 @@ export default {
         loading.close()
       }
     },
-    async queryCompanyTypeList(){
+    async queryCompanyTypeList() {
       try {
         this.companyTypeList = await this.$$main.commonListCompanyType()
       } catch (e) {
         this.companyTypeList = []
       }
     },
-    onCompanyTypeChange(i){
+    onCompanyTypeChange(i) {
       let chooseCompanyType = this.companyTypeList.filter((item) => {
         return item.companyTypeId === i
       })
@@ -1447,20 +2514,20 @@ export default {
         this.companyRegisterInfoForm.businessScope = chooseCompanyType[0].businessScope
       }
     },
-    addCompanyName(){
+    addCompanyName() {
       this.companyRegisterInfoForm.companyNames.push({
         value: ''
       })
     },
-    removeCompanyName(item){
+    removeCompanyName(item) {
       let index = this.companyRegisterInfoForm.companyNames.indexOf(item)
       if (index !== -1) {
         this.companyRegisterInfoForm.companyNames.splice(index, 1)
       }
     },
-    async editCompanyRegisterInfo(){
+    async editCompanyRegisterInfo() {
       let arr = []
-      if (this.companyRegisterInfoForm.companyNames && this.companyRegisterInfoForm.companyNames.length > 0){
+      if (this.companyRegisterInfoForm.companyNames && this.companyRegisterInfoForm.companyNames.length > 0) {
         this.companyRegisterInfoForm.companyNames.forEach((item) => {
           item && item.value && arr.push(item.value)
         })
@@ -1485,7 +2552,7 @@ export default {
         loading.close()
       }
     },
-    async editRegistrationProcess(){
+    async editRegistrationProcess() {
       const loading = this.$loading({
         text: '正在操作',
         spinner: 'el-icon-loading'
@@ -1505,7 +2572,7 @@ export default {
         loading.close()
       }
     },
-    async editCompanyAttachment(){
+    async editCompanyAttachment() {
       const loading = this.$loading({
         text: '正在操作',
         spinner: 'el-icon-loading'
@@ -1525,7 +2592,7 @@ export default {
         loading.close()
       }
     },
-    async editExpress(){
+    async editExpress() {
       const loading = this.$loading({
         text: '正在操作',
         spinner: 'el-icon-loading'
@@ -1545,7 +2612,7 @@ export default {
         loading.close()
       }
     },
-    async editCustomerServiceRecord(){
+    async editCustomerServiceRecord() {
       const loading = this.$loading({
         text: '正在操作',
         spinner: 'el-icon-loading'
@@ -1568,12 +2635,12 @@ export default {
     openLoading(target) {
       this.uploadLoading = this.$loading({
         lock: true,
-        text: '图片上传中',
+        text: '文件上传中',
         spinner: 'el-icon-loading',
         target: target
       })
     },
-    closeLoading(){
+    closeLoading() {
       this.uploadLoading.close()
     }
   },

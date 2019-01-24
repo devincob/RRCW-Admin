@@ -30,6 +30,8 @@
         element-loading-spinner="el-icon-loading"
         element-loading-background="rgba(255, 255, 255, 0.8)"
         size="mini"
+        :border="true"
+        :highlight-current-row="true"
         style="width: 100%;">
         <el-table-column fixed prop="companyName" label="站点名称" min-width="150">
           <template slot-scope="scope">
@@ -38,13 +40,13 @@
             </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column sortable="custom" prop="ioCount" label="累计开票次数" min-width="120"/>
-        <el-table-column sortable="custom" prop="sumInvoiceAmount" label="累计开票金额" min-width="140" :formatter="(row) => `${$options.filters['currency'](row.sumInvoiceAmount, '', 2)}`"/>
-        <el-table-column sortable="custom" prop="sumServiceAmount" label="累计服务费金额" min-width="140" :formatter="(row) => `${$options.filters['currency'](row.sumServiceAmount, '', 2)}`"/>
-        <el-table-column prop="createTime" label="站点开通时间" min-width="140"/>
-        <el-table-column prop="lastIOTime" label="最后一次开票时间" min-width="140"/>
-        <el-table-column prop="deptName" label="所属部门" min-width="120"/>
-        <el-table-column prop="belongAdminUserName" label="所属商务" min-width="120"/>
+        <el-table-column sortable="custom" prop="ioCount" align="right" label="累计开票次数" min-width="120"/>
+        <el-table-column sortable="custom" prop="sumInvoiceAmount"   align="right"  label="累计开票金额" min-width="140" :formatter="(row) => `${$options.filters['currency'](row.sumInvoiceAmount, '', 2)}`"/>
+        <el-table-column sortable="custom" prop="sumServiceAmount"  align="right"  label="累计服务费金额" min-width="140" :formatter="(row) => `${$options.filters['currency'](row.sumServiceAmount, '', 2)}`"/>
+        <el-table-column prop="createTime" label="站点开通时间"  align="center"  min-width="140"/>
+        <el-table-column prop="lastIOTime" label="最后一次开票时间" align="center"  min-width="140"/>
+        <el-table-column prop="deptName" label="所属部门" align="center"  min-width="120"/>
+        <el-table-column prop="belongAdminUserName" align="center"  label="所属商务" min-width="120"/>
       </el-table>
       <div class="text-right">
         <el-pagination

@@ -1,0 +1,28 @@
+.el-row{
+  max-width: 1200px;
+  min-width: 800px;
+  .el-col{
+    padding-right: 10px;
+  }
+}
+.el-card{
+  width: 100%;
+}
+.setting{
+  .title{
+    font-size: 13px;
+    margin: 10px 0;
+  }
+  .el-input{
+    width: 32%;
+  }
+  hr{
+    height:1px;
+    border:none;
+    border-top:1px dashed #000;
+    margin: 10px 0;
+  }
+  .el-button{
+    margin-top: 10px;
+  }
+}

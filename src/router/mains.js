@@ -28,6 +28,7 @@ export default [
   {path: '/order/invoice-order-create', component: require('../pages/order/invoice-order-create')},
   {path: '/order/invoice-orders', component: require('../pages/order/invoice-orders')},
   {path: '/order/invoice-order-details', component: require('../pages/order/invoice-order-details')},
+  {path: '/order/difference-order-list', component: require('../pages/order/difference-order-list')},
 
   {path: '/analysis/account-base-statistics', component: require('../pages/analysis/account-base-statistics')},
   {path: '/analysis/account-trend-statistics', component: require('../pages/analysis/account-trend-statistics')},
@@ -48,7 +49,16 @@ export default [
   {path: '/dep-achieve-statistics/account', component: require('../pages/depAchieveStatistics/account')},
   {path: '/dep-achieve-statistics/invoice', component: require('../pages/depAchieveStatistics/invoice')},
 
+  // 银行流水录入 银行流水预警
+  {path: '/risk-control/bank-entry', component: require('../pages/bankEntry/bank-entry')},
+  {path: '/risk-control/bank-flow-warning', component: require('../pages/bankFlowWarning/bank-flow-warning')},
+
   // 个人业绩统计
   {path: '/personal-achieve-statistics/account', component: require('../pages/personalAchieveStatistics/account')},
-  {path: '/personal-achieve-statistics/invoice', component: require('../pages/personalAchieveStatistics/invoice')}
+  {path: '/personal-achieve-statistics/invoice', component: require('../pages/personalAchieveStatistics/invoice')},
+
+  // 风控管理
+  {path: '/risk/invoice-threshold', component: require('../pages/risk/invoice-threshold')},
+  {path: '/risk/statement-threshold', component: require('../pages/risk/statement-threshold')},
+  {path: '/risk/invoice-company-warning', component: require('../pages/risk/invoice-company-warning')}
 ]

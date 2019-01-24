@@ -1,6 +1,6 @@
 /*
 **本代码由生成器自动生成，请勿手动修改
-**生成时间：2018-10-15 13:42:01
+**生成时间：2019-01-23 14:57:09
 */
 import Model from '../libs/model'
 export default class MSModel extends Model {
@@ -395,7 +395,7 @@ export default class MSModel extends Model {
     return this.modelExecute('/Common/ListBelongAdminUser', params, callback)
   }
   /**
-   *名称：Common.所属站点 路由：/Common/List/BelongCompany
+   *名称：通用.所属站点 路由：/Common/List/BelongCompany
    *@param {*} params 向服务器传送的参数,对应Request
    *@param {Function} [callback]  回调函数
    *Request:
@@ -798,6 +798,8 @@ export default class MSModel extends Model {
        "companyTypeId":int
        //经营范围
        "businessScope":string
+       //费率可变(Y/N)
+       "isInvoiceServiceRatioChangeable":string
    }
 
    */
@@ -905,6 +907,130 @@ export default class MSModel extends Model {
    */
   companyModify(params, callback){
     return this.modelExecute('/Company/Modify', params, callback)
+  }
+  /**
+   *名称：站点.开票统计 路由：/Company/Statistics/Invoice
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //开始时间
+       "beginTime":DateTime
+       //结束时间
+       "endTime":DateTime
+       //站点编号
+       "companyId":int
+   }
+
+   *Response:
+   {
+       //订单号
+       "orderId":int
+       //站点吗
+       "companyName":string
+       //开票金额
+       "invoiceAmount":decimal
+       //发票类型
+       "invoiceTypeName":string
+       //提交时间
+       "submitTime":string
+       //完成时间
+       "orderCompletedTime":string
+       //流程编号
+       "workflowId":int
+       //流程名称
+       "workflowName":string
+   }
+
+   */
+  companyStatisticsInvoice(params, callback){
+    return this.modelExecute('/Company/Statistics/Invoice', params, callback)
+  }
+  /**
+   *名称：站点.流水统计 路由：/Company/Statistics/Water
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //开始时间
+       "beginTime":DateTime
+       //结束时间
+       "endTime":DateTime
+       //站点编号
+       "companyId":int
+   }
+
+   *Response:
+   {
+       //交易方
+       "traderName":string
+       //贷方发生额
+       "sumInAmount":decimal
+       //借方发生额
+       "sumOutAmount":decimal
+       //交易次数
+       "tradeCount":int
+   }
+
+   */
+  companyStatisticsWater(params, callback){
+    return this.modelExecute('/Company/Statistics/Water', params, callback)
+  }
+  /**
+   *名称：站点.开票合计 路由：/Company/Sum/Invoice
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //开始时间
+       "beginTime":DateTime
+       //结束时间
+       "endTime":DateTime
+       //站点编号
+       "companyId":int
+   }
+
+   *Response:
+   {
+       //累计金额
+       "sumInvoiceAmount":decimal
+       //开票次数
+       "invoiceCount":int
+       //最后开票日期
+       "lastInvoiceTime":string
+   }
+
+   */
+  companySumInvoice(params, callback){
+    return this.modelExecute('/Company/Sum/Invoice', params, callback)
+  }
+  /**
+   *名称：站点.流水合计 路由：/Company/Sum/Water
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //开始时间
+       "beginTime":DateTime
+       //结束时间
+       "endTime":DateTime
+       //站点编号
+       "companyId":int
+   }
+
+   *Response:
+   {
+       //交易次数
+       "tradeCount":int
+       //贷方发生额
+       "sumInAmount":decimal
+       //借方发生额
+       "sumOutAmount":decimal
+   }
+
+   */
+  companySumWater(params, callback){
+    return this.modelExecute('/Company/Sum/Water', params, callback)
   }
   /**
    *名称：公司.修改状态 路由：/Company/Update
@@ -1512,6 +1638,8 @@ export default class MSModel extends Model {
        "createTime":string
        //流程Id
        "workflowId":int
+       //商务名称
+       "createAdminUserName":string
    }
 
    */
@@ -1582,6 +1710,8 @@ export default class MSModel extends Model {
        "workflowId":int
        //站点名称
        "companyName":string
+       //商务名称
+       "createAdminUserName":string
    }
 
    */
@@ -1650,6 +1780,10 @@ export default class MSModel extends Model {
        "orderCompletedBeginTime":DateTime
        //订单完成时间
        "orderCompletedEndTime":DateTime
+       //流程编号
+       "workflowId":int
+       //创建人
+       "createAdminUserId":int
    }
 
    *Response:
@@ -1690,6 +1824,10 @@ export default class MSModel extends Model {
        "handleAdminUserName":string
        //商务提交时间
        "submitTime":string
+       //商务编号
+       "createAdminUserId":int
+       //商务名
+       "bussinessName":string
    }
 
    */
@@ -1903,6 +2041,66 @@ export default class MSModel extends Model {
     return this.modelExecute('/Order/Bill/Create', params, callback)
   }
   /**
+   *名称：订单.开票.差额列表 路由：/Order/Diff/List
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //订单号
+       "orderNo":string
+       //客户名
+       "customerName":string
+       //站点名
+       "companyName":string
+       //商品编号
+       "goodsId":int
+       //开始时间
+       "beginSubmitTime":DateTime
+       //结束时间
+       "endSubmitTime":DateTime
+   }
+
+   *Response:
+   {
+       //订单编号
+       "orderId":int
+       //订单号
+       "orderNo":string
+       //客户编号
+       "customerId":int
+       //客户名
+       "customerName":string
+       //站点编号
+       "companyId":int
+       //站点名
+       "companyName":string
+       //开票金额
+       "invoiceAmount":decimal
+       //已开金额
+       "actualAmount":decimal
+       //差额
+       "differeceAmount":decimal
+       //发票类型
+       "invoiceTypeName":string
+       //商务编号
+       "createAdminUserId":int
+       //商务名
+       "bussinessName":string
+       //提交时间
+       "submitTime":string
+       //完成时间
+       "orderCompletedTime":string
+       //商品编号
+       "goodsId":int
+       //商品名
+       "goodsName":string
+   }
+
+   */
+  orderDiffList(params, callback){
+    return this.modelExecute('/Order/Diff/List', params, callback)
+  }
+  /**
    *名称：订单.新增开户订单.新增（编辑）订单 路由：/Order/EditAccountOrder
    *@param {*} params 向服务器传送的参数,对应Request
    *@param {Function} [callback]  回调函数
@@ -2084,6 +2282,12 @@ export default class MSModel extends Model {
        "invoiceContractUrl":string
        //加急原因
        "priorityReason":string
+       //开票服务费费率
+       "invoiceServiceRatio":decimal
+       //期望开票时间
+       "hopeInvoiceDate":DateTime
+       //备注
+       "invoiceRemark":string
    }
 
    *Response:
@@ -2115,11 +2319,19 @@ export default class MSModel extends Model {
        //收款信息
        "bankReceipts":BankReceiptInfo[]
        //发票信息
-       "invoiceInfo":InvoiceInfo
+       "invoiceInfos":InvoiceInfo[]
        //客服回访信息
        "customerServiceRecord":CustomerServiceRecordInfo
        //是否显示审批按钮
        "isShowButton":bool
+       //处理人
+       "handleAdminUserName":string
+       //处理人角色
+       "handleAdminRoleName":string
+       //状态
+       "status":string
+       //差额订单信息
+       "differenceInfo":DifferenceInfo
    }
 
    */
@@ -2148,6 +2360,10 @@ export default class MSModel extends Model {
        "orderCompletedBeginTime":DateTime
        //订单完成时间
        "orderCompletedEndTime":DateTime
+       //流程编号
+       "workflowId":int
+       //创建人
+       "createAdminUserId":int
    }
 
    *Response:
@@ -2192,6 +2408,12 @@ export default class MSModel extends Model {
        "companyId":int
        //商品编号
        "goodsId":int
+       //是否差额订单
+       "isDiff":string
+       //商务编号
+       "createAdminUserId":int
+       //商务名
+       "bussinessName":string
    }
 
    */
@@ -2215,6 +2437,22 @@ export default class MSModel extends Model {
     return this.modelExecute('/Order/IO/Delete', params, callback)
   }
   /**
+   *名称：订单.开票.删除发票信息 路由：/Order/IO/DeleteInvoice
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //快递号
+       "expressId":int
+   }
+
+   *Response:
+   bool
+   */
+  orderIODeleteInvoice(params, callback){
+    return this.modelExecute('/Order/IO/DeleteInvoice', params, callback)
+  }
+  /**
    *名称：订单.开票订单.新增（编辑）发票信息 路由：/Order/IOEditInvoice
    *@param {*} params 向服务器传送的参数,对应Request
    *@param {Function} [callback]  回调函数
@@ -2222,8 +2460,8 @@ export default class MSModel extends Model {
    {
        //订单Id
        "orderId":int
-       //发票列表
-       "invoiceDetails":InvoiceDetail
+       //发票数量
+       "invoiceCount":int
        //发票图片URL
        "invoiceImgUrl":string
        //快递单号
@@ -2232,10 +2470,16 @@ export default class MSModel extends Model {
        "expressImgUrl":string
        //快递公司
        "expressName":string
+       //快递信息编号
+       "expressId":int
+       //开票总额
+       "invoiceAmount":decimal
+       //税额
+       "taxAmount":decimal
    }
 
    *Response:
-   bool
+   int
    */
   orderIOEditInvoice(params, callback){
     return this.modelExecute('/Order/IOEditInvoice', params, callback)
@@ -2347,6 +2591,392 @@ export default class MSModel extends Model {
    */
   orderWorkflowWait(params, callback){
     return this.modelExecute('/Order/WorkflowWait', params, callback)
+  }
+  /**
+   *名称：风控.导入站点流水 路由：/Risk/Import/CompanyWater
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //
+       "":
+   }
+
+   *Response:
+   bool
+   */
+  riskImportCompanyWater(params, callback){
+    return this.modelExecute('/Risk/Import/CompanyWater', params, callback)
+  }
+  /**
+   *名称：风控.查询站点流水 路由：/Risk/Query/CompanyWater
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //客户名称
+       "customerName":string
+       //站点名称
+       "companyName":string
+       //开始时间
+       "tradeBeginTime":DateTime
+       //结束时间
+       "tradeEndTime":DateTime
+   }
+
+   *Response:
+   {
+       //流水编号
+       "waterId":int
+       //站点编号
+       "companyId":int
+       //站点名称
+       "companyName":string
+       //客户编号
+       "customerId":int
+       //客户名称
+       "customerName":string
+       //银行
+       "bankName":string
+       //交易时间
+       "tradeTime":string
+       //交易方
+       "traderName":string
+       //贷方发生额
+       "inAmount":decimal
+       //借方发生额
+       "outAmount":decimal
+       //余额
+       "lastAmount":decimal
+       //摘要
+       "remark":string
+       //导入时间
+       "createTime":string
+   }
+
+   */
+  riskQueryCompanyWater(params, callback){
+    return this.modelExecute('/Risk/Query/CompanyWater', params, callback)
+  }
+  /**
+   *名称：风控.查询银行流水预警 路由：/Risk/Query/CompanyWaterWarning
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //
+       "":
+   }
+
+   *Response:
+   {
+       //流水编号
+       "waterId":int
+       //站点编号
+       "companyId":int
+       //站点名称
+       "companyName":string
+       //客户编号
+       "customerId":int
+       //客户名称
+       "customerName":string
+       //交易时间
+       "tradeTime":string
+       //预警类型
+       "warningType":string
+       //预警项目
+       "warningContent":string
+       //处置结果
+       "handleContent":string
+       //处置时间
+       "handleTime":string
+       //状态
+       "handleStatus":string
+   }
+
+   */
+  riskQueryCompanyWaterWarning(params, callback){
+    return this.modelExecute('/Risk/Query/CompanyWaterWarning', params, callback)
+  }
+  /**
+   *名称：风控.查询站点流水预警设置 路由：/Risk/Query/CompanyWaterWarningSetting
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //
+       "":
+   }
+
+   *Response:
+   {
+       //非法人账户转出
+       "investorOutSetting":string
+       //当日入账当日出账
+       "todaySetting":string
+       //转入公司开票订单
+       "noInvestorSetting":string
+       //账户余额阈值
+       "amountSetting":decimal
+   }
+
+   */
+  riskQueryCompanyWaterWarningSetting(params, callback){
+    return this.modelExecute('/Risk/Query/CompanyWaterWarningSetting', params, callback)
+  }
+  /**
+   *名称：风控.查询开票站点预警 路由：/Risk/Query/GoodsIovoiceWarning
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //
+       "":
+   }
+
+   *Response:
+   {
+       //预警编号
+       "warningId":int
+       //站点编号
+       "companyId":int
+       //站点名称
+       "companyName":string
+       //客户编号
+       "customerId":int
+       //客户名称
+       "customerName":string
+       //商务编号
+       "bussinessId":int
+       //商务名称
+       "bussinessName":string
+       //预警内容
+       "warningContent":string
+       //预警时间
+       "warningTime":string
+   }
+
+   */
+  riskQueryGoodsIovoiceWarning(params, callback){
+    return this.modelExecute('/Risk/Query/GoodsIovoiceWarning', params, callback)
+  }
+  /**
+   *名称：风控.查询开票预警配置 路由：/Risk/Query/GoodsIovoiceWarningSetting
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //商品编号
+       "goodsId":int
+   }
+
+   *Response:
+   {
+       //商品编号
+       "goodsId":int
+       //新站点定义
+       "newCompanyMonth":int
+       //单月限制
+       "newMonthLimit":decimal
+       //季度限制
+       "newQuarterLimit":decimal
+       //月数1
+       "newTotalMonth1":int
+       //限制1
+       "newTotalMonthLimit1":decimal
+       //月数2
+       "newTotalMonth2":int
+       //限制2
+       "newTotalMonthLimit2":decimal
+       //月数3
+       "newTotalMonth3":int
+       //限制3
+       "newTotalMonthLimit3":decimal
+       //阈值
+       "newThreshold":decimal
+       //代开是否受限
+       "newIsRestrict":string
+       //单月限制
+       "oldMonthLimit":decimal
+       //季度限制
+       "oldQuarterLimit":decimal
+       //年度限制
+       "oldYearLimit":decimal
+       //月数1
+       "oldTotalMonth1":int
+       //限制1
+       "oldTotalMonthLimit1":decimal
+       //月数2
+       "oldTotalMonth2":int
+       //限制2
+       "oldTotalMonthLimit2":decimal
+       //月数3
+       "oldTotalMonth3":int
+       //限制3
+       "oldTotalMonthLimit3":decimal
+       //阈值
+       "oldThreshold":decimal
+       //代开是否受限
+       "oldIsRestrict":string
+   }
+
+   */
+  riskQueryGoodsIovoiceWarningSetting(params, callback){
+    return this.modelExecute('/Risk/Query/GoodsIovoiceWarningSetting', params, callback)
+  }
+  /**
+   *名称：风控.保存站点流水 路由：/Risk/Save/CompanyWater
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //流水编号
+       "waterId":int
+       //站点编号
+       "companyId":int
+       //银行
+       "bankName":string
+       //交易日期
+       "tradeTime":DateTime
+       //交易方
+       "traderName":string
+       //贷方发生额
+       "inAmount":decimal
+       //借方发生额
+       "outAmount":decimal
+       //余额
+       "lastAmount":decimal
+       //摘要
+       "remark":string
+   }
+
+   *Response:
+   int
+   */
+  riskSaveCompanyWater(params, callback){
+    return this.modelExecute('/Risk/Save/CompanyWater', params, callback)
+  }
+  riskDeleteCompanyWater(params, callback){
+    return this.modelExecute('/Risk/Delete/CompanyWater', params, callback)
+  }
+  riskHandleCompanyWaterWarning(params, callback){
+    return this.modelExecute('/Risk/Handle/CompanyWaterWarning', params, callback)
+  }
+  /**
+   *名称：风控.保存站点流水预警设置 路由：/Risk/Save/CompanyWaterWarningSetting
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //非法人账户转出
+       "investorOutSetting":string
+       //当日入账当日出账
+       "todaySetting":string
+       //转入公司开票订单
+       "noInvestorSetting":string
+       //账户余额阈值
+       "amountSetting":decimal
+   }
+
+   *Response:
+   bool
+   */
+  riskSaveCompanyWaterWarningSetting(params, callback){
+    return this.modelExecute('/Risk/Save/CompanyWaterWarningSetting', params, callback)
+  }
+  /**
+   *名称：风控.保存开票预警配置 路由：/Risk/Save/GoodsIovoiceWarningSetting
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //商品编号
+       "goodsId":int
+       //新站点定义
+       "newCompanyMonth":int
+       //单月限制
+       "newMonthLimit":decimal
+       //季度限制
+       "newQuarterLimit":decimal
+       //月数1
+       "newTotalMonth1":int
+       //限制1
+       "newTotalMonthLimit1":decimal
+       //月数2
+       "newTotalMonth2":int
+       //限制2
+       "newTotalMonthLimit2":decimal
+       //月数3
+       "newTotalMonth3":int
+       //限制3
+       "newTotalMonthLimit3":decimal
+       //阈值
+       "newThreshold":decimal
+       //代开是否受限
+       "newIsRestrict":string
+       //单月限制
+       "oldMonthLimit":decimal
+       //季度限制
+       "oldQuarterLimit":decimal
+       //年度限制
+       "oldYearLimit":decimal
+       //月数1
+       "oldTotalMonth1":int
+       //限制1
+       "oldTotalMonthLimit1":decimal
+       //月数2
+       "oldTotalMonth2":int
+       //限制2
+       "oldTotalMonthLimit2":decimal
+       //月数3
+       "oldTotalMonth3":int
+       //限制3
+       "oldTotalMonthLimit3":decimal
+       //阈值
+       "oldThreshold":decimal
+       //代开是否受限
+       "oldIsRestrict":string
+   }
+
+   *Response:
+   bool
+   */
+  riskSaveGoodsIovoiceWarningSetting(params, callback){
+    return this.modelExecute('/Risk/Save/GoodsIovoiceWarningSetting', params, callback)
+  }
+  /**
+   *名称：风控.站点流水统计 路由：/Risk/Statistics/ComapnyWater
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //开始时间
+       "tradeBeginTime":DateTime
+       //结束时间
+       "tradeEndTime":DateTime
+   }
+
+   *Response:
+   {
+       //交易次数
+       "tradeCount":int
+       //站点编号
+       "companyId":int
+       //站点名称
+       "companyName":string
+       //客户编号
+       "customerId":int
+       //客户名称
+       "customerName":string
+       //贷方发生额
+       "sumInAmount":decimal
+       //借方发生额
+       "sumOutAmount":decimal
+   }
+
+   */
+  riskStatisticsComapnyWater(params, callback){
+    return this.modelExecute('/Risk/Statistics/ComapnyWater', params, callback)
   }
   /**
    *名称：角色.列表 路由：/Role/List

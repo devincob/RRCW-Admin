@@ -195,7 +195,7 @@ export default {
       this.loadDetail()
     },
     async loadDetail(){
-      this.openLoading(null, '正在查询...')
+      this.openLoading('.invoice-dialog-component .el-dialog', '正在查询...')
       try {
         let list = await this.$$main.customerListInvoiceInfo({
           ...this.form,
@@ -265,6 +265,11 @@ export default {
       }
       if (item.invoiceInfoType === 'Z' && (!item.invoiceCompanyBankNo || item.invoiceCompanyBankNo === '')) {
         this.$message.error('公司开户银行账号是必填的')
+        return
+      }
+      let taxLen = item.invoiceCompanyTaxNo.length || 0
+      if (taxLen !== 15 && taxLen !== 18 && taxLen !== 20) {
+        this.$message.error('税号长度必须为15或18或20位')
         return
       }
       try {

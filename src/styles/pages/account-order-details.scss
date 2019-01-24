@@ -121,6 +121,32 @@
     }
   }
 }
+.amountComputed{
+  text-align: right;
+  .title{
+    display:inline-block;
+    font-size:12px;
+    color:#333333;
+    padding:10px 0;
+    div{
+      line-height: 22px;
+      height: 22px;
+    }
+    div:last-child{
+      font-size:16px;
+    }
+  }
+  .amount{
+    display:inline-block;
+    font-size:16px;
+    color:#333333;
+    padding:10px 10px 10px 0;
+    div{
+      line-height: 22px;
+      height: 22px;
+    }
+  }
+}
 
 .finish-info {
   font-size: 18px;

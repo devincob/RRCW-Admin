@@ -1,35 +1,39 @@
 <template>
-  <x-page :breadcrumb="breadcrumb" title="新增/编辑商品">
-    <el-card class="el-card-mini no-box-shadow no-border-radius">
-      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" size="mini" style="width: 460px;" label-width="120px">
+  <x-page :breadcrumb="breadcrumb" title="新增编辑商品">
+    <el-card class="el-card-mini no-box-shadow no-border-radius" style="max-width:800px;min-width:600px;min-height:1000px">
+         <div slot="header"><span
+              style="font-size: 14px;"
+              class="text-bold"
+            >新增编辑商品</span></div>
+      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" size="mini" style="width: 460px;" label-width="160px">
         <el-form-item label="商品编号" prop="goodsId">
-          <el-input v-model="ruleForm.goodsId" disabled :placeholder="ruleForm.goodsId ? ruleForm.goodsId : '系统自动生成'"></el-input>
+          <el-input v-model="ruleForm.goodsId" disabled :placeholder="ruleForm.goodsId ? ruleForm.goodsId : '系统自动生成'" style="width: 340px;"></el-input>
         </el-form-item>
         <el-form-item label="商品名称" prop="goodsName">
-          <el-input v-model="ruleForm.goodsName"></el-input>
+          <el-input v-model="ruleForm.goodsName" placeholder="请输入税管家商品名称" style="width: 340px;"></el-input>
         </el-form-item>
         <el-form-item label="纳税性质" prop="taxType">
-          <el-select v-model="ruleForm.taxType" placeholder="请选择纳税性质">
+          <el-select v-model="ruleForm.taxType" placeholder="请选择商品的纳税性质" style="width: 340px;">
             <el-option label="一般纳税人" value="N"></el-option>
             <el-option label="小规模纳税人" value="S"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="发票类型" prop="invoiceTypeName">
-          <el-select v-model="invoiceTypeNames" multiple placeholder="请选择发票类型">
+          <el-select v-model="invoiceTypeNames" multiple placeholder="请选择商品开票订单的发票类型" style="width: 340px;">
             <el-option v-for="item in invoiceTypes" :key="item.invoiceTypeId" :label="item.invoiceTypeName" :value="item.invoiceTypeName"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="开票服务费费率" prop="invoiceServiceRatio">
-          <el-input type="number" v-model.number="ruleForm.invoiceServiceRatio" placeholder="输入0.0至1.0之间的小数"></el-input>
+          <el-input type="number" v-model.number="ruleForm.invoiceServiceRatio" placeholder="输入0.0至1.0之间的小数" style="width: 340px;"></el-input>
         </el-form-item>
         <el-form-item label="开户服务费" prop="serviceCharge">
-          <el-input type="number" v-model.number="ruleForm.serviceCharge" placeholder="输入正整数"></el-input>
+          <el-input type="number" v-model.number="ruleForm.serviceCharge" placeholder="输入正整数" style="width: 340px;"></el-input>
         </el-form-item>
         <el-form-item label="开户押金" prop="deposit">
-          <el-input type="number" v-model.number="ruleForm.deposit" placeholder="输入正整数"></el-input>
+          <el-input type="number" v-model.number="ruleForm.deposit" placeholder="输入正整数" style="width: 340px;"></el-input>
         </el-form-item>
-        <el-form-item label="状态" prop="status">
-          <el-select v-model="ruleForm.status">
+        <el-form-item label="状态" prop="status"  >
+          <el-select v-model="ruleForm.status"  style="width: 340px;">
             <el-option label="正常" value="N"/>
             <el-option label="禁用" value="D"/>
           </el-select>
@@ -127,7 +131,7 @@ export default {
     },
     loadGoodsDetail(goodsId){
       this.$$main.goodsDetail({goodsId}).then(goods => {
-        this.invoiceTypeNames = goods.invoiceTypeName.split(',')
+        this.invoiceTypeNames = (!goods.invoiceTypeName || !goods.invoiceTypeName.length) ? [] : goods.invoiceTypeName.split(',')
         this.ruleForm = {
           'goodsName': goods.goodsName,
           'invoiceTypeName': goods.invoiceTypeName,

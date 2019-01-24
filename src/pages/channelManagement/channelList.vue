@@ -1,6 +1,6 @@
 <template>
   <x-page :breadcrumb="breadcrumb" title="渠道列表">
-    <el-card class="el-card-mini no-border-radius no-box-shadow" body-style="padding: 10px">
+    <el-card class="el-card-mini no-box-shadow" style="min-width:800px;min-height:1000px">
       <el-form :model="searchForm" :inline="true" size="mini" label-width="100px" label-position="left" class="demo-form-inline">
         <el-form-item label="渠道商名称：">
           <el-input v-model="searchForm.channelName" placeholder="请输入渠道商名称" style="width: 200px"/>
@@ -18,10 +18,10 @@
                 element-loading-text="拼命加载中..."
                 element-loading-spinner="el-icon-loading"
                 element-loading-background="rgba(255, 255, 255, 0.8)"
-                stripe
+                :border="true"
+                :highlight-current-row="true"
                 @sort-change="onSortChange"
-                size="mini"
-                style="width: 100%;border-top:1px #eee solid">
+                size="mini">
         <el-table-column label="渠道商编号" align="center" prop="channelId" width="100" fixed />
         <el-table-column label="渠道商名称" prop="channelName" align="center"/>
         <el-table-column label="渠道联系人" prop="channelContact" align="center"/>

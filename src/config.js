@@ -34,7 +34,7 @@ const config = {
       'D': 'http://static.caiwu.com', // http://192.168.1.130/res/ResReadOlnyServer.ashx
       'T': 'http://test.statics.maosui.com/Res/ResReadOlnyServer.ashx',
       // 'P': getServerConfig(config.serverConfigVersion, 'ImageUrl', 'http://statics.maosui.com/Res/ResReadOlnyServer.ashx')
-      'P': 'http://static.wenwujz.com'
+      'P': 'http://test.static.i-caiwu.com'
     }
     return urls[this.appMode]
   },
@@ -60,7 +60,7 @@ const config = {
       // D: '127.0.0.1:3001',
       T: 'test.mc.api.maosui.com',
       // P: getServerConfig(config.serverConfigVersion, 'RestfulUrl', 'mc.api.maosui.com')
-      P: 'api.admin.wenwujz.com'
+      P: 'test.api.admin.ts.i-caiwu.com'
     }
     return urls[this.appMode]
   },

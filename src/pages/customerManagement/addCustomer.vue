@@ -1,44 +1,56 @@
 <template>
   <x-page :breadcrumb="breadcrumb"  :title="pageText">
-    <el-card body-style="padding: 10px" class="no-box-shadow el-card-mini">
-      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="150px" class="demo-ruleForm" size="mini">
+    <el-card body-style="padding: 10px" class="no-box-shadow el-card-mini" style="max-width:800px;min-width:600px;min-height:1000px">
+       <div slot="header"><span
+              style="font-size: 14px;"
+              class="text-bold"
+            >新增编辑客户</span></div>
+      <el-form :model="ruleForm" :rules="rules" ref="ruleForm"  style="width: 460px;" label-width="160px" class="demo-ruleForm" size="mini">
         <el-form-item label="客户编号">
           <el-col :span="6">
-            <el-input disabled :placeholder="ruleForm.customerId > 0 ? ruleForm.customerId : '系统自动生成' "></el-input>
+            <el-input disabled :placeholder="ruleForm.customerId > 0 ? ruleForm.customerId : '系统自动生成' " style="width:340px"></el-input>
           </el-col>
         </el-form-item>
         <el-form-item label="客户姓名" prop="customerName">
           <el-col :span="6">
-            <el-input v-model="ruleForm.customerName" placeholder="请填写客户姓名"></el-input>
+            <el-input v-model="ruleForm.customerName" placeholder="请填写客户姓名" style="width:340px"></el-input>
           </el-col>
         </el-form-item>
         <el-form-item label="客户手机" prop="phone">
           <el-col :span="6">
-            <el-input v-model="ruleForm.phone" placeholder="请填写客户电话"></el-input>
+            <el-input v-model="ruleForm.phone" placeholder="请填写客户电话" style="width:340px"></el-input>
           </el-col>
         </el-form-item>
         <el-form-item label="客户邮箱">
           <el-col :span="6">
-            <el-input v-model="ruleForm.email" type="email" placeholder="请填写客户邮箱"></el-input>
+            <el-input v-model="ruleForm.email" type="email" placeholder="请填写客户邮箱" style="width:340px"></el-input>
           </el-col>
         </el-form-item>
         <el-form-item label="家庭地址">
           <el-col :span="6">
-            <el-input v-model="ruleForm.liveAddress" placeholder="请填写您的家庭地址"></el-input>
+            <el-input v-model="ruleForm.liveAddress" placeholder="请填写您的家庭地址" style="width:340px"></el-input>
           </el-col>
         </el-form-item>
         <el-form-item label="办公地址">
           <el-col :span="6">
-            <el-input v-model="ruleForm.workAddress" placeholder="请填写您的办公地址"></el-input>
+            <el-input v-model="ruleForm.workAddress" placeholder="请填写您的办公地址" style="width:340px"></el-input>
           </el-col>
         </el-form-item>
         <el-form-item label="客户生日">
           <el-col :span="6">
-            <el-input v-model="ruleForm.birthday" placeholder="生日格式：1999-01-01"></el-input>
+            <el-input v-model="ruleForm.birthday" placeholder="生日格式：1999-01-01" style="width:340px"></el-input>
           </el-col>
         </el-form-item>
+        <!--若改成日历形式 直接去小上面 的 把下面代码放出即可-->
+        <!--<el-form-item label="客户生日">-->
+          <!--<el-date-picker placeholder="生日格式：1999-01-01"-->
+            <!--v-model="ruleForm.birthday"-->
+            <!--type="date"-->
+            <!--value-format="yyyy-MM-dd">-->
+          <!--</el-date-picker>-->
+        <!--</el-form-item>-->
         <el-form-item label="渠道商列表"  prop="source">
-          <el-select v-model="ruleForm.source" placeholder="请选择客户来源" @change="selectChannel">
+          <el-select v-model="ruleForm.source" placeholder="请选择客户来源" @change="selectChannel" style="width:340px">
             <el-option
               v-for="(item, index) in channelList"
               :key=index
@@ -48,7 +60,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="客户状态" prop="status">
-          <el-select v-model="ruleForm.status" placeholder="请选择客户状态">
+          <el-select v-model="ruleForm.status" placeholder="请选择客户状态" style="width:340px">
             <el-option label="正常" value="N"></el-option>
             <el-option label="禁用" value="D"></el-option>
           </el-select>
@@ -58,11 +70,12 @@
             placeholder="请选择所属部门"
             v-model="selectedOptions"
             :show-all-levels="false"
-            :options="depts">
+            :options="depts"
+            style="width:340px">
           </el-cascader>
         </el-form-item>
         <el-form-item label="所属商务人员" prop="belongAdminUserId">
-          <el-select v-model="ruleForm.belongAdminUserId" placeholder="请选择所属商务人员" @change="selectBelong">
+          <el-select v-model="ruleForm.belongAdminUserId" placeholder="请选择所属商务人员" @change="selectBelong" style="width:340px">
             <el-option
               v-for="(item, index) in roles"
               :key=index
@@ -73,7 +86,7 @@
         </el-form-item>
         <el-form-item label="备注">
           <el-col :span="6">
-            <el-input type="textarea" :autosize="{ minRows: 4, maxRows: 4}" v-model="ruleForm.remark" placeholder="请备注一下…"></el-input>
+            <el-input style="width:340px" type="textarea" rows="6" v-model="ruleForm.remark" placeholder="请输入客户备注信息"></el-input>
           </el-col>
         </el-form-item>
         <el-form-item>
@@ -258,10 +271,11 @@ export default {
         remark: ''
       }
       this.$refs.ruleForm.resetFields()
-      if (this.$route.query.customer_id) {
-        const customerId = Number(this.$route.query.customer_id || 0)
-        this.loadDetails(customerId)
-      }
+      // if (this.$route.query.customer_id) {
+      //   console.log(222222222222222)
+      //   const customerId = Number(this.$route.query.customer_id || 0)
+      //   this.loadDetails(customerId)
+      // }
     }
   },
   mounted() {

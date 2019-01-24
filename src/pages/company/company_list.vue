@@ -1,6 +1,6 @@
 <template>
-  <x-page breadcrumb="auto" title="公司列表">
-    <el-card body-style="padding: 10px" class="el-card-mini no-box-shadow no-border-radius">
+  <x-page breadcrumb="auto" title="站点列表">
+    <el-card body-style="padding: 10px" class="el-card-mini no-box-shadow" style="min-width:800px;min-height:1000px">
       <el-form :inline="true" size="mini" label-width="100px" label-position="left" class="demo-form-inline">
         <el-form-item label="客户名称：">
           <el-input v-model="searchForm.customerName" placeholder="请输入客户名称" style="width: 200px"/>
@@ -40,38 +40,38 @@
         element-loading-spinner="el-icon-loading"
         element-loading-background="rgba(255, 255, 255, 0.8)"
         ref="table"
-        stripe
+        :border="true"
+        :highlight-current-row="true"
         @sort-change="onSortChange"
-        size="mini"
-        style="width: 100%;border-top:1px #eee solid">
+        size="mini">
         <x-empty v-if="!loading" slot="empty"/>
         <x-empty v-if="loading" no-icon no-title text="正在获取数据" slot="empty"/>
 
-        <el-table-column label="站点编号" prop="companyId" width="80"/>
-        <el-table-column label="站点名称" prop="companyName">
+        <el-table-column label="编号" prop="companyId" width="50" align="center"/>
+        <el-table-column label="站点名称" prop="companyName" min-width="150">
           <CompanyDetailsDialog slot-scope="scope" :company-id="scope.row.companyId">
             <span>{{scope.row.companyName}}</span>
           </CompanyDetailsDialog>
         </el-table-column>
-        <el-table-column label="开票折扣率" prop="serviceFeeDiscount"/>
-        <el-table-column label="站点类型" prop="companyTypeName"/>
-        <el-table-column label="所属客户" prop="customerName">
+        <el-table-column label="开票折扣率" align="right" width="100" prop="serviceFeeDiscount"/>
+        <el-table-column label="站点类型" prop="companyTypeName" min-width="120"/>
+        <el-table-column label="所属客户" prop="customerName" width="80">
           <CustomerDetailsDialog slot-scope="scope" :customer-id="scope.row.customerId">
             <span>{{scope.row.customerName}}</span>
           </CustomerDetailsDialog>
         </el-table-column>
-        <el-table-column label="税源地" prop="sourceTaxName">
+        <el-table-column label="税源地" prop="sourceTaxName" width="120">
           <TaxSourceDetailsDialog slot-scope="scope" :source-tax-id="scope.row.sourceTaxId">
           <span>{{scope.row.sourceTaxName}}</span>
           </TaxSourceDetailsDialog>
         </el-table-column>
-        <el-table-column label="商品" prop="goodsName">
+        <el-table-column label="商品" prop="goodsName" min-width="120">
           <GoodsDetailsDialog slot-scope="scope" :goods-id="scope.row.goodsId">
             <span>{{scope.row.goodsName}}</span>
           </GoodsDetailsDialog>
         </el-table-column>
         <el-table-column label="开户日期" prop="showCreateTime" width="150"/>
-        <el-table-column label="状态" prop="status">
+        <el-table-column label="状态" align="center" prop="status" width="60">
           <span slot-scope="scope" :class="{'text-danger': scope.row.status === 'D', 'text-success': scope.row.status === 'N'}">{{statusText[scope.row.status]}}</span>
         </el-table-column>
         <!--<el-table-column label="操作" width="100" align="center" header-align="center">-->

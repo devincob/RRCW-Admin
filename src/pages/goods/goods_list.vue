@@ -1,6 +1,6 @@
 <template>
   <x-page breadcrumb="auto" title="商品列表">
-    <el-card body-style="padding: 10px" class="el-card-mini no-box-shadow no-border-radius">
+    <el-card  class="el-card-mini no-box-shadow" style="min-width:800px;min-height:1000px">
       <!-- 表格数据 -->
       <el-table
         :data="tableData"
@@ -9,26 +9,26 @@
         element-loading-spinner="el-icon-loading"
         element-loading-background="rgba(255, 255, 255, 0.8)"
         ref="table"
-        stripe
+        :border="true"
+        :highlight-current-row="true"
         @sort-change="onSortChange"
-        size="mini"
-        style="width: 100%;border-top:1px #eee solid">
+        size="mini">
         <x-empty v-if="!loading" slot="empty"/>
         <x-empty v-if="loading" no-icon no-title text="正在获取数据" slot="empty"/>
 
-        <el-table-column label="商品编号" prop="goodsId" width="80"/>
-        <el-table-column label="名称" prop="goodsName"/>
-        <el-table-column label="纳税性质" prop="userType">
+        <el-table-column label="商品编号" prop="goodsId" align="center" width="80"/>
+        <el-table-column label="名称" prop="goodsName"  min-width="120"/>
+        <el-table-column label="纳税性质" prop="userType" min-width="120">
           <span slot-scope="scope">{{userTypeText[scope.row.taxType]}}</span>
         </el-table-column>
-        <el-table-column label="开票服务费率" prop="invoiceServiceRatio" min-width="100"/>
-        <el-table-column label="开户服务费" prop="serviceCharge">
+        <el-table-column align="right" label="开票服务费率" prop="invoiceServiceRatio" width="120"/>
+        <el-table-column  align="right" label="开户服务费" prop="serviceCharge" width="120">
           <span slot-scope="scope">{{scope.row.serviceCharge | currency}}</span>
         </el-table-column>
-        <el-table-column label="开户押金" prop="deposit">
+        <el-table-column label="开户押金" align="right" prop="deposit" width="120">
           <span slot-scope="scope">{{scope.row.deposit | currency}}</span>
         </el-table-column>
-        <el-table-column label="状态" prop="status">
+        <el-table-column label="状态" prop="status" align="center" width="60">
           <span slot-scope="scope" :class="{'text-danger': scope.row.status === 'D', 'text-success': scope.row.status === 'N'}">{{statusText[scope.row.status]}}</span>
         </el-table-column>
         <el-table-column label="操作" width="100" align="center" header-align="center">

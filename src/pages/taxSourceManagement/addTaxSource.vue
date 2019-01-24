@@ -1,19 +1,23 @@
 <template>
   <x-page :breadcrumb="breadcrumb" :title="pageText">
-    <el-card body-style="padding: 10px" class="no-box-shadow el-card-mini">
-      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="150px" class="demo-ruleForm" size="mini">
+    <el-card body-style="padding: 10px" class="no-box-shadow el-card-mini" style="max-width:800px;min-width:600px;min-height:1000px">
+        <div slot="header"><span
+              style="font-size: 14px;"
+              class="text-bold"
+            >新增编辑税源地</span></div>
+      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" style="width: 460px;" label-width="160px" class="demo-ruleForm" size="mini">
           <el-form-item label="税源地编号">
             <el-col :span="6">
-              <el-input disabled :placeholder="ruleForm.sourceTaxId > 0 ? ruleForm.sourceTaxId : '系统自动生成'"></el-input>
+              <el-input disabled :placeholder="ruleForm.sourceTaxId > 0 ? ruleForm.sourceTaxId : '系统自动生成'" style="width:340px"></el-input>
             </el-col>
           </el-form-item>
-          <el-form-item label="税源地名称(园区)" prop="sourceTaxName">
+          <el-form-item label="税源地名称" prop="sourceTaxName">
             <el-col :span="6">
-              <el-input v-model="ruleForm.sourceTaxName" placeholder="请填写税源地名称"></el-input>
+              <el-input v-model="ruleForm.sourceTaxName" placeholder="请输入税源地名称" style="width:340px"></el-input>
             </el-col>
           </el-form-item>
-          <el-form-item label="税源地供应商" prop="supplierIds">
-            <el-select v-model="supplierIds" multiple placeholder="请选择供货商" @change="onSupplierChange">
+          <el-form-item label="供应商" prop="supplierIds">
+            <el-select v-model="supplierIds" multiple placeholder="请选择税源地供应商" @change="onSupplierChange" style="width:340px">
               <el-option
                 v-for="item in supplierList"
                 :key="item.supplierId"
@@ -23,7 +27,7 @@
             </el-select>
           </el-form-item>
         <el-form-item label="税源地所属省份" prop="provinceId">
-              <el-select v-model="ruleForm.provinceId" placeholder="请选择省份" @change="selectProvince">
+              <el-select v-model="ruleForm.provinceId" placeholder="请选择税源地所在省份" @change="selectProvince" style="width:340px">
                 <el-option
                   v-for="(item, index) in arrProvince"
                   :key=index
@@ -33,7 +37,7 @@
               </el-select>
           </el-form-item>
           <el-form-item label="税源地所属城市" prop="cityId">
-              <el-select v-model="ruleForm.cityId" placeholder="请选择城市" @change="selectCity">
+              <el-select v-model="ruleForm.cityId" placeholder="请选择税源地所在城市" @change="selectCity" style="width:340px">
                 <el-option
                   v-for="(item, index) in arrCitys"
                   :key=index
@@ -44,30 +48,30 @@
           </el-form-item>
           <el-form-item label="增值税返税比率" prop="zzsRatio">
             <el-col :span="6">
-              <el-input type="number" v-model.number="ruleForm.zzsRatio" :min='0.001' :step="0.001" placeholder="增值税返税比率请填写0.0至1.0之间的小数"></el-input>
+              <el-input type="number" style="width:340px" v-model.number="ruleForm.zzsRatio" :min='0.001' :step="0.001" placeholder="增值税返税比率请填写0.0至1.0之间的小数"></el-input>
             </el-col>
           </el-form-item>
-          <el-form-item label="个人所得税返税比率" prop="grsdsRatio">
+          <el-form-item label="个税返税比率" prop="grsdsRatio">
             <el-col :span="6">
-              <el-input type="number" v-model.number="ruleForm.grsdsRatio" :min='0.001' :step="0.001" placeholder="个人所得税比率请填写0.0至1.0之间的小数"></el-input>
+              <el-input type="number" style="width:340px" v-model.number="ruleForm.grsdsRatio" :min='0.001' :step="0.001" placeholder="个人所得税比率请填写0.0至1.0之间的小数"></el-input>
             </el-col>
           </el-form-item>
           <el-form-item label="附加税返税比率" prop="fjsRatio">
             <el-col :span="6">
-              <el-input type="number" v-model.number="ruleForm.fjsRatio" :min='0.001' :step="0.001" placeholder="附加税返税比率请填写0.0至1.0之间的小数"></el-input>
+              <el-input type="number" style="width:340px" v-model.number="ruleForm.fjsRatio" :min='0.001' :step="0.001" placeholder="附加税返税比率请填写0.0至1.0之间的小数"></el-input>
             </el-col>
           </el-form-item>
           <el-form-item label="印花税返税比率" prop="yhsRatio">
             <el-col :span="6">
-              <el-input type="number" v-model.number="ruleForm.yhsRatio" :min='0.001' :step="0.001" placeholder="印花税返税比率请填写0.0至1.0之间的小数"></el-input>
+              <el-input type="number" style="width:340px" v-model.number="ruleForm.yhsRatio" :min='0.001' :step="0.001" placeholder="印花税返税比率请填写0.0至1.0之间的小数"></el-input>
             </el-col>
           </el-form-item>
           <el-form-item label="法人年龄上限"  prop="legalAge">
             <el-col :span="6">
-              <el-input type="number" v-model.number="ruleForm.legalAge" :min='1' placeholder="请填写法人年龄上限"></el-input>
+              <el-input type="number" style="width:340px" v-model.number="ruleForm.legalAge" :min='1' placeholder="请输入法人年龄上限"></el-input>
             </el-col>
           </el-form-item>
-          <el-form-item label="需要财务身份复印件">
+          <el-form-item label="财务身份复印件">
             <el-radio-group v-model="ruleForm.isNeedFinanceID">
               <el-radio label="Y" >是</el-radio>
               <el-radio label="N" >否</el-radio>
@@ -75,16 +79,16 @@
           </el-form-item>
           <el-form-item label="园区联系人"  prop="contact">
             <el-col :span="6">
-              <el-input v-model="ruleForm.contact" placeholder="请填写园区联系人"></el-input>
+              <el-input style="width:340px" v-model="ruleForm.contact" placeholder="请输入税源地联系人"></el-input>
             </el-col>
           </el-form-item>
           <el-form-item label="联系人电话" prop="phone">
             <el-col :span="6">
-              <el-input v-model="ruleForm.phone" placeholder="请填写联系人电话"></el-input>
+              <el-input style="width:340px" v-model="ruleForm.phone" placeholder="请输入税源地联系人电话"></el-input>
             </el-col>
           </el-form-item>
           <el-form-item label="税源地状态">
-            <el-select v-model="ruleForm.status" placeholder="请选择活动区域">
+            <el-select style="width:340px" v-model="ruleForm.status" placeholder="请选择税源地状态">
               <el-option label="正常" value="N"></el-option>
               <el-option label="禁用" value="D"></el-option>
             </el-select>

@@ -23,14 +23,16 @@
         element-loading-spinner="el-icon-loading"
         element-loading-background="rgba(255, 255, 255, 0.8)"
         size="mini"
+        :border="true"
+        :highlight-current-row="true"
         style="width: 100%;">
         <el-table-column fixed prop="adminUserName" label="人员名称" min-width="120"/>
         <el-table-column prop="deptName" label="部门名称" min-width="120"/>
         <el-table-column prop="deptUserName" label="部门负责人" min-width="120"/>
-        <el-table-column sortable="custom" prop="customerCount" label="客户数" min-width="120"/>
-        <el-table-column sortable="custom" prop="companyCount" label="已开户站点总数" min-width="120"/>
-        <el-table-column sortable="custom" prop="newCompanyCount" label="新开站点总数" min-width="120"/>
-        <el-table-column sortable="custom" prop="activeCompanyCount" label="活跃站点总数（6个月内有开票）" min-width="120"/>
+        <el-table-column sortable="custom" align="right" prop="customerCount" label="客户数" width="80"/>
+        <el-table-column sortable="custom" align="right" prop="companyCount" label="站点总数" width="100"/>
+        <el-table-column sortable="custom" align="right" prop="newCompanyCount" label="新开站点" min-width="80"/>
+        <el-table-column sortable="custom" align="right" prop="activeCompanyCount" label="活跃站点（6个月内开票）" min-width="120"/>
       </el-table>
       <div class="text-right">
         <el-pagination

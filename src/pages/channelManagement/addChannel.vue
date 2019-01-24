@@ -1,34 +1,38 @@
 <template>
   <x-page :breadcrumb="breadcrumb"  :title="pageText">
-    <el-card body-style="padding: 10px" class="no-box-shadow el-card-mini">
-      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="150px" class="demo-ruleForm" size="mini">
+    <el-card  class="no-box-shadow el-card-mini" style="max-width:800px;min-width:600px;min-height:1000px">
+               <div slot="header"><span
+              style="font-size: 14px;"
+              class="text-bold"
+            >新增编辑渠道商</span></div>
+      <el-form :model="ruleForm" :rules="rules" ref="ruleForm"  style="width: 460px;" label-width="160px"  class="demo-ruleForm" size="mini">
         <el-form-item label="渠道商编号">
           <el-col :span="6">
-            <el-input disabled :placeholder="ruleForm.channelId > 0 ? ruleForm.channelId : '系统自动生成' "></el-input>
+            <el-input disabled :placeholder="ruleForm.channelId > 0 ? ruleForm.channelId : '系统自动生成' " style="width:340px"></el-input>
           </el-col>
         </el-form-item>
         <el-form-item label="渠道商名称" prop="channelName">
           <el-col :span="6">
-            <el-input v-model="ruleForm.channelName" placeholder="请填写渠道商名称"></el-input>
+            <el-input v-model="ruleForm.channelName" placeholder="请填写渠道商名称" style="width:340px"></el-input>
           </el-col>
         </el-form-item>
         <el-form-item label="联系人名称" prop="channelContact">
           <el-col :span="6">
-            <el-input v-model="ruleForm.channelContact" placeholder="请填写渠道商联系人名称"></el-input>
+            <el-input v-model="ruleForm.channelContact" placeholder="请填写渠道商联系人名称" style="width:340px"></el-input>
           </el-col>
         </el-form-item>
         <el-form-item label="渠道商电话" prop="channelPhone">
           <el-col :span="6">
-            <el-input v-model="ruleForm.channelPhone" placeholder="请填写渠道商联系电话"></el-input>
+            <el-input v-model="ruleForm.channelPhone" placeholder="请填写渠道商联系电话" style="width:340px"></el-input>
           </el-col>
         </el-form-item>
         <el-form-item label="渠道分成比例" prop="channelRatio">
           <el-col :span="6">
-            <el-input type="number" v-model.number="ruleForm.channelRatio" :min='0' :step="1" placeholder="请填写0至100之间的整数"></el-input>
+            <el-input type="number" v-model.number="ruleForm.channelRatio" :min='0' :step="1" placeholder="请填写0至100之间的整数" style="width:340px"></el-input>
           </el-col>
         </el-form-item>
         <el-form-item label="渠道状态" prop="channelStatus">
-          <el-select v-model="ruleForm.channelStatus" placeholder="请选择渠道状态">
+          <el-select v-model="ruleForm.channelStatus" placeholder="请选择渠道状态" style="width:340px">
             <el-option label="正常" value="N"></el-option>
             <el-option label="禁用" value="D"></el-option>
           </el-select>

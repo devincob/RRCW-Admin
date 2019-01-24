@@ -16,6 +16,8 @@
         element-loading-text="拼命加载中..."
         element-loading-spinner="el-icon-loading"
         element-loading-background="rgba(255, 255, 255, 0.8)"
+        :border="true"
+        :highlight-current-row="true"
         size="mini"
         style="width: 100%;">
         <el-table-column fixed prop="companyName" label="站点名称" min-width="120">

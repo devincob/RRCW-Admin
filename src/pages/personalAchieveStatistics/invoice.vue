@@ -22,14 +22,16 @@
         element-loading-text="拼命加载中..."
         element-loading-spinner="el-icon-loading"
         element-loading-background="rgba(255, 255, 255, 0.8)"
+        :border="true"
+        :highlight-current-row="true"
         size="mini"
         style="width: 100%;">
         <el-table-column fixed prop="adminUserName" label="姓名" min-width="120"/>
         <el-table-column prop="deptName" label="部门名称" min-width="120"/>
         <el-table-column prop="deptUserName" label="部门负责人" min-width="120"/>
-        <el-table-column sortable="custom" prop="sumInvoiceAmount" label="开票金额" min-width="120" :formatter="(row) => `${$options.filters['currency'](row.sumInvoiceAmount, '', 2)}`"/>
-        <el-table-column sortable="custom" prop="sumServiceAmount" label="服务费金额" min-width="120" :formatter="(row) => `${$options.filters['currency'](row.sumServiceAmount, '', 2)}`"/>
-        <el-table-column sortable="custom" prop="companyCount" label="开票站点数" min-width="120"/>
+        <el-table-column sortable="custom" prop="sumInvoiceAmount" align="right" label="开票金额" min-width="120" :formatter="(row) => `${$options.filters['currency'](row.sumInvoiceAmount, '', 2)}`"/>
+        <el-table-column sortable="custom" prop="sumServiceAmount" align="right" label="服务费金额" min-width="120" :formatter="(row) => `${$options.filters['currency'](row.sumServiceAmount, '', 2)}`"/>
+        <el-table-column sortable="custom" prop="companyCount" align="right" label="开票站点" min-width="120"/>
       </el-table>
       <div class="text-right">
         <el-pagination

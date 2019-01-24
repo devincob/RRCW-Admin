@@ -37,6 +37,10 @@
             <label slot="label"><span class="red-text">* </span>商品</label>
             <el-input v-model="form.goodsName" placeholder="商品" readonly/>
           </el-form-item>
+          <el-form-item prop="invoiceServiceRatio">
+            <label slot="label"><span class="red-text">* </span>服务费费率</label>
+            <el-input v-model="form.invoiceServiceRatio" placeholder="服务费费率" :readonly="form.isInvoiceServiceRatioChangeable !== 'Y'"/>
+          </el-form-item>
           <el-form-item label="发票类型" prop="invoiceTypeName">
             <label slot="label"><span class="red-text">* </span>发票类型</label>
             <el-select v-model="form.invoiceTypeName" :placeholder="form.goodsId ? '请选择发票类型' : '请先选择商品'">
@@ -52,7 +56,7 @@
             <label slot="label"><span class="red-text">* </span>项目</label>
             <!--<el-input v-model="form.invoiceContent" placeholder="项目"/>-->
             <el-select v-model="form.invoiceContent">
-              <el-option v-for="item in invoices" :label="item" :value="item" :key="item"/>
+              <el-option n v-for="item in invoices" :label="item" :value="item" :key="item"/>
             </el-select>
           </el-form-item>
           <el-form-item prop="invoiceAmount">
@@ -89,6 +93,19 @@
             <el-input v-model="form.invoiceExpressAddress" placeholder="发票快递地址" readonly/>
             <express-info-dialog :customer-id="form.customerId" class="ml-5" @onChoose="(res) => {onExpressChoose(res, 'invoiceExpressAddress')}">选择快递信息</express-info-dialog>
           </el-form-item>
+          <el-form-item prop="invoiceCompanyBankNo">
+            <label slot="label">期望开票日期</label>
+            <el-date-picker
+              v-model="form.hopeInvoiceDate"
+              type="date"
+              value-format="yyyy-MM-dd"
+              placeholder="选择日期">
+            </el-date-picker>
+          </el-form-item>
+          <el-form-item prop="invoiceCompanyBankNo">
+            <label slot="label">发票备注信息</label>
+            <el-input v-model="form.invoiceRemark" placeholder="发票备注信息"/>
+          </el-form-item>
           <!--<el-form-item label="是否需要特殊审批" prop="isNeedApproval">-->
             <!--<el-checkbox v-model="form.isNeedApproval" true-label="Y" false-label="N">是否需要特殊审批</el-checkbox>-->
           <!--</el-form-item>-->
@@ -105,7 +122,8 @@
                 <x-image v-if="form.invoiceContractUrl" :src="form.invoiceContractUrl" class="avatar"/>
                 <i v-else class="el-icon-plus avatar-uploader-icon" style="display: block"></i>
               </el-upload>
-              <el-button type="text" @click="onPreviewClick(form.invoiceContractUrl)" size="mini" v-if="form.invoiceContractUrl">查看原图</el-button>
+              <el-button type="text" @click="onPreviewClick(form.invoiceContractUrl)" size="mini" v-if="form.invoiceContractUrl">查看原文件</el-button>
+              <preview-button type="text" :src="form.invoiceContractUrl" size="mini" v-if="form.invoiceContractUrl">预览原文件</preview-button>
             </div>
           </el-form-item>
           <el-form-item label="是否加急处理" prop="isPriority">
@@ -150,9 +168,10 @@
 <script>
 import ExpressInfoDialog from '../../components/ExpressInfoDialog'
 import InvoiceInfoDialog from '../../components/InvoiceInfoDialog'
+import PreviewButton from '../../components/PreviewButton'
 export default {
   name: 'invoice-order-create',
-  components: {ExpressInfoDialog, InvoiceInfoDialog},
+  components: {ExpressInfoDialog, InvoiceInfoDialog, PreviewButton},
   data() {
     const validateServiceFee = (rule, value, callback) => {
       if (value < 0 || value > 1) {
@@ -177,15 +196,18 @@ export default {
         invoiceAmount: '', // 开票金额
         invoiceCompanyName: '', // 开票公司名称
         invoiceCompanyTaxNo: '', // 开票公司税号
+        invoiceServiceRatio: '',
         invoiceCompanyAddress: '', // 开票公司地址
         invoiceCompanyPhone: '', // 开票公司电话
         invoiceCompanyBankName: '', // 开票公司银行名称
         invoiceCompanyBankNo: '', // 开票公司银行账号
         invoiceExpressAddress: '', // 发票快递地址
+        hopeInvoiceDate: '', // 期望开票时间
+        invoiceRemark: '', // 备注
         isNeedApproval: 'N', // 是否需要审批
         isPriority: 'N', // 是否加急
         priorityReason: '', // 加急原因
-        invoiceServiceRatio: '',
+        isInvoiceServiceRatioChangeable: '',
         serviceFeeDiscount: '', // 服务费折扣
         orderId: '', // 订单Id
         invoiceTypeName: '', // 发票类型
@@ -282,9 +304,9 @@ export default {
           orderId: this.orderId
         })
 
-        await this.onCompanyChange(info.orderInfo.companyId || '')
+        await this.onCompanyChange(info.orderInfo.companyId || '', true)
 
-        info.orderInfo.invoiceServiceRatio = this.form.invoiceServiceRatio
+        info.orderInfo.isInvoiceServiceRatioChangeable = this.form.isInvoiceServiceRatioChangeable
         this.form = info.orderInfo
 
         this.form.customerId = this.form.customerId || ''
@@ -448,16 +470,19 @@ export default {
         invoiceCompanyBankName: '', // 开票公司银行名称
         invoiceCompanyBankNo: '', // 开票公司银行账号
         invoiceExpressAddress: '', // 发票快递地址
+        hopeInvoiceDate: '', // 期望开票时间
+        invoiceRemark: '', // 备注
         isNeedApproval: 'N', // 是否需要审批
         isPriority: 'N', // 是否加急
         invoiceServiceRatio: '',
+        isInvoiceServiceRatioChangeable: '',
         serviceFeeDiscount: '', // 服务费折扣
         orderId: '', // 订单Id
         invoiceTypeName: '', // 发票类型
         invoiceContractUrl: ''
       }
     },
-    async onCompanyChange(companyId){
+    async onCompanyChange(companyId, isAfterDetails = false){
       this.form.serviceFeeDiscount = null
       this.form.sourceTaxId = null
       this.form.sourceTaxName = null
@@ -474,7 +499,8 @@ export default {
       this.form.invoiceCompanyBankName = ''
       this.form.invoiceCompanyBankNo = ''
       this.form.invoiceExpressAddress = ''
-      this.form.invoiceServiceRatio = ''
+      !isAfterDetails && (this.form.invoiceServiceRatio = '')
+      this.form.isInvoiceServiceRatioChangeable = ''
       this.invoiceTypeList = []
 
       this.invoices = []
@@ -487,7 +513,8 @@ export default {
           this.form.goodsName = res.goodsName
           this.form.customerId = res.customerId
           this.form.customerName = res.customerName
-          this.form.invoiceServiceRatio = res.invoiceServiceRatio
+          !isAfterDetails && (this.form.invoiceServiceRatio = res.invoiceServiceRatio)
+          this.form.isInvoiceServiceRatioChangeable = res.isInvoiceServiceRatioChangeable || 'N'
           this.invoiceTypeList = res.invoiceTypeNames || []
           this.invoiceTypeList && this.invoiceTypeList.length === 1 && (this.form.invoiceTypeName = this.invoiceTypeList[0])
           this.invoices = res.invoiceContents || []
@@ -497,7 +524,7 @@ export default {
     openLoading(target) {
       this.uploadLoading = this.$loading({
         lock: true,
-        text: '图片上传中',
+        text: '文件上传中',
         spinner: 'el-icon-loading',
         target: target
       })

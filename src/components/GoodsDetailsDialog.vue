@@ -5,7 +5,7 @@
         <div v-if="loading">
           正在加载中...
         </div>
-        <table v-else class="details-table">
+        <table v-else class="detail-table">
           <tr>
             <td class="td-label">商品编号</td>
             <td>{{goods.goodsId}}</td>

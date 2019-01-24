@@ -131,7 +131,7 @@ export default {
       this.loadDetail()
     },
     async loadDetail(){
-      this.openLoading(null, '正在查询...')
+      this.openLoading('.express-dialog-component .el-dialog', '正在查询...')
       try {
         let list = await this.$$main.customerListAddress({
           ...this.form,

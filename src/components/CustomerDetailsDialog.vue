@@ -7,7 +7,7 @@
             正在加载中...
           </div>
           <div v-else-if="customerInfo && customerInfo.customerId">
-            <table class="details-table">
+            <table class="detail-table">
               <tr>
                 <td class="td-label">客户编号</td>
                 <td>{{customerInfo.customerId}}</td>

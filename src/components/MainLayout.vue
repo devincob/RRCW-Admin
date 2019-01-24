@@ -50,7 +50,7 @@
             <template v-if="menu.children">
               <el-submenu v-show="!menu.disabled" :key="menu.id" :index="`m-${menu.id}`">
                 <template slot="title">
-                  <i :class="menu.icon"></i>
+                  <i class="iconfont" :class="menu.icon"></i>
                   <span>{{menu.title}}</span>
                 </template>
                 <template v-for="child in menu.children">
@@ -82,7 +82,7 @@
             </template>
             <template v-else>
               <el-menu-item v-show="!menu.disabled" :key="menu.id" :index="menu.path">
-                <i :class="menu.icon"></i>
+                <i class="iconfont" :class="menu.icon"></i>
                 <span slot="title">{{menu.title}}</span>
               </el-menu-item>
             </template>
