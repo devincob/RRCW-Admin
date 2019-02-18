@@ -1,0 +1,26 @@
+.el-table--mini td{
+  vertical-align: top;
+}
+.el-table--mini td .cell {
+  height: auto;
+  overflow: unset;
+  white-space: unset;
+  text-overflow: unset;
+}
+
+.citySelectBox{
+  .el-form-item__content{
+    width: 300px;
+    .citySelectClass{
+      height: 28px !important;
+      line-height: 28px !important;
+      margin-top: 1px;
+  }
+}
+}
+.greenColor{
+  color: green;
+}
+.redColor{
+  color: red;
+}

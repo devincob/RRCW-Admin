@@ -3,19 +3,23 @@
 @import "vue-transitions";
 @import "components/index";
 @import "ui";
-@import "iconfonts/iconfont.css";
 
 @import "pages/login";
+@import "pages/order-details";
+@import "pages/order-log";
+@import "pages/financial-delay";
+@import "pages/publish";
+@import "pages/orders";
+@import "pages/detail";
+@import "pages/suborders";
+@import "pages/suborder-detail";
+@import "pages/appointment";
+@import "pages/waitforwork";
+@import "pages/waitforpay";
+@import "pages/atwork";
+@import "pages/insert";
+@import "pages/adjust-salary-approval";
+@import "pages/adjust-salary-record";
+@import "pages/event-detail";
+@import "pages/event-management";
 
-// order
-@import "pages/account-order-create";
-@import "pages/account-orders";
-@import "pages/account-order-details";
-@import "pages/invoice-order-create";
-@import "pages/invoice-orders";
-@import "pages/invoice-order-details";
-@import "pages/company_create";
-@import "pages/difference-order-list.vue";
-
-// risk
-@import "pages/invoice-threshold";

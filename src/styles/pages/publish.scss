@@ -1,0 +1,31 @@
+.box-card{
+  min-width: 300px;
+  max-width: 1000px;
+}
+.el-input,textarea{
+  width: 400px;
+}
+.citySelectClass{
+  height: 32px !important;
+  line-height: 32px !important;
+  margin-top: 1px;
+}
+.cityBoxClass{
+  width: 200px!important;
+}
+.train-dialog{
+  .el-input,textarea{
+    width: 313px;
+  }
+}
+.create-confirm-dialog{
+  .el-form-item__content{
+    padding-left: 10px;
+    .el-input{
+      width: 100%;
+    }
+  }
+  .el-form-item__error{
+    padding-left: 10px;
+  }
+}

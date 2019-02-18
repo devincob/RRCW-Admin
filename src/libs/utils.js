@@ -783,5 +783,3 @@ export function listToTree($list, $pk = 'id', $pid = 'pid', $child = 'children',
   }
   return $tree
 }
-
-utils.listToTree = listToTree

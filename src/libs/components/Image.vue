@@ -1,6 +1,6 @@
 <template>
   <img :src="imgSrc"
-       :data-src="displayDataSrc"
+       :data-src="getUploadImageUrl(src, '')"
        @error="onError"
        @click="(e)=>$emit('click', e)"
        @load="(e)=>$emit('load', e)"/>
@@ -19,30 +19,12 @@ export default {
   },
   data() {
     return {
-      img: this.src || this.dataSrc,
-      formats: {
-        'pdf': require('../../assets/images/pdf-placeholder.png'),
-        'doc': require('../../assets/images/word-placeholder.png'),
-        'docx': require('../../assets/images/word-placeholder.png'),
-        'zip': require('../../assets/images/zip-placeholder.png'),
-        'rar': require('../../assets/images/zip-placeholder.png')
-      }
+      img: this.src || this.dataSrc
     }
   },
   computed: {
     imgSrc() {
       return (this.src || this.dataSrc) ? this.realSrc((this.src || this.dataSrc)) : this.placeholder || this.$config.errorImage
-    },
-    displayDataSrc() {
-      let src = (this.src || this.dataSrc)
-      let displaySrc = this.getUploadImageUrl(src, '')
-      if (src && src.substr(0, 4) !== 'http' && src[0] === '/') {
-        let urlFormat = src.split('.')
-        if (['pdf', 'doc', 'docx', 'zip', 'rar'].indexOf(urlFormat[urlFormat.length - 1]) !== -1){
-          displaySrc = this.formats[urlFormat[urlFormat.length - 1]]
-        }
-      }
-      return displaySrc || this.$config.errorImage
     }
   },
   methods: {
@@ -51,8 +33,7 @@ export default {
     },
     realSrc(src) {
       if (src && src.substr(0, 4) !== 'http' && src[0] === '/') {
-        let urlFormat = src.split('.')
-        return ['pdf', 'doc', 'docx', 'zip', 'rar'].indexOf(urlFormat[urlFormat.length - 1]) !== -1 ? this.formats[urlFormat[urlFormat.length - 1]] : this.getUploadImageUrl(src, this.size)
+        return this.getUploadImageUrl(src, this.size)
       }
       return src || this.$config.errorImage
     }

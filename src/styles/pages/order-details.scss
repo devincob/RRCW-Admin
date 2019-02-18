@@ -1,0 +1,25 @@
+header{
+  background-color: #E9EEF3 !important;
+  padding-left: 20px !important;
+  font-size: 20px;
+  font-weight: bold;
+  span{
+    font-size: 15px;
+    color: #ff0000;
+  }
+  button span{
+    color: #7e7e7e;
+  }
+}
+
+.shortInput{
+  min-width: 32px;
+  max-width: 80px;
+}
+.dateSelect{
+  min-width: 32px;
+  max-width: 100%;
+}
+input{
+  height: 32px;
+}
