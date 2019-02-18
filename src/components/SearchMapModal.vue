@@ -1,20 +1,20 @@
 <template>
   <el-dialog
-    :visible.sync="showMapSelect"
+    :visible="showMapSelect"
     title="地图搜索"
-    width="60%"
-    v-drag-dialog="{reset: true}"
-    close-on-press-escape
-    >
+    width="50%"
+    :show-close="false"
+    :mask-closable="false"
+    :append-to-body="appendToBody">
     <template v-if="mapReady && showMapSelect">
-      <div class="amap-page-container" style="padding-top:10px">
+      <div class="amap-page-container">
         <el-amap-search-box ref="searchBox" class="search-box" :search-option="searchParams" :on-search-result="onSearchResult" :events="events"></el-amap-search-box>
         <el-amap :vid="vid" :center="mapCenter" :zoom="12">
           <el-amap-marker :title="marker.content" :position="marker.position" :events="marker.events" :draggable="true" :animation="marker.animation" :raiseOnDrag="true"></el-amap-marker>
         </el-amap>
       </div>
     </template>
-    <div slot="footer" style="padding-top:20px">
+    <div slot="footer">
       <el-button :native-type="'button'" @click="showMapSelect = false">取消</el-button>
       <el-button :native-type="'button'" @click="onSearchDone()" type="primary">确认</el-button>
     </div>

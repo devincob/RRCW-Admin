@@ -3,7 +3,7 @@
     <div style="max-width: 360px; margin: auto;padding-top: 100px;">
       <div class="farm-box login top-colors">
         <h1>
-          你好！欢迎使用<br>斜杠兼职管理系统
+          你好！欢迎使用<br>人人财务交易管理系统
           <div class="logo"></div>
         </h1>
         <section style="text-align: left">
@@ -19,7 +19,7 @@
               </el-form-item>
               <el-form-item class="verifyCode" prop="verifyCode" label="验证码" :rules="{required: true, message: '请输入图片中的内容'}">
                 <el-col :span="10">
-                  <el-input type="tel" v-model="fromData.verifyCode" style="width: 120px" placeholder="右侧图片数字"/>
+                  <el-input type="tel" v-model="fromData.verifyCode" style="width: 120px" placeholder="右侧图片字符"/>
                 </el-col>
                 <el-col :span="11">
                   <div v-if="!verifyCodeInfo.base64Image" class="verifyCodeImg">验证码图片</div>
@@ -74,7 +74,7 @@ export default {
     ...mapActions(['setUserInfo', 'pullMenus']),
     async verifyCode(){
       try {
-        const verifyCodeInfo = await this.$$main.userCreateCode()
+        const verifyCodeInfo = await this.$$main.commonCreateCode()
         if (verifyCodeInfo && !verifyCodeInfo.base64Image.startsWith('data:image')) {
           verifyCodeInfo.base64Image = 'data:image/jpg;base64,' + verifyCodeInfo.base64Image
         }
@@ -89,7 +89,7 @@ export default {
         this.loading = true
         const isValid = await this.$refs.loginFrom.validate()
         if (!isValid) return
-        const userInfo = await this.$$main.userLogin({
+        const userInfo = await this.$$main.commonLogin({
           loginName: this.fromData.loginName,
           loginPwd: this.fromData.password,
           code: this.fromData.verifyCode,
@@ -108,7 +108,7 @@ export default {
     }
   },
   mounted(){
-    this.$refs.page.setTitle('斜杠兼职管理系统')
+    this.$refs.page.setTitle('人人财务交易管理系统')
     this.verifyCode()
   }
 }

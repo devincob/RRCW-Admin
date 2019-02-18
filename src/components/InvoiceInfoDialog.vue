@@ -133,7 +133,7 @@
 <script>
 import CPicker from './CPicker'
 export default {
-  name: 'CompanyDetailsDialog',
+  name: 'InvoiceInfoDialog',
   components: {CPicker},
   props: ['customerId', 'invoiceInfoType'],
   watch: {

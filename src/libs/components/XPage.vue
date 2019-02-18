@@ -74,7 +74,6 @@ export default {
       }
     },
     setTitle(title){
-      console.log(this.breadcrumbs)
       if (title) {
         document.title = title
         return

@@ -74,7 +74,7 @@
         :border="true"
         :highlight-current-row="true"
         style="width: 100%;">
-        <el-table-column fixed prop="orderNo" label="订单号" min-width="210">
+        <el-table-column fixed prop="orderNo" label="订单号" width="180">
           <template slot-scope="scope">
             <router-link v-if="scope.row.workflowId === 0" :to="`/order/invoice-order-create?orderid=${scope.row.orderId}`" target="_blank">
               {{scope.row.orderNo}}
@@ -87,7 +87,7 @@
         </el-table-column>
         <!--订单编号OrderId,int订单号,OrderNo,string客户编号,CustomerId,int站点编号,ComapnyId,int商务编号,CreateAdminUserId-->
         <!--订单号、客户、站点、开票金额、实际开票金额、发票差额、发票类型、商务、商务提交时间、订单完成时间、操作（补录发票）-->
-        <el-table-column prop="customerName" label="客户姓名" min-width="120">
+        <el-table-column prop="customerName" label="客户姓名" width="70" align="center">
           <customer-details-dialog slot-scope="scope" :customer-id="scope.row.customerId">
             {{scope.row.customerName}}
           </customer-details-dialog>
@@ -97,18 +97,18 @@
             <span>{{scope.row.companyName}}</span>
           </company-details-dialog>
         </el-table-column>
-        <el-table-column prop="goodsName" label="商品" min-width="120">
+        <el-table-column prop="goodsName" label="商品" width="120">
           <goods-details-dialog slot-scope="scope" :goods-id="scope.row.goodsId">
             {{scope.row.goodsName}}
           </goods-details-dialog>
         </el-table-column>
-        <el-table-column prop="invoiceAmount" label="开票金额" min-width="120" :formatter="formatterMoney"/>
-        <el-table-column prop="actualAmount" label="实际开票金额" min-width="120" :formatter="(row) => `${$options.filters['currency'](row.actualAmount, '', 2)} 元`"/>
-        <el-table-column prop="differeceAmount" label="发票差额" min-width="120" :formatter="(row) => `${$options.filters['currency'](row.differeceAmount, '', 2)} 元`"/>
-        <el-table-column prop="invoiceTypeName" label="发票类型" min-width="150"/>
-        <el-table-column prop="bussinessName" label="商务" min-width="120"/>
-        <el-table-column prop="submitTime" label="商务提交时间" min-width="150"/>
-        <el-table-column prop="orderCompletedTime" label="订单完成时间" min-width="150"/>
+        <el-table-column prop="invoiceAmount" label="开票金额" width="120" align="right" :formatter="formatterMoney"/>
+        <el-table-column prop="actualAmount" label="实际开票金额" width="120" align="right" :formatter="(row) => `${$options.filters['currency'](row.actualAmount, '', 2)} 元`"/>
+        <el-table-column prop="differeceAmount" label="发票差额" width="120" align="right" :formatter="(row) => `${$options.filters['currency'](row.differeceAmount, '', 2)} 元`"/>
+        <el-table-column prop="invoiceTypeName" label="发票类型" width="100" align="center"/>
+        <el-table-column prop="bussinessName" label="商务" width="70" align="center"/>
+        <el-table-column prop="submitTime" label="商务提交时间" width="150"/>
+        <el-table-column prop="orderCompletedTime" label="订单完成时间" width="150"/>
         <!--<el-table-column label="税源地" prop="sourceTaxName" min-width="120">-->
           <!--<tax-source-details-dialog slot-scope="scope" :source-tax-id="scope.row.sourceTaxId">-->
             <!--{{scope.row.sourceTaxName}}-->

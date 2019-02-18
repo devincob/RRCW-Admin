@@ -20,131 +20,133 @@
             <el-table-column prop="goodsName" label="名称" min-width="100"/>
             <el-table-column prop="goodsName" label="操作" width="100">
               <template slot-scope="scope">
-                <el-button size="mini" type="text" @click="queryThresholdInfo(scope)">阈值设置</el-button>
+                <el-button size="mini" type="text" @click="queryThresholdInfo(scope.row)">阈值设置</el-button>
               </template>
             </el-table-column>
           </el-table>
         </el-card>
       </el-col>
-      <el-col style="width: 650px" v-if="form && form.goodsId">
-        <el-card class="box-card setting">
-          <div slot="header" class="clearfix">
-            <span>阈值设置</span>
-          </div>
-          <div style="margin-top: -10px">
-            <el-form ref="form" :model="form" :rules="formRules" size="mini" label-width="140px">
-              <div class="title">新开户站点阈值</div>
-              <el-form-item label="新开户站点定义：" prop="newCompanyMonth">
-                <el-input v-model.number="form.newCompanyMonth" placeholder="0为不限制"/> 个月
-              </el-form-item>
-              <el-form-item label="单月开票限制：" prop="newMonthLimit">
-                <el-input v-model.number="form.newMonthLimit" placeholder="0为不限制"/> 元
-              </el-form-item>
-              <el-form-item label="自然季度开票限制：" prop="newQuarterLimit">
-                <el-input v-model.number="form.newQuarterLimit" placeholder="0为不限制"/> 元
-              </el-form-item>
-              <el-form-item label="累计开票限制1：" style="margin-bottom: 0">
-                <el-col style="width: 55%;padding: 0;">
-                  <el-form-item prop="newTotalMonth1">
-                    <el-input style="width: 58.5%" v-model.number="form.newTotalMonth1" placeholder="0为不限制"/> 个月 ，开票限制
-                  </el-form-item>
-                </el-col>
-                <el-col style="width: 45%;padding: 0 3px;">
-                  <el-form-item prop="newTotalMonthLimit1">
-                    <el-input style="width: 75%" v-model.number="form.newTotalMonthLimit1" placeholder="0为不限制"/> 元
-                  </el-form-item>
-                </el-col>
-              </el-form-item>
-              <el-form-item label="累计开票限制2：" style="margin-bottom: 0">
-                <el-col style="width: 55%;padding: 0;">
-                  <el-form-item prop="newTotalMonth2">
-                    <el-input style="width: 58.5%" v-model.number="form.newTotalMonth2" placeholder="0为不限制"/> 个月 ，开票限制
-                  </el-form-item>
-                </el-col>
-                <el-col style="width: 45%;padding: 0 3px;">
-                  <el-form-item prop="newTotalMonthLimit2">
-                    <el-input style="width: 75%" v-model.number="form.newTotalMonthLimit2" placeholder="0为不限制"/> 元
-                  </el-form-item>
-                </el-col>
-              </el-form-item>
-              <el-form-item label="累计开票限制3：" style="margin-bottom: 0">
-                <el-col style="width: 55%;padding: 0;">
-                  <el-form-item prop="newTotalMonth3">
-                    <el-input style="width: 58.5%" v-model.number="form.newTotalMonth3" placeholder="0为不限制"/> 个月 ，开票限制
-                  </el-form-item>
-                </el-col>
-                <el-col style="width: 45%;padding: 0 3px;">
-                  <el-form-item prop="newTotalMonthLimit3">
-                    <el-input style="width: 75%" v-model.number="form.newTotalMonthLimit3" placeholder="0为不限制"/> 元
-                  </el-form-item>
-                </el-col>
-              </el-form-item>
-              <el-form-item label="预警阈值：" prop="newThreshold">
-                <el-input v-model.number="form.newThreshold" placeholder="默认90%进入预警阶段"/> %
-              </el-form-item>
-              <el-form-item label="代开是否受限：">
-                <el-checkbox v-model="form.newIsRestrict" true-label="Y" false-label="N">限制</el-checkbox>
-                （该配置仅{{goodsItem.goodsName || ''}}专票有效）
-              </el-form-item>
-              <hr/>
-              <div class="title">非新开户站点阈值</div>
-              <el-form-item label="单月开票限制：" prop="oldMonthLimit">
-                <el-input v-model.number="form.oldMonthLimit" placeholder="0为不限制"/> 元
-              </el-form-item>
-              <el-form-item label="自然季度开票限制：" prop="oldQuarterLimit">
-                <el-input v-model.number="form.oldQuarterLimit" placeholder="0为不限制"/> 元
-              </el-form-item>
-              <el-form-item label="自然年度开票限制：" prop="oldYearLimit">
-                <el-input v-model.number="form.oldYearLimit" placeholder="0为不限制"/> 元
-              </el-form-item>
-              <el-form-item label="累计开票限制1：" style="margin-bottom: 0">
-                <el-col style="width: 55%;padding: 0;">
-                  <el-form-item prop="oldTotalMonth1">
-                    <el-input style="width: 58.5%" v-model.number="form.oldTotalMonth1" placeholder="0为不限制"/> 个月 ，开票限制
-                  </el-form-item>
-                </el-col>
-                <el-col style="width: 45%;padding: 0 3px;">
-                  <el-form-item prop="oldTotalMonthLimit1">
-                    <el-input style="width: 75%" v-model.number="form.oldTotalMonthLimit1" placeholder="0为不限制"/> 元
-                  </el-form-item>
-                </el-col>
-              </el-form-item>
-              <el-form-item label="累计开票限制2：" style="margin-bottom: 0">
-                <el-col style="width: 55%;padding: 0;">
-                  <el-form-item prop="oldTotalMonth2">
-                    <el-input style="width: 58.5%" v-model.number="form.oldTotalMonth2" placeholder="0为不限制"/> 个月 ，开票限制
-                  </el-form-item>
-                </el-col>
-                <el-col style="width: 45%;padding: 0 3px;">
-                  <el-form-item prop="oldTotalMonthLimit2">
-                    <el-input style="width: 75%" v-model.number="form.oldTotalMonthLimit2" placeholder="0为不限制"/> 元
-                  </el-form-item>
-                </el-col>
-              </el-form-item>
-              <el-form-item label="累计开票限制3：" style="margin-bottom: 0">
-                <el-col style="width: 55%;padding: 0;">
-                  <el-form-item prop="oldTotalMonth3">
-                    <el-input style="width: 58.5%" v-model.number="form.oldTotalMonth3" placeholder="0为不限制"/> 个月 ，开票限制
-                  </el-form-item>
-                </el-col>
-                <el-col style="width: 45%;padding: 0 3px;">
-                  <el-form-item prop="oldTotalMonthLimit3">
-                    <el-input style="width: 75%" v-model.number="form.oldTotalMonthLimit3" placeholder="0为不限制"/> 元
-                  </el-form-item>
-                </el-col>
-              </el-form-item>
-              <el-form-item label="预警阈值：" prop="oldThreshold">
-                <el-input v-model.number="form.oldThreshold" placeholder="默认90%进入预警阶段"/> %
-              </el-form-item>
-              <el-form-item label="代开是否受限：">
-                <el-checkbox v-model="form.oldIsRestrict" true-label="Y" false-label="N">限制</el-checkbox>
-                （该配置仅{{goodsItem.goodsName || ''}}专票有效）
-              </el-form-item>
-            </el-form>
-            <el-button size="small" type="primary" @click="onSaveClick">保存</el-button>
-          </div>
-        </el-card>
-      </el-col>
+      <transition name="slide-fade">
+        <el-col style="width: 650px" v-if="form && form.goodsId">
+          <el-card class="box-card setting">
+            <div slot="header" class="clearfix">
+              <span>阈值设置</span>
+            </div>
+            <div style="margin-top: -10px">
+              <el-form ref="form" :model="form" :rules="formRules" size="mini" label-width="140px">
+                <div class="title">新开户站点阈值</div>
+                <el-form-item label="新开户站点定义：" prop="newCompanyMonth">
+                  <el-input v-model.number="form.newCompanyMonth" placeholder="0为不限制"/> 个月
+                </el-form-item>
+                <el-form-item label="单月开票限制：" prop="newMonthLimit">
+                  <el-input v-model.number="form.newMonthLimit" placeholder="0为不限制"/> 元
+                </el-form-item>
+                <el-form-item label="自然季度开票限制：" prop="newQuarterLimit">
+                  <el-input v-model.number="form.newQuarterLimit" placeholder="0为不限制"/> 元
+                </el-form-item>
+                <el-form-item label="累计开票限制1：" style="margin-bottom: 0">
+                  <el-col style="width: 55%;padding: 0;">
+                    <el-form-item prop="newTotalMonth1">
+                      <el-input style="width: 58.5%" v-model.number="form.newTotalMonth1" placeholder="0为不限制"/> 个月 ，开票限制
+                    </el-form-item>
+                  </el-col>
+                  <el-col style="width: 45%;padding: 0 3px;">
+                    <el-form-item prop="newTotalMonthLimit1">
+                      <el-input style="width: 75%" v-model.number="form.newTotalMonthLimit1" placeholder="0为不限制"/> 元
+                    </el-form-item>
+                  </el-col>
+                </el-form-item>
+                <el-form-item label="累计开票限制2：" style="margin-bottom: 0">
+                  <el-col style="width: 55%;padding: 0;">
+                    <el-form-item prop="newTotalMonth2">
+                      <el-input style="width: 58.5%" v-model.number="form.newTotalMonth2" placeholder="0为不限制"/> 个月 ，开票限制
+                    </el-form-item>
+                  </el-col>
+                  <el-col style="width: 45%;padding: 0 3px;">
+                    <el-form-item prop="newTotalMonthLimit2">
+                      <el-input style="width: 75%" v-model.number="form.newTotalMonthLimit2" placeholder="0为不限制"/> 元
+                    </el-form-item>
+                  </el-col>
+                </el-form-item>
+                <el-form-item label="累计开票限制3：" style="margin-bottom: 0">
+                  <el-col style="width: 55%;padding: 0;">
+                    <el-form-item prop="newTotalMonth3">
+                      <el-input style="width: 58.5%" v-model.number="form.newTotalMonth3" placeholder="0为不限制"/> 个月 ，开票限制
+                    </el-form-item>
+                  </el-col>
+                  <el-col style="width: 45%;padding: 0 3px;">
+                    <el-form-item prop="newTotalMonthLimit3">
+                      <el-input style="width: 75%" v-model.number="form.newTotalMonthLimit3" placeholder="0为不限制"/> 元
+                    </el-form-item>
+                  </el-col>
+                </el-form-item>
+                <el-form-item label="预警阈值：" prop="newThreshold">
+                  <el-input v-model.number="form.newThreshold" placeholder="默认90%进入预警阶段"/> %
+                </el-form-item>
+                <el-form-item label="代开是否受限：">
+                  <el-checkbox v-model="form.newIsRestrict" true-label="Y" false-label="N">限制</el-checkbox>
+                  （该配置仅{{goodsItem.goodsName || ''}}专票有效）
+                </el-form-item>
+                <hr/>
+                <div class="title">非新开户站点阈值</div>
+                <el-form-item label="单月开票限制：" prop="oldMonthLimit">
+                  <el-input v-model.number="form.oldMonthLimit" placeholder="0为不限制"/> 元
+                </el-form-item>
+                <el-form-item label="自然季度开票限制：" prop="oldQuarterLimit">
+                  <el-input v-model.number="form.oldQuarterLimit" placeholder="0为不限制"/> 元
+                </el-form-item>
+                <el-form-item label="自然年度开票限制：" prop="oldYearLimit">
+                  <el-input v-model.number="form.oldYearLimit" placeholder="0为不限制"/> 元
+                </el-form-item>
+                <el-form-item label="累计开票限制1：" style="margin-bottom: 0">
+                  <el-col style="width: 55%;padding: 0;">
+                    <el-form-item prop="oldTotalMonth1">
+                      <el-input style="width: 58.5%" v-model.number="form.oldTotalMonth1" placeholder="0为不限制"/> 个月 ，开票限制
+                    </el-form-item>
+                  </el-col>
+                  <el-col style="width: 45%;padding: 0 3px;">
+                    <el-form-item prop="oldTotalMonthLimit1">
+                      <el-input style="width: 75%" v-model.number="form.oldTotalMonthLimit1" placeholder="0为不限制"/> 元
+                    </el-form-item>
+                  </el-col>
+                </el-form-item>
+                <el-form-item label="累计开票限制2：" style="margin-bottom: 0">
+                  <el-col style="width: 55%;padding: 0;">
+                    <el-form-item prop="oldTotalMonth2">
+                      <el-input style="width: 58.5%" v-model.number="form.oldTotalMonth2" placeholder="0为不限制"/> 个月 ，开票限制
+                    </el-form-item>
+                  </el-col>
+                  <el-col style="width: 45%;padding: 0 3px;">
+                    <el-form-item prop="oldTotalMonthLimit2">
+                      <el-input style="width: 75%" v-model.number="form.oldTotalMonthLimit2" placeholder="0为不限制"/> 元
+                    </el-form-item>
+                  </el-col>
+                </el-form-item>
+                <el-form-item label="累计开票限制3：" style="margin-bottom: 0">
+                  <el-col style="width: 55%;padding: 0;">
+                    <el-form-item prop="oldTotalMonth3">
+                      <el-input style="width: 58.5%" v-model.number="form.oldTotalMonth3" placeholder="0为不限制"/> 个月 ，开票限制
+                    </el-form-item>
+                  </el-col>
+                  <el-col style="width: 45%;padding: 0 3px;">
+                    <el-form-item prop="oldTotalMonthLimit3">
+                      <el-input style="width: 75%" v-model.number="form.oldTotalMonthLimit3" placeholder="0为不限制"/> 元
+                    </el-form-item>
+                  </el-col>
+                </el-form-item>
+                <el-form-item label="预警阈值：" prop="oldThreshold">
+                  <el-input v-model.number="form.oldThreshold" placeholder="默认90%进入预警阶段"/> %
+                </el-form-item>
+                <el-form-item label="代开是否受限：">
+                  <el-checkbox v-model="form.oldIsRestrict" true-label="Y" false-label="N">限制</el-checkbox>
+                  （该配置仅{{goodsItem.goodsName || ''}}专票有效）
+                </el-form-item>
+              </el-form>
+              <el-button size="small" type="primary" @click="onSaveClick">保存</el-button>
+            </div>
+          </el-card>
+        </el-col>
+      </transition>
     </el-row>
   </x-page>
 </template>
@@ -226,6 +228,12 @@ export default {
     }
   },
   methods: {
+    onPageShow(){
+      this.queryGoodsList()
+    },
+    onPageHide(){
+      this.init()
+    },
     async queryGoodsList(){
       try {
         this.loading = true
@@ -237,17 +245,27 @@ export default {
         this.loading = false
       }
     },
-    async queryThresholdInfo({row}){
+    async queryThresholdInfo(row){
+      const loading = this.$loading({
+        text: '正在操作',
+        spinner: 'el-icon-loading'
+      })
       try {
         this.goodsItem = row
         let data = await this.$$main.riskQueryGoodsIovoiceWarningSetting({
           goodsId: row.goodsId
         })
+        data.goodsId = data.goodsId || row.goodsId
         data.newIsRestrict = data.newIsRestrict || 'N'
-        data.oldThreshold = data.oldThreshold || 'N'
+        data.oldIsRestrict = data.oldIsRestrict || 'N'
         this.form = data
+        this.$nextTick(() => {
+          this.$refs['form'] && this.$refs['form'].clearValidate()
+        })
       } catch (e) {
         e.message && this.$message.error(e.message)
+      } finally {
+        loading.close()
       }
     },
     onSaveClick(){
@@ -268,15 +286,43 @@ export default {
           message: `操作成功`,
           type: 'success'
         })
+        this.queryThresholdInfo(this.goodsItem)
       } catch (e) {
         e.message && this.$message.error(e.message)
       } finally {
         loading.close()
       }
+    },
+    init(){
+      this.form = {
+        goodsId: '',
+        newCompanyMonth: '', // 新站点限制
+        newMonthLimit: '', // 新站点单月开票限制
+        newQuarterLimit: '', // 新站点季度开票限制
+        // newSumLimit: '', // 新站点累计开票限制
+        newThreshold: '', // 新站点预警阈值
+        newTotalMonth1: '', // 新站点累计开票月数1
+        newTotalMonthLimit1: '', // 新站点累计开票限制1
+        newTotalMonth2: '', // 新站点累计开票月数2
+        newTotalMonthLimit2: '', // 新站点累计0开票限制2
+        newTotalMonth3: '', // 新站点累计开票月数3
+        newTotalMonthLimit3: '', // 新站点累计开票限制3
+        newIsRestrict: 'N', // 新站点是否受限
+        oldMonthLimit: '', // 单月开票限制
+        oldQuarterLimit: '', // 季度开票限制
+        oldYearLimit: '', // 年度开票限制
+        oldThreshold: '', // 预警阈值
+        oldTotalMonth1: '', // 累计开票月数1
+        oldTotalMonthLimit1: '', // 累计开票限制1
+        oldTotalMonth2: '', // 累计开票月数2
+        oldTotalMonthLimit2: '', // 累计开票限制2
+        oldTotalMonth3: '', // 累计开票月数3
+        oldTotalMonthLimit3: '', // 累计开票限制3
+        oldIsRestrict: 'N' // 站点是否受限
+      }
     }
   },
   mounted() {
-    this.queryGoodsList()
   }
 }
 </script>

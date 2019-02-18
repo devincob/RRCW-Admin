@@ -15,7 +15,7 @@
           <el-select
             v-model="form.customerId"
             filterable
-            placeholder="请输入客户名"
+            placeholder="请输入客户名或选择客户，支持模糊搜索"
             no-match-text="未搜索到该用户">
             <el-option
               v-for="item in customerList"
@@ -27,7 +27,7 @@
         </el-form-item>
         <el-form-item prop="sourceTaxId">
           <label slot="label"><span class="red-text">* </span>税源地</label>
-          <el-select v-model="form.sourceTaxId" @change="onSourceTaxChange" placeholder="请选择税源地">
+          <el-select v-model="form.sourceTaxId" @change="onSourceTaxChange" placeholder="请选择站点注册税源地">
             <el-option
               v-for="item in sourceTaxList"
               :key="item.sourceTaxId"
@@ -38,7 +38,7 @@
         </el-form-item>
         <el-form-item prop="goodsId">
           <label slot="label"><span class="red-text">* </span>商品</label>
-          <el-select v-model="form.goodsId" @change="onGoodsChange" placeholder="请选择商品">
+          <el-select v-model="form.goodsId" @change="onGoodsChange" placeholder="请选择税管家商品">
             <el-option
               v-for="item in goodsList"
               :key="item.goodsId"
@@ -48,11 +48,11 @@
           </el-select><span v-if="form.goodsId">交易费：{{form.serviceCharge || 0}}元，押金：{{form.deposit || 0}}元</span>
         </el-form-item>
         <el-form-item label="纳税性质">
-          <el-input v-model="form.taxTypeName" placeholder="请选择商品" readonly/>
+          <el-input v-model="form.taxTypeName" placeholder="选择税管家商品后自动获取" readonly/>
         </el-form-item>
         <el-form-item prop="companyTypeId">
           <label slot="label"><span class="red-text">* </span>站点类型</label>
-          <el-select v-model="form.companyTypeId" @change="onCompanyTypeChange" placeholder="请选择站点类型">
+          <el-select v-model="form.companyTypeId" @change="onCompanyTypeChange" placeholder="请选择开户站点类型">
             <el-option
               v-for="item in companyTypeList"
               :key="item.companyTypeId"
@@ -65,17 +65,17 @@
           <el-input
             type="textarea"
             :autosize="{ minRows: 4, maxRows: 4}"
-            placeholder="经营范围"
+            placeholder="选择站点类型后自动获取"
             readonly
             v-model="form.businessScope">
           </el-input>
         </el-form-item>
         <el-form-item prop="companyName" v-for="(name, index) in form.companyNames" :key="index">
           <label slot="label" v-show="index === 0"><span class="red-text">* </span>站点名称</label>
-          <el-input v-model="name.value" placeholder="站点名称"/>
+          <el-input v-model="name.value" placeholder="请输入注册的公司名称(最多10个)。若接受改名,请勾选接受调剂"/>
           <el-button @click.prevent="removeCompanyName(name)" v-if="form.companyNames && form.companyNames.length > 1">删除</el-button>
           <el-button style="margin-left: 0" @click.prevent="addCompanyName()" v-if="form.companyNames && form.companyNames.length < 10 &&form.companyNames.length === index + 1">增加</el-button>
-          <el-checkbox v-model="form.isAdjustment" true-label="Y" false-label="N" v-if="index === 0">是否接受调剂</el-checkbox>
+          <el-checkbox v-model="form.isAdjustment" true-label="Y" false-label="N" v-if="index === 0">接受调剂</el-checkbox>
         </el-form-item>
         <el-form-item prop="registeredCapital">
           <label slot="label"><span class="red-text">* </span>注册资本</label>
@@ -83,15 +83,15 @@
         </el-form-item>
         <el-form-item prop="serviceFeeDiscount">
           <label slot="label"><span class="red-text">* </span>开票服务费费率折扣</label>
-          <el-input v-model="form.serviceFeeDiscount" placeholder="请输入0~1之间的小数"/>
+          <el-input v-model="form.serviceFeeDiscount" placeholder="请输入0~1之间的折扣小数，例：75折为0.75"/>
         </el-form-item>
         <el-form-item prop="investorName">
           <label slot="label"><span class="red-text">* </span>投资人姓名</label>
-          <el-input v-model="form.investorName" placeholder="投资人姓名"/>
+          <el-input v-model="form.investorName" placeholder="请输入投资人姓名，即法人姓名"/>
         </el-form-item>
         <el-form-item prop="investorMobile">
           <label slot="label"><span class="red-text">* </span>投资人手机</label>
-          <el-input v-model="form.investorMobile" placeholder="投资人手机"/>
+          <el-input v-model="form.investorMobile" placeholder="请输入投资人手机号码，即法人手机"/>
         </el-form-item>
         <el-form-item prop="investorIdCardFrontUrl" class="account-upload">
           <label slot="label"><span class="red-text">* </span>上传投资人身份证</label>
@@ -126,19 +126,19 @@
           </el-form-item>
         <el-form-item prop="investorIdCardNo">
           <label slot="label"><span class="red-text">* </span>投资人身份证号码</label>
-          <el-input v-model="form.investorIdCardNo" placeholder="投资人身份证号码"/>
+          <el-input v-model="form.investorIdCardNo" placeholder="请输入投资人身份证号码，即法人身份证号码"/>
         </el-form-item>
         <el-form-item prop="investorEmail">
           <label slot="label"><span class="red-text">* </span>邮箱</label>
-          <el-input v-model="form.investorEmail" placeholder="邮箱"/>
+          <el-input v-model="form.investorEmail" placeholder="请输入法人邮箱"/>
         </el-form-item>
         <el-form-item prop="financePersonName">
           <label slot="label"><span class="red-text">* </span>财务人员姓名</label>
-          <el-input v-model="form.financePersonName" placeholder="财务人员姓名"/>
+          <el-input v-model="form.financePersonName" placeholder="请输入站点财务负责人姓名，该税源地必填"/>
         </el-form-item>
         <el-form-item prop="financePersonMobile">
           <label slot="label"><span class="red-text">* </span>财务人员手机</label>
-          <el-input v-model="form.financePersonMobile" placeholder="财务人员手机"/>
+          <el-input v-model="form.financePersonMobile" placeholder="请输入站点财务负责人手机，该税源地必填"/>
         </el-form-item>
         <el-form-item prop="financePersonIdCardFrontUrl" class="account-upload" v-show="form.isNeedFinanceID === 'Y'">
           <label slot="label"><span class="red-text">* </span>上传财务人员身份证</label>
@@ -173,21 +173,21 @@
         </el-form-item>
         <el-form-item prop="financePersonIdCardNo">
           <label slot="label"><span class="red-text">* </span>财务人员身份证号</label>
-          <el-input v-model="form.financePersonIdCardNo" placeholder="财务人员身份证号"/>
+          <el-input v-model="form.financePersonIdCardNo" placeholder="请输入站点财务负责人身份证号码"/>
         </el-form-item>
         <el-form-item prop="idCardReturnAddress" class="account-upload">
           <label slot="label"><span class="red-text">* </span>身份证寄回地址</label>
-          <el-input v-model="form.idCardReturnAddress" placeholder="身份证寄回地址" readonly/>
+          <el-input v-model="form.idCardReturnAddress" placeholder="请选择身份证材料寄回快递收件地址" readonly/>
           <express-info-dialog :customer-id="form.customerId" class="ml-5" @onChoose="(res) => {onExpressChoose(res, 'idCardReturnAddress')}">选择快递信息</express-info-dialog>
         </el-form-item>
         <el-form-item prop="invoiceExpressAddress" class="account-upload">
           <label slot="label"><span class="red-text">* </span>押金单快递地址</label>
-          <el-input v-model="form.invoiceExpressAddress" placeholder="押金单快递地址" readonly/>
+          <el-input v-model="form.invoiceExpressAddress" placeholder="请选择站点注册押金凭证收件地址" readonly/>
           <express-info-dialog :customer-id="form.customerId" class="ml-5" @onChoose="(res) => {onExpressChoose(res, 'invoiceExpressAddress')}">选择快递信息</express-info-dialog>
         </el-form-item>
         <el-form-item prop="fileExpressAddress" class="account-upload">
           <label slot="label"><span class="red-text">* </span>材料交付地址</label>
-          <el-input v-model="form.fileExpressAddress" placeholder="材料交付地址" readonly/>
+          <el-input v-model="form.fileExpressAddress" placeholder="请选择站点注册材料交付收件快递地址" readonly/>
           <express-info-dialog :customer-id="form.customerId" class="ml-5" @onChoose="(res) => {onExpressChoose(res, 'fileExpressAddress')}">选择快递信息</express-info-dialog>
         </el-form-item>
         <el-form-item class="account-upload">
@@ -211,18 +211,24 @@
         <el-form-item label="是否需要特殊审批" prop="isNeedApproval">
           <el-checkbox v-model="form.isNeedApproval" true-label="Y" false-label="N">是否需要特殊审批</el-checkbox>
         </el-form-item>
-        <el-form-item label="是否加急" prop="isPriority" v-if="form.isNeedApproval === 'Y'">
-          <el-checkbox v-model="form.isPriority" true-label="Y" false-label="N">是否加急</el-checkbox>
-        </el-form-item>
-        <el-form-item label="加急原因" prop="priorityReason" v-if="form.isPriority === 'Y'">
-          <el-input v-model="form.priorityReason" placeholder="加急原因"/>
-        </el-form-item>
-        <el-form-item label="押金减免" prop="depositRemissionAmount" v-if="form.isNeedApproval === 'Y'">
-          <el-input v-model="form.depositRemissionAmount" placeholder="押金减免"/> 元
-        </el-form-item>
-        <el-form-item label="交易费折扣" prop="tradeFeeDiscount" v-if="form.isNeedApproval === 'Y'">
-          <el-input v-model="form.tradeFeeDiscount" placeholder="请输入0~1之间的小数"/>
-        </el-form-item>
+        <transition name="slide-fade">
+          <div v-if="form.isNeedApproval === 'Y'">
+            <el-form-item label="是否加急" prop="isPriority">
+              <el-checkbox v-model="form.isPriority" true-label="Y" false-label="N">是否加急</el-checkbox>
+            </el-form-item>
+            <transition name="slide-fade">
+              <el-form-item label="加急原因" prop="priorityReason" v-if="form.isPriority === 'Y'">
+                <el-input v-model="form.priorityReason" placeholder="加急原因"/>
+              </el-form-item>
+            </transition>
+            <el-form-item label="押金减免" prop="depositRemissionAmount">
+              <el-input v-model="form.depositRemissionAmount" placeholder="押金减免"/> 元
+            </el-form-item>
+            <el-form-item label="交易费折扣" prop="tradeFeeDiscount">
+              <el-input v-model="form.tradeFeeDiscount" placeholder="请输入0~1之间的小数"/>
+            </el-form-item>
+          </div>
+        </transition>
         <div class="mini-item">
           <p>交易费：<span>+{{form.serviceCharge || 0 | currency}}</span></p>
           <p>押金：<span>+{{form.deposit || 0 | currency}}</span></p>

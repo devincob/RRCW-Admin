@@ -1,0 +1,10 @@
+.el-card-mini {
+  border: none !important;
+  .el-card__header{
+    padding: 0 0 10px;
+    border: none;
+  }
+  .el-card__body {
+    padding: 0 !important;
+  }
+}

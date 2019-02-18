@@ -27,23 +27,23 @@
           </el-form-item>
           <el-form-item prop="customerId">
             <label slot="label"><span class="red-text">* </span>客户</label>
-            <el-input v-model="form.customerName" placeholder="客户" readonly/>
+            <el-input v-model="form.customerName" placeholder="选择站点后自动获取" readonly/>
           </el-form-item>
           <el-form-item prop="sourceTaxId">
             <label slot="label"><span class="red-text">* </span>税源地</label>
-            <el-input v-model="form.sourceTaxName" placeholder="税源地" readonly/>
+            <el-input v-model="form.sourceTaxName" placeholder="选择站点后自动获取" readonly/>
           </el-form-item>
           <el-form-item prop="goodsId">
             <label slot="label"><span class="red-text">* </span>商品</label>
-            <el-input v-model="form.goodsName" placeholder="商品" readonly/>
+            <el-input v-model="form.goodsName" placeholder="选择站点后自动获取" readonly/>
           </el-form-item>
           <el-form-item prop="invoiceServiceRatio">
             <label slot="label"><span class="red-text">* </span>服务费费率</label>
-            <el-input v-model="form.invoiceServiceRatio" placeholder="服务费费率" :readonly="form.isInvoiceServiceRatioChangeable !== 'Y'"/>
+            <el-input v-model="form.invoiceServiceRatio" placeholder="选择站点后自动获取" :readonly="form.isInvoiceServiceRatioChangeable !== 'Y'"/>
           </el-form-item>
           <el-form-item label="发票类型" prop="invoiceTypeName">
             <label slot="label"><span class="red-text">* </span>发票类型</label>
-            <el-select v-model="form.invoiceTypeName" :placeholder="form.goodsId ? '请选择发票类型' : '请先选择商品'">
+            <el-select v-model="form.invoiceTypeName" placeholder="请先选择开票站点后再选择发票">
               <el-option
                 v-for="item in invoiceTypeList"
                 :key="item"
@@ -53,44 +53,44 @@
             </el-select>
           </el-form-item>
           <el-form-item prop="invoiceContent">
-            <label slot="label"><span class="red-text">* </span>项目</label>
+            <label slot="label"><span class="red-text">* </span>开票项目</label>
             <!--<el-input v-model="form.invoiceContent" placeholder="项目"/>-->
-            <el-select v-model="form.invoiceContent">
+            <el-select v-model="form.invoiceContent" placeholder="请先选择开票站点后再选择开票项目">
               <el-option n v-for="item in invoices" :label="item" :value="item" :key="item"/>
             </el-select>
           </el-form-item>
           <el-form-item prop="invoiceAmount">
             <label slot="label"><span class="red-text">* </span>开票金额</label>
-            <el-input v-model="form.invoiceAmount" placeholder="开票金额"/>
+            <el-input v-model="form.invoiceAmount" placeholder="请输入开票总金额"/>
           </el-form-item>
           <el-form-item prop="invoiceCompanyName" class="account-upload">
             <label slot="label"><span class="red-text">* </span>开票信息-公司名称</label>
-            <el-input v-model="form.invoiceCompanyName" placeholder="开票信息-公司名称" readonly/>
+            <el-input v-model="form.invoiceCompanyName" placeholder="选择站点后可选择开票信息" readonly/>
             <invoice-info-dialog :customer-id="form.customerId" :invoice-info-type="invoiceInfoType" class="ml-5" @onChoose="onInvoiceChoose">选择开票信息</invoice-info-dialog>
           </el-form-item>
           <el-form-item prop="invoiceCompanyTaxNo">
             <label slot="label"><span class="red-text">* </span>开票信息-公司税号</label>
-            <el-input v-model="form.invoiceCompanyTaxNo" placeholder="开票信息-公司税号" readonly/>
+            <el-input v-model="form.invoiceCompanyTaxNo" placeholder="选择开票信息后自动获取" readonly/>
           </el-form-item>
           <el-form-item v-if="invoiceHidden" prop="invoiceCompanyAddress">
             <label slot="label"><span class="red-text">* </span>开票信息-公司地址</label>
-            <el-input v-model="form.invoiceCompanyAddress" placeholder="开票信息-公司地址" readonly/>
+            <el-input v-model="form.invoiceCompanyAddress" placeholder="选择开票信息后自动获取" readonly/>
           </el-form-item>
           <el-form-item v-if="invoiceHidden" prop="invoiceCompanyPhone">
             <label slot="label"><span class="red-text">* </span>开票信息-公司电话</label>
-            <el-input v-model="form.invoiceCompanyPhone" placeholder="开票信息-公司电话" readonly/>
+            <el-input v-model="form.invoiceCompanyPhone" placeholder="选择开票信息后自动获取" readonly/>
           </el-form-item>
           <el-form-item v-if="invoiceHidden" prop="invoiceCompanyBankName">
             <label slot="label"><span class="red-text">* </span>开票信息-开户银行</label>
-            <el-input v-model="form.invoiceCompanyBankName" placeholder="开票信息-开户银行" readonly/>
+            <el-input v-model="form.invoiceCompanyBankName" placeholder="选择开票信息后自动获取" readonly/>
           </el-form-item>
           <el-form-item v-if="invoiceHidden" prop="invoiceCompanyBankNo">
             <label slot="label"><span class="red-text">* </span>开票信息-银行账户</label>
-            <el-input v-model="form.invoiceCompanyBankNo" placeholder="开票信息-银行账户" readonly/>
+            <el-input v-model="form.invoiceCompanyBankNo" placeholder="选择开票信息后自动获取" readonly/>
           </el-form-item>
           <el-form-item prop="invoiceExpressAddress" class="account-upload">
             <label slot="label"><span class="red-text">* </span>发票快递信息</label>
-            <el-input v-model="form.invoiceExpressAddress" placeholder="发票快递地址" readonly/>
+            <el-input v-model="form.invoiceExpressAddress" placeholder="选择站点后可选择发票快递信息" readonly/>
             <express-info-dialog :customer-id="form.customerId" class="ml-5" @onChoose="(res) => {onExpressChoose(res, 'invoiceExpressAddress')}">选择快递信息</express-info-dialog>
           </el-form-item>
           <el-form-item prop="invoiceCompanyBankNo">
@@ -99,12 +99,12 @@
               v-model="form.hopeInvoiceDate"
               type="date"
               value-format="yyyy-MM-dd"
-              placeholder="选择日期">
+              placeholder="(选填)请选择日期，指定客户要求的开票日期">
             </el-date-picker>
           </el-form-item>
           <el-form-item prop="invoiceCompanyBankNo">
             <label slot="label">发票备注信息</label>
-            <el-input v-model="form.invoiceRemark" placeholder="发票备注信息"/>
+            <el-input v-model="form.invoiceRemark" placeholder="(选填)请输入客户指定的发票备注信息"/>
           </el-form-item>
           <!--<el-form-item label="是否需要特殊审批" prop="isNeedApproval">-->
             <!--<el-checkbox v-model="form.isNeedApproval" true-label="Y" false-label="N">是否需要特殊审批</el-checkbox>-->
@@ -129,11 +129,14 @@
           <el-form-item label="是否加急处理" prop="isPriority">
             <el-checkbox v-model="form.isPriority" true-label="Y" false-label="N">是否加急处理</el-checkbox>
           </el-form-item>
-          <el-form-item v-if="form.isPriority === 'Y'" label="加急原因">
-            <el-input v-model="form.priorityReason" placeholder="请输入加急原因"/>
-          </el-form-item>
+          <transition name="slide-fade">
+            <el-form-item v-if="form.isPriority === 'Y'" label="加急原因">
+              <el-input v-model="form.priorityReason" placeholder="请输入加急原因"/>
+            </el-form-item>
+          </transition>
           <el-form-item label="服务费折扣" prop="serviceFeeDiscount">
-            <el-input v-model="form.serviceFeeDiscount" disabled placeholder="请输入0~1之间的小数"/>
+            <el-input v-if="form.serviceFeeDiscount === 0 || form.serviceFeeDiscount === 1" v-model="noServiceFee" disabled placeholder="请输入0~1之间的小数"/>
+            <el-input v-else v-model="form.serviceFeeDiscount" disabled placeholder="选择站点后自动获取"/>
           </el-form-item>
           <div class="mini-item">
             <p>服务费：<span>+{{transFee | currency}}</span></p>
@@ -185,6 +188,7 @@ export default {
       orderLogListDialogDisplay: false,
       orderLogList: [],
       invoiceTypeList: [],
+      noServiceFee: '无折扣',
       form: {
         customerId: '', // 客户Id
         companyId: '', // 站点Id
@@ -446,6 +450,13 @@ export default {
         this.queryOrderInfo()
         this.$router.push(`/order/invoice-order-details?orderid=${this.orderId}`)
       } catch (e) {
+        if (e.source && e.source.code === 'WL') {
+          let text = (e.message && e.message.split(',').join('<br>')) || ''
+          this.$alert(text, '警告', {
+            dangerouslyUseHTMLString: true
+          })
+          return
+        }
         e.message && this.$message.error(e.message)
       } finally {
         loading.close()

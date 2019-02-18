@@ -42,7 +42,7 @@ export default {
       try {
         await this.$refs.form.validate()
         this.loading = true
-        const isChanged = await this.$$main.userUpdatePwd({
+        const isChanged = await this.$$main.adminUserUpdatePwd({
           'oldPwd': this.form.password,
           'newPwd': this.form.newPassword
         })

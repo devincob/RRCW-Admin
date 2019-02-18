@@ -83,7 +83,7 @@
 <script>
 import CPicker from './CPicker'
 export default {
-  name: 'CompanyDetailsDialog',
+  name: 'ExpressInfoDialog',
   components: {CPicker},
   props: ['customerId'],
   watch: {

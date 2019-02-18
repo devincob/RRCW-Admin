@@ -212,11 +212,11 @@
               type="primary"
               size="mini"
               @click="displayNextDialog()"
-            >验货完成，提交订单</el-button>
+            >录入完成，提交订单</el-button>
             <el-button
               size="mini"
               @click="companyAttachmentDialogDisplay = true"
-            >录入货物信息</el-button>
+            >录入站点注册信息</el-button>
             <el-button
               size="mini"
               @click="displayRejectDialog()"
@@ -357,7 +357,7 @@
         v-if="info.orderInfo && info.orderInfo.workflowId > 1130"
       >
         <div slot="header">
-          <span>货物信息</span>
+          <span>站点实际注册信息</span>
         </div>
         <table class="detail-table">
           <tr>
@@ -1643,7 +1643,7 @@
       </span>
     </el-dialog>
     <el-dialog
-      title="货物信息"
+      title="站点实际注册信息"
       :visible.sync="companyAttachmentDialogDisplay"
       :close-on-click-modal="false"
       custom-class="company-attachment-dialog"
@@ -1660,42 +1660,42 @@
           <span>站点名称</span>
           <el-input
             v-model="companyAttachmentForm.companyName"
-            placeholder="站点名称"
+            placeholder="请输入站点营业执照名称"
           />
         </el-form-item>
         <el-form-item class="input-item">
           <span>站点地址</span>
           <el-input
             v-model="companyAttachmentForm.companyAddress"
-            placeholder="站点地址"
+            placeholder="请输入站点营业执照注册地址"
           />
         </el-form-item>
         <el-form-item class="input-item">
           <span>公司电话</span>
           <el-input
             v-model="companyAttachmentForm.companyPhone"
-            placeholder="公司电话"
+            placeholder="请输入站点注册电话"
           />
         </el-form-item>
         <el-form-item class="input-item">
           <span>开户银行</span>
           <el-input
             v-model="companyAttachmentForm.accountBank"
-            placeholder="开户银行"
+            placeholder="请输入站点开户银行"
           />
         </el-form-item>
         <el-form-item class="input-item">
           <span>开户银行账号</span>
           <el-input
             v-model="companyAttachmentForm.accountBankAccount"
-            placeholder="开户银行账号"
+            placeholder="请输入站点开户银行账号"
           />
         </el-form-item>
         <el-form-item class="input-item">
           <span>税号</span>
           <el-input
             v-model="companyAttachmentForm.taxNo"
-            placeholder="税号"
+            placeholder="请输入站点税号"
           />
         </el-form-item>
         <el-row>
@@ -2178,7 +2178,7 @@ export default {
         orderId: '', // 订单Id
         expressNo: '', // 快递单号
         expressImgUrl: '', // 快递单回单截图URL
-        expressName: '' // 快递公司
+        expressName: '顺丰快递' // 快递公司
       },
       expressRules: [],
       customerServiceRecordDialogDisplay: false,

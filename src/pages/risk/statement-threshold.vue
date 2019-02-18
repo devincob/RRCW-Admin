@@ -57,6 +57,9 @@ export default {
     }
   },
   methods: {
+    onPageShow(){
+      this.queryStatementThreshold()
+    },
     async queryStatementThreshold(){
       const loading = this.$loading({
         text: '正在操作',
@@ -92,6 +95,7 @@ export default {
           message: `操作成功`,
           type: 'success'
         })
+        this.queryStatementThreshold()
       } catch (e) {
         e.message && this.$message.error(e.message)
       } finally {
@@ -100,7 +104,6 @@ export default {
     }
   },
   mounted() {
-    this.queryStatementThreshold()
   }
 }
 </script>

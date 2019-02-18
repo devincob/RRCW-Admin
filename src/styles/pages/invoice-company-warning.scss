@@ -1,0 +1,9 @@
+.el-table--mini td{
+  vertical-align: top;
+}
+.el-table--mini td .cell {
+  height: auto;
+  overflow: unset;
+  white-space: unset;
+  text-overflow: unset;
+}
