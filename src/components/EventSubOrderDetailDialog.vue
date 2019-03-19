@@ -15,7 +15,7 @@
       modal-append-to-body
       append-to-body
       :visible.sync="detailDialogVisible">
-      <sub-order-detail ref="detailInfoDialog" type="E" :order-sub-id="dialogOrderSubId" :event-info="info"/>
+      <sub-order-detail ref="detailInfoDialog" :type="type" :order-sub-id="dialogOrderSubId" :event-info="info"/>
     </el-dialog>
   </span>
 </template>
@@ -35,7 +35,8 @@ export default {
     btnSize: {default: 'mini'},
     info: {default: () => { return {} }},
     showBtn: {default: true},
-    btnText: {default: '详情'}
+    btnText: {default: '详情'},
+    type: {default: 'E'}
   },
   methods: {
     show(){
@@ -58,6 +59,9 @@ export default {
       height: 46px;
       width: 800px;
       padding: 0;
+      .el-dialog__headerbtn{
+        top: 15px;
+      }
     }
     .el-dialog__body{
       padding: 0;

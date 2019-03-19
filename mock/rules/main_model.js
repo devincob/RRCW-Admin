@@ -5,27 +5,17 @@ import Config from '../../src/config'
 // 模拟 CaiWuModel 接口
 
 const globalRules = {
-  'POST /Index/Data.json': {
-    // 今日新增开户订单数量
-    'aOCount': '@integer(1, 10000)',
-    // 本月已完成开户订单数量
-    'aOCompletedCount': '@integer(1, 10000)',
-    // 今天新增开票订单数量
-    'iOCount': '@integer(1, 10000)',
-    // 本月已完成开票订单数量
-    'iOCompletedCount': '@integer(1, 10000)'
-  },
-  'POST /Common/CreateCode.json ': {
+  'POST /User/CreateCode.json ': {
     // 验证码序列号
     'codeSn': '@string(32)',
     // BASEB4编码
     'base64Image': '@dataImage(90x40, 随便填写)'
   },
-  'POST /Common/Login.json delay:3000': req => {
+  'POST /User/Login.json delay:3000': req => {
     // 使用setTimeout 延时
     return new Promise(resolve => {
       setTimeout(() => {
-        if (req.body.loginName === 'admin' && req.body.loginPwd === '888888') {
+        if (req.body.loginName === 'admin' && req.body.userPwd === '888888') {
           resolve({
             'sessionId': '@string',
             'permissionFullModel': require('./menus'),
@@ -58,14 +48,211 @@ const globalRules = {
       }
     }
   },
-  'POST /AdminUser/RoleList.json delay:500': {
+  'POST /User/CList.json delay:500': req => {
+    const pageSize = req.body.pageSize || 15
+    return {
+      isSuccess: true,
+      body: {
+        totalCount: pageSize * 15,
+        [`datas|${pageSize}`]: [{
+          // 用户编号
+          'workerUserId': '@integer(1000, 2000)',
+          // 姓名
+          'userName': '@cname',
+          // 性别(F/M/U)
+          'sex|1': ['F', 'M', 'U'],
+          // 手机号码
+          'mobilePhone': /1[345789]\d{9}/,
+          // 城市
+          'cityName|1': ['北京', '上海', '广州'],
+          // 注册时间
+          'registerTime': '@datetime',
+          // 注册时间(string)
+          'formatRegisterTime': '@datetime',
+          // 实名状态(PA:通过)
+          'realNameStatus|1': ['R', 'N'],
+          // 抢单资格(N:正常,D:取消)
+          'orderStatus|1': ['N', 'D'],
+          // 账号状态(N:正常,D:封号)
+          'status|1': ['N', 'D']
+        }]
+      }
+    }
+  },
+  'POST /User/CInfoDetails.json delay:1000': {
+    // 手机号码
+    'mobilePhone': /1[345789]\d{9}/,
+    // 姓名
+    'userName': '@cname',
+    // 头像
+    'headImage': '@dataImage',
+    // 性别(F/M/U)
+    'sex|1': ['F', 'M', 'U'],
+    // 身高
+    'height': '@integer(150, 250)',
+    // 体重
+    'weight': '@integer(40, 200)',
+    // 是否在校(N/D)
+    'isStudent|1': ['Y', 'N'],
+    // 注册时间
+    'registerTime': '@datetime',
+    // 注册时间(string)
+    'formatRegisterTime': '@datetime',
+    // 抢单资格(N/D)
+    'orderStatus|1': ['N', 'D'],
+    // 账号状态(N/D)
+    'userStatus|1': ['N', 'D'],
+    // 生活照
+    'lifePhoto|0-5': ['@dataImage(200x200, 生活照)'],
+    // 真实姓名
+    'realName': '@cname',
+    // 身份证号
+    'idCardNo': /\d{18}/,
+    // 民族
+    'nation|1': ['汉族', '黎族'],
+    // 生日
+    'birthday': '@datetime',
+    // 证件照
+    'photoUrl': '@dataImage(320x240, 身份证照片)',
+    // 状态(PA:通过,UP:未通过,CT:审核中)
+    'status|1': ['PA', 'UP', 'CT'],
+    // 余额
+    'amount': '@integer(0, 99999)',
+    // 实名认证编号
+    'realNameId': '@integer(1000, 999999)'
+  },
+  'POST /User/CSaveInfo.json delay:1000': {
+    isSuccess: true,
+    body: true
+  },
+  'POST /User/SaveRealNameInfo.json delay:1000': {
+    isSuccess: true,
+    body: true
+  },
+  'POST /Order/Query/ListWorker.json delay:500': req => {
+    const pageSize = req.body.pageSize || 15
+    return {
+      isSuccess: true,
+      body: {
+        totalCount: pageSize * 15,
+        [`datas|${pageSize}`]: [{
+          'mobilePhone': /1[345789]\d{9}/,
+          'userName': '@cname',
+          'workerUserId': '@integer(1000, 2000)'
+        }]
+      }
+    }
+  },
+  'POST /Salary/RechargeDebit.json delay:1000': true,
+  'POST /User/BList.json delay:500': req => {
+    const pageSize = req.body.pageSize || 15
+    return {
+      isSuccess: true,
+      body: {
+        totalCount: pageSize * 15,
+        [`datas|${pageSize}`]: [{
+          'companyUserId': /\d{6}/,
+          'companyUserName': '@cname',
+          'userType|1': ['C', 'P'],
+          'contactPhone': /1[345789]\d{9}/,
+          'autoPayHour': '@integer(0, 24)',
+          'registerTime': '@datetime',
+          'formatRegisterTime': '@datetime',
+          'orderStatus|1': ['N', 'D'],
+          'status|1': ['N', 'D']
+        }]
+      }
+    }
+  },
+  'POST /User/BInfo.json delay:1000': {
+    'loginName': /1[345789]\d{9}/,
+    // 手机号码
+    'contactPhone': /1[345789]\d{9}/,
+    // 姓名/公司名称
+    'companyUserName': '@cname',
+    // 用户类型(P:个人,C:企业用户)
+    'userType|1': ['C', 'P'],
+    // 联系人
+    'contact': '@cname',
+    // 公司简称
+    'shortName': '@cname',
+    // 注册时间
+    'formatRegisterTime': '@datetime',
+    // 发单状态(N/D)
+    'orderStatus|1': ['N', 'D'],
+    // 用户状态(N/D)
+    'status|1': ['N', 'D'],
+    // 订单自动支付时间
+    'autoPayHour': '@integer(1, 24)',
+    // 余额
+    'amount': '@integer(0, 999999)'
+  },
+  'POST /User/BSaveUserInfo.json delay:1000': true,
+  'POST /Salary/CWithdrawalsList.json': {
+    'totalCount': '@integer(30, 200)',
+    [`datas|15`]: [{
+      // 提现编号
+      'cashApplyId': '@integer(1, 10000)',
+      // 提现用户
+      'userName': '@cname',
+      // 提现金额
+      'amount': '@integer(1, 9999)',
+      // 提现银行名称
+      'bankName|1': ['CCB', 'CMB', 'ICBC', 'BOC', 'ABC', 'BOCOM', 'CMBC'],
+      // 账号
+      'bankNo': '@integer(16)',
+      // 户主
+      'bankUserName': '@cname',
+      // 提现账户
+      'withdrawalsAccount': '@integer(16)',
+      // 申请时间
+      'applyTime': '@datetime',
+      // 申请时间(string)
+      'formatApplyTime': '@datetime',
+      // 状态(A:审核中,S:已标记,P:已通过,R:已驳回)
+      'status|1': ['A', 'S', 'P', 'R'],
+      // 驳回原因
+      'rejectReason': '@csentence\n@csentence',
+      // 联系电话
+      'mobilePhone': /1[345789]\d{9}/
+    }]
+  },
+  'POST /Salary/UpdateWithdrawalsStatus.json delay:1000': {
+    isSuccess: true,
+    body: true,
+    message: 'ID不能为空'
+  },
+  'POST /Salary/TradeList.json delay:1000': {
+    totalCount: 1,
+    'datas|15': [{
+      // 流水编号
+      'transId': '@integer(1,10000)',
+      // 账号
+      'inAccountCashId': '@integer(1,100000)',
+      // 交易金额
+      'amount': '@integer(0,99999)',
+      // 交易时间
+      'transTime': '@datetime',
+      // 交易时间(string)
+      'formatTransTime': '@datetime',
+      // 交易类型
+      'transType|1': ['RC', 'PP', 'PS', 'AC', 'AB', 'PB', 'DA', 'TA'],
+      // 交易对象
+      'outAccountCashId': '@integer(1, 100)',
+      // 支付方式(W:微信,C:钱包,O:线下,L:支付宝)
+      'payType|1': ['L', 'W', 'C', 'O'],
+      // 业务单号
+      'bizNo': '@integer(0)'
+    }]
+  },
+  'POST /User/RoleList.json delay:500': {
     isSuccess: true,
     'body|5': [
       {'roleId': '@integer(1, 1000000)', 'roleName|1': ['系统管理员', '超级管理员', '运营管理', '管理员', 'xx管理员']}
     ]
   },
-  'POST /AdminUser/RoleOperation.json delay:1000': true,
-  'POST /AdminUser/List.json delay:1000': req => {
+  'POST /User/RoleOperation.json delay:1000': true,
+  'POST /User/AdminList.json delay:1000': req => {
     const pageSize = req.body.pageSize || 10
     return {
       'totalCount': '@integer(30, 200)',
@@ -81,21 +268,6 @@ const globalRules = {
         'formatCreateTime': '@datetime',
         'roleName|1': ['系统管理员', '超级管理员', '运营管理', '管理员', 'xx管理员'],
         'roleId|1': [1, 2, 3, 4, 5]
-      }]
-    }
-  },
-  'POST /Channel/List.json delay:1000': req => {
-    const pageSize = req.body.pageSize || 10
-    return {
-      'totalCount': '@integer(30, 200)',
-      [`datas|${pageSize}`]: [{
-        'channelId': '2678',
-        'channelName': '@cname',
-        'channelContact': '@cname',
-        'othersName': '@cname',
-        'channelPhone': /1[345789]\d{9}/,
-        'channelRatio': '@integer(1, 100)',
-        'channelStatus|1': ['N', 'D']
       }]
     }
   },
@@ -126,952 +298,778 @@ const globalRules = {
       }]
     }
   },
-  'POST /Order/EditAccountOrder.json delay:500': {
-    isSuccess: true,
-    body: true
-  },
-  'POST /Common/ListCustomer.json delay:2000': req => {
-    const pageSize = req.body.pageSize || 10
+  // 使用 delay: time 规则延时
+  'POST /A/TimeOrder/Query/List.json delay:1000': (req) => {
+    const pageSize = req.body.pageSize || 20
     return {
-      'totalCount': '@integer(30, 200)',
-      [`datas|${pageSize}`]: [{
-        // 客户编号
-        'customerId': '@integer(1, 200)',
-        // 客户名称
-        'customerName': '@cname(2, 3)'
-      }]
+      isSuccess: true,
+      body: {
+        totalCount: pageSize * 20,
+        [`datas|${pageSize}`]: [{
+          // 支付状态(S1待支付,S2待财务确认,S3已支付,S4财务已确认)
+          'payStatus': function () {
+            let arr = ['S1', 'S2', 'S3', 'S4']
+            return arr[Math.floor(Math.random() * arr.length)]
+          },
+          // 服务者编号
+          'workerUserId': '@integer(1, 10000)',
+          // 服务者名
+          'workerName': '@ctitle(0, 3)',
+          // 订单编号
+          'orderId': '@integer(1, 9999999999)',
+          // 订单号
+          'orderNo': '@integer(1000000000, 9999999999)',
+          // 发布时间
+          'showCreateTime': '@datetime("yyyy-MM-dd HH:mm:ss")',
+          // 商品编号
+          'itemId': '@integer(1, 9999999999)',
+          // 商品名
+          'itemName': '@ctitle(10)',
+          // 服务实际时间
+          'overWorkingTime': '@integer(1, 5)',
+          // 支付金额
+          'payAmount': '@integer(1, 1000)',
+          // 支付类型
+          'payType': function () {
+            let arr = ['T1', 'T2']
+            return arr[Math.floor(Math.random() * arr.length)]
+          },
+          // 公司名
+          'companyName': '@ctitle(8)公司',
+          // 上门地址
+          'address': '@ctitle(15)',
+          // 预约服务时间
+          'showAppointmentBeginTime': '@datetime("yyyy-MM-dd HH:mm:ss")',
+          // 服务状态(S1预约中,S2待服务,S3服务中,S4服务完成,S5已取消)
+          'serviceStatus': function () {
+            let arr = ['S1', 'S2', 'S3', 'S4', 'S5']
+            return arr[Math.floor(Math.random() * arr.length)]
+          }
+        }]
+      }
     }
   },
-  'POST /Common/ListSourceTax.json delay:2000': req => {
-    const pageSize = req.body.pageSize || 10
+  // 使用 delay: time 规则延时
+  'POST /A/TimeOrder/Query/Detail.json delay:1000': (req) => {
     return {
-      'totalCount': '@integer(30, 200)',
-      [`datas|${pageSize}`]: [{
-        // 税源地编号
-        'sourceTaxId': '@integer(1, 200)',
-        // 税源地名称
-        'sourceTaxName': '@ctitle(4, 8)',
-        // 增值税返税比率
-        'zZSRatio': '@integer(1, 30)',
-        // 个税返税比率
-        'gRSDSRatio': '@integer(1, 30)',
-        // 附加税返税比率
-        'fJSRatio': '@integer(1, 30)',
-        // 印花税返税比率
-        'yHSRatio': '@integer(1, 30)'
-      }]
-    }
-  },
-  'POST /Common/ListGoods.json delay:2000': req => {
-    const pageSize = req.body.pageSize || 10
-    return {
-      'totalCount': '@integer(30, 200)',
-      [`datas|${pageSize}`]: [{
+      isSuccess: true,
+      body: {
+        // 订单编号
+        'orderId': '@integer(1, 10000)',
+        // 订单号
+        'orderNo': '@integer(1000000000, 9999999999)',
+        // 服务状态(S1预约中,S2待服务,S3服务中,S4服务完成,S5已取消)
+        'serviceStatus': function () {
+          let arr = ['S1', 'S2', 'S3', 'S4', 'S5']
+          return arr[Math.floor(Math.random() * arr.length)]
+        },
+        // 支付状态(S1待支付,S2待财务确认,S3已支付,S4财务已确认)
+        'payStatus': function () {
+          let arr = ['S1', 'S2', 'S3', 'S4']
+          return arr[Math.floor(Math.random() * arr.length)]
+        },
+        // 发布时间
+        'showCreateTime': '@datetime("yyyy-MM-dd HH:mm:ss")',
         // 商品编号
-        'goodsId': '@integer(1, 200)',
+        'itemId': '@integer(1, 9999999999)',
         // 商品名
-        'goodsName': '@ctitle(4, 8)',
-        // 纳税性质(N一般,S小规模)
-        'taxType|1': ['N', 'S'],
-        // 发票类型
-        'invoiceTypeId': '@integer(1, 200)',
-        // 发票类型名称
-        'invoiceTypeName': '@ctitle(4, 8)',
-        // 开票服务费费率
-        'invoiceServiceRatio': '@integer(1, 50)',
-        // 开户服务费
-        'serviceCharge': '@integer(1, 200)',
-        // 开户押金
-        'deposit': '@integer(1, 200)'
-      }]
-    }
-  },
-  'POST /Common/ListCompanyType.json delay:2000': req => {
-    const pageSize = req.body.pageSize || 10
-    return {
-      'totalCount': '@integer(30, 200)',
-      [`datas|${pageSize}`]: [{
-        // 公司类型编号
-        'companyTypeId': '@integer(1, 200)',
-        // 名称
-        'companyTypeName': '@ctitle(4, 8)公司',
-        // 经营范围
-        'businessScope': '@ctitle(40, 80)'
-      }]
-    }
-  },
-  // 'POST /Common/ListDept.json delay:2000': req => {
-  //   return {
-  //     datas: [{
-  //       //  部门编号(人工填入)
-  //       'deptId': 24576,
-  //       // 上级部分编号
-  //       'parentDeptId': 0,
-  //       // 部门名称
-  //       'deptName': '总部',
-  //       // 部门负责人
-  //       'deptUserId': 0,
-  //       'deptLevel': 1
-  //     },
-  //     {'deptId': 26112,
-  //       'parentDeptId': 24576,
-  //       'deptName': '华南大区',
-  //       'deptUserId': 0,
-  //       'deptLevel': 2
-  //     },
-  //     {'deptId': 26111,
-  //       'parentDeptId': 24576,
-  //       'deptName': '华东大区',
-  //       'deptUserId': 0,
-  //       'deptLevel': 2
-  //     },
-  //     {'deptId': 26496,
-  //       'parentDeptId': 26112,
-  //       'deptName': '成都分公司',
-  //       'deptUserId': '@integer(1, 10)',
-  //       'deptLevel': 3
-  //     },
-  //     {'deptId': 26497,
-  //       'parentDeptId': 26112,
-  //       'deptName': '重庆分公司',
-  //       'deptUserId': '@integer(1, 10)',
-  //       'deptLevel': 3
-  //     },
-  //     {'deptId': 26508,
-  //       'parentDeptId': 26496,
-  //       'deptName': '成都东运营部',
-  //       'deptUserId': 0,
-  //       'deptLevel': 4
-  //     },
-  //     {'deptId': 26509,
-  //       'parentDeptId': 26496,
-  //       'deptName': '成都西运营部',
-  //       'deptUserId': 0,
-  //       'deptLevel': 4
-  //     }
-  //     ]
-  //   }
-  // },
-  'POST /Common/ListDistict.json delay:2000': req => {
-    return {
-      datas: [{
-        'distictId': 2,
-        'districtName': '澳门特别行政区',
-        'level': 'P',
-        'parentId': 1
-      },
-      {
-        'distictId': 11,
-        'districtName': '北京',
-        'level': 'P',
-        'parentId': 1
-      },
-      {
-        'distictId': 12,
-        'districtName': '北京东城区',
-        'level': 'C',
-        'parentId': 11
-      },
-      {
-        'distictId': 13,
-        'districtName': '北京西城区',
-        'level': 'C',
-        'parentId': 11
-      },
-      {
-        'distictId': 22,
-        'districtName': '上海',
-        'level': 'P',
-        'parentId': 1
-      },
-      {
-        'distictId': 21,
-        'districtName': '徐汇区',
-        'level': 'C',
-        'parentId': 22
-      }
-      ]
-    }
-  },
-  'POST /Role/List.json delay:2000': req => {
-    const pageSize = req.body.pageSize || 10
-    return {
-      // 'totalCount': '@integer(30, 200)',
-      isSuccess: true,
-      [`body|${pageSize}`]: [{
-        // 客户编号
-        'adminRoleId': '@integer(1, 200)',
-        // 客户名称
-        'adminRoleName': '@cname(2, 3)'
-      }]
-    }
-  },
-  'POST /Role/PermissionList.json': {},
-  'POST /Customer/List.json delay:2000': req => {
-    const pageSize = req.body.pageSize || 10
-    return {
-      'totalCount': '@integer(30, 200)',
-      [`datas|${pageSize}`]: [{
-        // 客户编号
-        'customerId': '@integer(1, 200)',
-        // 客户名称
-        'customerName': '@cname(2, 3)',
-        // 客户名称所属商务
-        'belongAdminUserName': '@cname(2, 3)',
-        // 电话
-        'phone': '@integer(1, 99999999999)',
-        // 邮箱
-        'email': '@email',
-        // 生日
-        'showBirthday': '@datetime',
-        // 居住地址
-        'liveAddress': '@ctitle(5)',
-        //   办公地址
-        'workAddress': '@ctitle(6)',
-        // 状态(N/D)
-        'status|1': ['N', 'D'],
-        // 来源(直属:D;渠道:C)
-        'source|1': ['C', 'D'],
-        // 所属部门
-        'deptId': '@integer(1, 200)',
-        // 所属部门
-        'deptName': '@cname(2, 3)',
-        // 所属商务
-        'belongAdminUserId': '@integer(1, 200)',
+        'itemName': '@ctitle(10)',
+        // 服务者编号
+        'workerUserId': '@integer(1, 9999999999)',
+        // 服务者名
+        'workerName': '@ctitle(3)',
+        // 服务者电话
+        'workerMobile': '13655599666',
+        // 公司名
+        'companyName': '@ctitle(10)公司',
+        // 上门地址
+        'address': '@ctitle(15)',
+        // 预约服务时间
+        'showAppointmentBeginTime': '@datetime("yyyy-MM-dd HH:mm:ss")',
+        // 联系人
+        'contact': '@ctitle(3)',
+        // 联系电话
+        'phone': '15966655356',
+        // 预计时长
+        'expectHours': '@integer(1, 5)',
+        // 服务实际时间
+        'overWorkingTime': '@integer(1, 5)',
+        // 支付金额
+        'payAmount': '@integer(1, 1000)',
+        // 支付类型
+        'payType': function () {
+          let arr = ['T1', 'T2']
+          return arr[Math.floor(Math.random() * arr.length)]
+        },
         // 备注
-        'remark': '@string',
-        // 创建人
-        'createAdminUserId': '@integer(1, 200)',
-        //  创建时间
-        'showCreateTime': '@datetime'
-      }]
-    }
-  },
-  'POST /Customer/Detail.json delay:2000': req => {
-    return {
-      datas: {
-        // 编号
-        'customerId': '@integer(1, 200)',
-        // 客户名称
-        'customerName': '@cname(3, 4)',
-        // 客户名称所属商务
-        'belongAdminUserName': '@cname(2, 3)',
-        // 电话
-        'phone': '@integer(1, 9999999999)',
-        // 邮箱
-        'email': '@email',
-        // 生日
-        'showBirthday': '@datetime',
-        // 居住地址
-        'liveAddress': '上海市@ctitle(2)区@ctitle(2)路@integer(1, 200)号',
-        //   办公地址
-        'workAddress': '上海市@ctitle(2)区@ctitle(2)路@integer(1, 200)号',
-        // 状态(N/D)
-        'status|1': ['N', 'D'],
-        // 来源(直属:D;渠道:C)
-        'source|1': ['C', 'D'],
-        // 所属部门
-        'deptId': 26508,
-        // 所属部门
-        'deptName': '成都运营部',
-        // 所属商务
-        'belongAdminUserId': '@integer(1, 200)',
-        // 备注
-        'remark': '@string',
-        // 创建人
-        'createAdminUserId': '@integer(1, 200)',
-        //  创建时间
-        'showCreateTime': '@datetime'
+        'description': '@ctitle(50)',
+        // 是否上门
+        'isVisit': function () {
+          let arr = ['Y', 'N']
+          return arr[Math.floor(Math.random() * arr.length)]
+        },
+        // B端电话
+        'companyUserMobile': '13855555666'
       }
     }
   },
-  'POST /Customer/Update.json delay:500': {
-    isSuccess: true,
-    body: true
-  },
-  'POST /Channel/Update.json delay:500': {
-    isSuccess: true,
-    body: true
-  },
-  'POST /SourceTax/List.json delay:2000': req => {
-    const pageSize = req.body.pageSize || 10
-    return {
-      'totalCount': '@integer(30, 200)',
-      [`datas|${pageSize}`]: [{
-        // 编号
-        'sourceTaxId': '@integer(1, 200)',
-        // 税源地名称
-        'sourceTaxName': '@cname(2, 3)',
-        // 省编号
-        'provinceId': '@integer(1, 200)',
-        'provinceName': '@cname(2, 3)',
-        // 城市编号
-        'cityId': '@integer(1, 200)',
-        'cityName': '@cname(2, 3)',
-        // 电话
-        'phone': '@integer(1, 99999999999)',
-        'zZSRatio': '@integer(1, 30)',
-        // 个税返税比率
-        'gRSDSRatio': '@integer(1, 30)',
-        // 附加税返税比率
-        'fJSRatio': '@integer(1, 30)',
-        // 印花税返税比率
-        'yHSRatio': '@integer(1, 30)',
-        // 居住地址
-        'TaxAddress': '@ctitle(6)',
-        // 状态(N/D)
-        'status|1': ['N', 'D'],
-        'isNeedFinanceID|1': ['Y', 'N'],
-        'belongAdminUserId': '@integer(1, 200)',
-        'contact': '@cname(2, 3)',
-        'legalAge': '@integer(18, 99)',
-        // 创建人
-        'createAdminUserId': '@integer(1, 200)',
-        //  创建时间
-        'showCreateTime': '@datetime'
-      }]
-    }
-  },
-  'POST /SourceTax/Detail.json delay:2000': req => {
-    return {
-      datas: {
-        // 编号
-        'sourceTaxId': '@integer(1, 200)',
-        // 税源地名称
-        'sourceTaxName': '@cname(2, 3)',
-        // 省编号
-        'provinceId': 11,
-        'provinceName': '北京',
-        // 城市编号
-        'cityId': 12,
-        'cityName': '北京城区',
-        // 电话
-        'phone': '@integer(1, 99999999999)',
-        'zZSRatio': '@integer(1, 30)',
-        // 个税返税比率
-        'gRSDSRatio': '@integer(1, 30)',
-        // 附加税返税比率
-        'fJSRatio': '@integer(1, 30)',
-        // 印花税返税比率
-        'yHSRatio': '@integer(1, 30)',
-        // 居住地址
-        'TaxAddress': '@ctitle(6)',
-        // 状态(N/D)
-        'status|1': ['N', 'D'],
-        'isNeedFinanceID|1': ['Y', 'N'],
-        'belongAdminUserId': '@integer(1, 200)',
-        'contact': '@cname(2, 3)',
-        'legalAge': '@integer(18, 99)',
-        // 创建人
-        'createAdminUserId': '@integer(1, 200)',
-        //  创建时间
-        'showCreateTime': '@datetime'
-      }
-    }
-  },
-  'POST /Channel/Detail.json delay:2000': req => {
-    return {
-      datas: {
-        'channelId': '2678',
-        'ChannelName': '@cname(2, 3)',
-        'channelContact': '@cname(2, 3)',
-        'channelPhone': '@integer(1, 99999999999)',
-        'channelRatio': '@integer(1, 30)',
-        'ChannelStatus|1': ['N', 'D']
-      }
-    }
-  },
-  'POST /SourceTax/Update.json delay:500': {
-    isSuccess: true,
-    body: true
-  },
-  'POST /SourceTax/Modify.json delay:2000': req => {
-    return {
-      datas: {
-        // 编号
-        'sourceTaxId': '@integer(1, 200)',
-        // 税源地名称
-        'sourceTaxName': '@cname(2, 3)',
-        // 省编号
-        'provinceId': '@integer(1, 200)',
-        'provinceName': '@cname(2, 3)',
-        // 城市编号
-        'cityId': '@integer(1, 200)',
-        'cityName': '@cname(2, 3)',
-        // 电话
-        'phone': '@integer(1, 99999999999)',
-        'zZSRatio': '@integer(1, 30)',
-        // 个税返税比率
-        'gRSDSRatio': '@integer(1, 30)',
-        // 附加税返税比率
-        'fJSRatio': '@integer(1, 30)',
-        // 印花税返税比率
-        'yHSRatio': '@integer(1, 30)',
-        // 居住地址
-        'TaxAddress': '@ctitle(6)',
-        // 状态(N/D)
-        'status|1': ['N', 'D'],
-        'isNeedFinanceID|1': ['Y', 'N'],
-        'belongAdminUserId': '@integer(1, 200)',
-        'contact': '@cname(2, 3)',
-        'legalAge': '@integer(18, 99)',
-        // 创建人
-        'createAdminUserId': '@integer(1, 200)',
-        //  创建时间
-        'showCreateTime': '@datetime'
-      }
-    }
-  },
-  'POST /Common/ListBelongAdminUser.json delay:2000': req => {
-    const pageSize = req.body.pageSize || 10
-    return {
-      'totalCount': '@integer(1, 10)',
-      [`datas|${pageSize}`]: [{
-        // 客户编号
-        'adminUserId': '@integer(1, 200)',
-        // 客户名称
-        'userName': '@cname(2, 3)'
-      }]
-    }
-  },
-  'POST /Common/ListInvoiceType.json': {
-    'datas|4': [{
-      // 类型编号
-      'invoiceTypeId': '@integer(1,1000)',
-      // 发票名称
-      'invoiceTypeName|1': ['3%增值税普票', '3%增值税专票', '6%增值税普票', '6%增值税专票'],
-      // 发票税率
-      'invoiceTypeTax': '@decimal'
-    }]
-  },
-  'POST /Goods/List.json': {
-    totalCount: '@integer(10, 100)',
-    'datas|10-20': [{
-      // 商品名
-      'goodsName': '@cname',
-      // 纳税性质(N一般,S小规模)
-      'taxType|1': ['N', 'S'],
-      // 发票类型
-      'invoiceTypeId': '@integer(1,5)',
-      // 发票类型名称
-      'invoiceTypeName': '@cname',
-      // 开票服务费费率
-      'invoiceServiceRatio': '@integer(1,5)',
-      // 开户服务费
-      'serviceCharge': '@integer(1,5)',
-      // 开户押金
-      'deposit': '@integer(1,5)',
-      // 状态(N,D)
-      'status|1': ['N', 'D'],
-      // 创建人
-      'createAdminUserId': '@integer(1,5)',
-      // 创建时间
-      'showCreateTime': '@datetime',
-      // 商品编号
-      'goodsId': '@integer(1,55)',
-    }]
-  },
-  'POST /Goods/Modify.json delay:2000': true,
-  'POST /Goods/Update.json delay:2000': true,
-  'POST /Goods/Detail.json': req => {
-    return {
-      // 商品名
-      'goodsName': '@cname',
-      // 纳税性质(N一般,S小规模)
-      'taxType|1': ['N', 'S'],
-      // 发票类型
-      'invoiceTypeId': '@integer(1,5)',
-      // 发票类型名称
-      'invoiceTypeName': ['3%增值税普票', '3%增值税专票', '6%增值税普票', '6%增值税专票'],
-      // 开票服务费费率
-      'invoiceServiceRatio': 22.22,
-      // 开户服务费
-      'serviceCharge': '@integer(100, 10000)',
-      // 开户押金
-      'deposit': '@integer(1000,10000)',
-      // 状态(N,D)
-      'status|1': ['N', 'D'],
-      // 创建人
-      'createAdminUserId': '@integer(1, 100)',
-      // 创建时间
-      'showCreateTime': '@datetime',
-      // 商品编号
-      'goodsId': '@integer(1,1000)'
-    }
-  },
-  'POST /Company/Modify.json delay:1000': true,
-  'POST /Company/Update.json delay:1000': true,
-  'POST /Company/List.json delay:1000': {
-    totalCount: '@integer(10,100)',
-    'datas|10-20': [{
-      // 公司编号
-      'companyId': '@integer(1, 1000)',
-      // 公司名
-      'companyName': '@cname',
-      // 客户编号
-      'customerId': '@integer(100,1000)',
-      // 姓名
-      'customerName': '@cname',
-      // 税源地编号
-      'sourceTaxId': '@integer(1, 1000)',
-      // 税源地名称
-      'sourceTaxName': '@cname',
-      // 商品编号
-      'goodsId': '@integer(1, 1000)',
-      // 商品名
-      'goodsName': '@cname',
-      // 执照地址
-      'licenseUrl': '@image',
-      // 状态(N/D)
-      'status|1': ['N', 'D'],
-      // 创建人
-      'createAdminUserId': '@integer(1, 10000)',
-      // 创建时间
-      'showCreateTime': '@datetime'
-    }]
-  },
-  'POST /Company/Detail.json delay:1000': {
-    // 公司编号
-    'companyId': '@integer(1, 1000)',
-    // 公司名
-    'companyName': '@cname',
-    // 客户编号
-    'customerId': '@integer(1, 1000)',
-    // 姓名
-    'customerName': '@cname',
-    // 税源地编号
-    'sourceTaxId': '@integer(1, 1000)',
-    // 税源地名称
-    'sourceTaxName': '@cname',
-    // 商品编号
-    'goodsId': '@integer(1, 1000)',
-    // 商品名
-    'goodsName': '@cname',
-    // 执照地址
-    'licenseUrl': '@image',
-    // 状态(N/D)
-    'status|1': ['N', 'D'],
-    // 创建人
-    'createAdminUserId': '@integer(1, 10000)',
-    // 创建时间
-    'showCreateTime': '@datetime'
-  },
-  'POST /Common/ListSourceTax.json delay:1000': {
-    'datas|10-20': [{
-      // 税源地编号
-      'sourceTaxId': '@integer(1, 1000)',
-      // 税源地名称
-      'sourceTaxName': '@cname',
-      // 增值税返税比率
-      'zZSRatio': '@integer(1, 1000)',
-      // 个税返税比率
-      'gRSDSRatio': '@integer(1, 1000)',
-      // 附加税返税比率
-      'fJSRatio': '@integer(1, 1000)',
-      // 印花税返税比率
-      'yHSRatio': '@integer(1, 1000)'
-    }]
-  },
-  'POST /Common/ListCompany.json delay:2000': req => {
-    const pageSize = req.body.pageSize || 10
-    return {
-      'totalCount': '@integer(30, 200)',
-      [`datas|${pageSize}`]: [{
-        // 公司编号
-        'companyId': '@integer(1, 200)',
-        // 名称
-        'companyName': '@ctitle(4, 8)公司'
-      }]
-    }
-  },
-  'POST /Order/AccountOrderQuery.json delay:2000': req => {
-    const pageSize = req.body.pageSize || 10
-    return {
-      'totalCount': '@integer(30, 200)',
-      [`datas|${pageSize}`]: [{
-        // 订单Id
-        'orderId': '@integer(1, 200)',
-        // 订单编号
-        'orderNo': '@integer(111111111, 9999999999)',
-        // 客户编号
-        'customerId': '@integer(1, 200)',
-        // 客户姓名
-        'customerName': '@cname(2, 3)',
-        // 税源地名称
-        'sourceTaxName': '@ctitle(3, 5)',
-        // 商品名称
-        'goodsName': '@ctitle(3, 5)',
-        // 实际支付交易费
-        'totalAmount': '@integer(1, 200)',
-        // 实际支付押金
-        'realDepositFee': '@integer(1, 200)',
-        // 是否加急(Y/N)
-        'isPriority|1': ['Y', 'N'],
-        // 流程名称
-        'workflowName': '@ctitle(3, 5)'
-      }]
-    }
-  },
-  'POST /Order/InvoiceOrderQuery.json delay:2000': req => {
-    const pageSize = req.body.pageSize || 10
-    return {
-      'totalCount': '@integer(30, 200)',
-      [`datas|${pageSize}`]: [{
-        // 订单Id
-        'orderId': '@integer(1, 200)',
-        // 订单编号
-        'orderNo': '@integer(111111111, 9999999999)',
-        // 客户编号
-        'customerId': '@integer(1, 200)',
-        // 客户姓名
-        'customerName': '@cname(2, 3)',
-        // 税源地名称
-        'sourceTaxName': '@ctitle(3, 5)',
-        // 商品名称
-        'goodsName': '@ctitle(3, 5)',
-        // 开票金额
-        'invoiceAmount': '@integer(1, 200)',
-        // 发票税率
-        'invoiceTypeTax': '@integer(1, 200)',
-        // 是否加急(Y/N)
-        'isPriority|1': ['Y', 'N'],
-        // 流程名称
-        'workflowName': '@ctitle(3, 5)'
-      }]
-    }
-  },
-  'POST /Order/AccountOrderDetail.json delay:100': req => {
+  'POST /A/FixOrder/Query/List.json delay:1000': (req) => {
+    const pageSize = req.body.pageSize || 20
     return {
       isSuccess: true,
       body: {
-        // 订单信息
-        'orderInfo': {
-          // 订单Id
-          'orderId': '@integer(1, 1000)',
+        totalCount: pageSize * 20,
+        [`datas|${pageSize}`]: [{
+          // 发布时间
+          'showCreateTime': '@datetime("yyyy-MM-dd HH:mm:ss")',
+          // 订单号
+          'orderNo': '@integer(1000000000, 9999999999)',
+          // 公司名
+          'companyName': '@ctitle(10)公司',
+          // 业务类型
+          'businessType': '@ctitle(10)',
+          // 支付金额
+          'payAmount': '@integer(5, 1000)',
+          // 支付方式
+          'payType': function () {
+            let arr = ['T1', 'T2']
+            return arr[Math.floor(Math.random() * arr.length)]
+          },
+          // 客户来源
+          'orderSource': '@ctitle(10)',
+          // 供应商
+          'supplier': '@ctitle(10)',
+          // 财务确认时间
+          'showFinanceConfirmTime': '@datetime("yyyy-MM-dd HH:mm:ss")',
           // 订单编号
-          'orderNo': '@integer(111111111, 999999999)',
-          // 客户编号
-          'customerId': '@integer(1, 1000)',
-          // 客户姓名
-          'customerName': '@cname(2, 3)',
-          // 税源地编号
-          'sourceTaxId': '@integer(1, 1000)',
-          // 税源地名称
-          'sourceTaxName': '@ctitle(5, 11)',
-          // 商品编号
-          'goodsId': '@integer(1, 1000)',
-          // 商品名称
-          'goodsName': '@ctitle(3, 6)',
-          // 站点名称
-          'companyName': '@ctitle(3, 6)',
-          // 站点类型编号
-          'companyTypeId': '@integer(1, 1000)',
-          // 站点类型名称
-          'companyTypeName': '@ctitle(3, 6)',
-          // 经营范围
-          'businessScope': '@ctitle(15, 60)',
-          // 注册资本
-          'registeredCapital': '@integer(1, 1000)',
-          // 纳税性质
-          'taxTypeName': '@ctitle(3, 6)',
-          // 投资人姓名
-          'investorName': '@cname(2, 3)',
-          // 投资人手机
-          'investorMobile': /1[345789]\d{9}/,
-          // 投资人身份证正面URL
-          'investorIdCardFrontUrl': 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1528865905353&di=8eef2357a6499129c22945af641a0c7a&imgtype=0&src=http%3A%2F%2Fphotocdn.sohu.com%2F20130530%2FImg377522814.jpg',
-          // 投资人身份证背面
-          'investorIdCardBackUrl': 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1528865932337&di=b5b47d0c4896aff62a21a8ba17c9c945&imgtype=0&src=http%3A%2F%2Fimgsrc.baidu.com%2Fimage%2Fc0%253Dpixel_huitu%252C0%252C0%252C294%252C40%2Fsign%3Db05d0b3c38fa828bc52e95a394672458%2Fd788d43f8794a4c2717d681205f41bd5ad6e39a8.jpg',
-          // 投资人身份证号码
-          'investorIdCardNo': '654896521458745632',
-          // 投资人邮箱
-          'investorEmail': 'dsklfhakjsl@djkf.com',
-          // 财务人员姓名
-          'financePersonName': '@cname(2, 3)',
-          // 财务人员手机
-          'financePersonMobile': /1[345789]\d{9}/,
-          // 财务人员身份证正面URL
-          'financePersonIdCardFrontUrl': 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1528865905353&di=8eef2357a6499129c22945af641a0c7a&imgtype=0&src=http%3A%2F%2Fphotocdn.sohu.com%2F20130530%2FImg377522814.jpg',
-          // 财务人员身份证背面URL
-          'financePersonIdCardBackUrl': 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1528865932337&di=b5b47d0c4896aff62a21a8ba17c9c945&imgtype=0&src=http%3A%2F%2Fimgsrc.baidu.com%2Fimage%2Fc0%253Dpixel_huitu%252C0%252C0%252C294%252C40%2Fsign%3Db05d0b3c38fa828bc52e95a394672458%2Fd788d43f8794a4c2717d681205f41bd5ad6e39a8.jpg',
-          // 财务人员身份证号
-          'financePersonIdCardNo': '322165488864897564',
-          // 身份证寄回地址
-          'idCardReturnAddress': '@ctitle(5, 11)',
-          // 发票快递地址
-          'invoiceExpressAddress': '@ctitle(5, 11)',
-          // 材料交付地址
-          'fileExpressAddress': '@ctitle(5, 11)',
-          'isAdjustment|1': ['Y', 'N'],
-          // 是否需要审批
-          'isNeedApproval|1': ['Y', 'N'],
-          // 是否加急
-          'isPriority|1': ['Y', 'N'],
-          // 交易费
-          'tradeFee': '@integer(1, 1000)',
-          // 押金费用
-          'depositFee': '@integer(1, 1000)',
-          // 押金减免(实际减免金额)
-          'depositRemissionAmount': '@integer(1, 1000)',
-          // 交易费折扣(折扣)
-          'tradeFeeDiscount': '@integer(1, 1000)',
-          // 交易费折扣金额
-          'tradeFeeDiscountAmount': '@integer(1, 1000)',
-          // 合计支付金额
-          'totalAmount': '@integer(1, 1000)',
-          // 订单创建时间
-          'createTime': '@datetime',
-          // 创建人
-          'createAdminUserId': '@integer(1, 1000)',
-          // 提交时间
-          'showSubmitTime': '@datetime',
-          // 创建部门
-          'createAdminUserDeptId': '@integer(1, 1000)',
-          // 流程编号
-          'workflowId': 1170,
-          // 流程名称
-          'workflowName': '@ctitle(3, 5)',
-          // 显示按钮
-          'isShowButton': true,
-          // 订单完成时间
-          'showOrderCompletedTime': '@datetime'
-        },
-        // 收款信息
-        'bankReceipts|1-3': [{
-          // 收款银行名称
-          bankName: '@ctitle(3, 5)银行',
-          // 收款账户
-          bankNo: '453213245643213',
-          // 银行回单号
-          bankBillNo: '456456456432132',
-          // 到账日期
-          showInDate: '@datetime',
-          // 到账金额
-          inAmount: '@integer(1, 50000)',
-          // 回单图片URL
-          billImgUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1528865905353&di=8eef2357a6499129c22945af641a0c7a&imgtype=0&src=http%3A%2F%2Fphotocdn.sohu.com%2F20130530%2FImg377522814.jpg'
-        }],
-        // 公司注册信息
-        'companyRegInfo': {
-          // 站点名称
-          companyName: '@ctitle(3, 5)',
-          // 站点类型
-          companyTypeName: '@ctitle(3, 5)',
-          // 经营范围
-          businessScope: '@ctitle(30, 50)',
-          // 注册资本
-          registeredCapital: '@integer(1, 1000)',
-          // 纳税性质
-          taxTypeName: '@ctitle(2)',
-          // 投资人姓名
-          investorName: '@cname(2, 3)',
-          // 投资人手机
-          investorMobile: /1[345789]\d{9}/,
-          // 投资人身份证正面URL
-          investorIdCardFrontUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1528865905353&di=8eef2357a6499129c22945af641a0c7a&imgtype=0&src=http%3A%2F%2Fphotocdn.sohu.com%2F20130530%2FImg377522814.jpg',
-          // 投资人身份证背面URL
-          investorIdCardBackUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1528865905353&di=8eef2357a6499129c22945af641a0c7a&imgtype=0&src=http%3A%2F%2Fphotocdn.sohu.com%2F20130530%2FImg377522814.jpg',
-          // 投资人身份证号码
-          investorIdCardNo: '5164564564536',
-          // 投资人邮箱
-          investorEmail: 'sdfasdf@ajs.com',
-          // 财务人员姓名
-          financePersonName: '@cname(2, 3)',
-          // 财务人员手机
-          financePersonMobile: /1[345789]\d{9}/,
-          // 财务人员身份证正面URL
-          financePersonIdCardFrontUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1528865905353&di=8eef2357a6499129c22945af641a0c7a&imgtype=0&src=http%3A%2F%2Fphotocdn.sohu.com%2F20130530%2FImg377522814.jpg',
-          // 财务人员身份证背面URL
-          financePersonIdCardBackUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1528865905353&di=8eef2357a6499129c22945af641a0c7a&imgtype=0&src=http%3A%2F%2Fphotocdn.sohu.com%2F20130530%2FImg377522814.jpg',
-          // 财务人员身份证号
-          financePersonIdCardNo: '4561321564156456',
-          // 备注
-          remark: '@ctitle(5, 20)'
-        },
-        // 进度信息
-        'processInfo': {
-          // 商务提交订单时间
-          showSubmitTime: '@datetime',
-          // 下单时间(跟单确认订单流转至交易员)
-          showConfirmOrderTime: '@datetime',
-          // 材料提交时间（交易将资料交付供应商时间）
-          showSubmitSupplierTime: '@datetime',
-          // 核名完成时间
-          showCheckNameCompletedTime: '@datetime',
-          // 营业执照发放时间
-          showLicenseTime: '@datetime',
-          // 银行开户时间
-          showBankOpenAccountTime: '@datetime',
-          // 银行开户完成时间
-          showBankOpenAccountCompletedTime: '@datetime',
-          // 核税完成时间
-          showCheckTaxCompletedTime: '@datetime'
-        },
-        // 供应商交付物（货物）
-        'companyAttachment': {
-          // U盾图片路径
-          ukeyImgUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1528865905353&di=8eef2357a6499129c22945af641a0c7a&imgtype=0&src=http%3A%2F%2Fphotocdn.sohu.com%2F20130530%2FImg377522814.jpg',
-          // 公章图片路径
-          stampImgUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1528865905353&di=8eef2357a6499129c22945af641a0c7a&imgtype=0&src=http%3A%2F%2Fphotocdn.sohu.com%2F20130530%2FImg377522814.jpg',
-          // 营业执照图片路径
-          licenseImgUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1528865905353&di=8eef2357a6499129c22945af641a0c7a&imgtype=0&src=http%3A%2F%2Fphotocdn.sohu.com%2F20130530%2FImg377522814.jpg',
-          // 国地税协议三方PDF
-          taxAgreementPDFUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1528865905353&di=8eef2357a6499129c22945af641a0c7a&imgtype=0&src=http%3A%2F%2Fphotocdn.sohu.com%2F20130530%2FImg377522814.jpg'
-        },
-        // 交付物流信息
-        'accountOrderExpress': {
-          // 快递单号
-          expressNo: '@integer(124124124124, 111241231232000)',
-          // 快递单回单截图URL
-          expressImgUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1528865905353&di=8eef2357a6499129c22945af641a0c7a&imgtype=0&src=http%3A%2F%2Fphotocdn.sohu.com%2F20130530%2FImg377522814.jpg',
-          // 快递公司
-          expressName: '@ctitle(5, 10)'
-        },
-        // 客服回访信息
-        'customerServiceRecord': {
-          // 评分
-          evalValue: '@integer(1, 5)',
-          // 反馈
-          feedback: '@ctitle(5, 20)'
-        }
+          'orderId': '@integer(1, 9999999999)'
+        }]
       }
     }
   },
-  'POST /Order/LogList.json delay:500': req => {
-    const pageSize = req.body.pageSize || 10
+  // 接口名称：Finance.Query.待确认订单接口编码：AFinanceQueryWaitConfirmOrderList 接口路由：/A/Finance/Query/WaitConfirmOrderList
+
+  'POST /A/Finance/Query/WaitConfirmOrderList.json delay:1000': (req) => {
+    const pageSize = req.body.pageSize || 20
     return {
-      'totalCount': '@integer(30, 200)',
-      [`datas|${pageSize}`]: [{
-        'logId': '@integer(1, 200)',
-        'actionUserName': '@cname(2, 3)',
-        'actionUserRoleName': '@cname(3, 5)',
-        'actionContent': '@ctitle(5, 10)',
-        'actionTime': '@datetime'
-      }]
+      body: {
+        totalCount: pageSize * 20,
+        [`datas|${pageSize}`]: [{
+          // 服务者编号
+          'financeUserId': '@integer(1, 10000)',
+          // 服务者名
+          'financeUserName': '@ctitle(4)',
+          // 订单编号
+          'payNo': '@integer(1, 9999999999)',
+          // 支付单号
+          'orderId': '@integer(1, 9999999999)',
+          // 订单号
+          'orderNo': '@integer(1000000000, 9999999999)',
+          // 订单类型
+          'orderType': '@integer(1, 9999999999)',
+          // 服务完成时间
+          'showOverTime': '@datetime("yyyy-MM-dd HH:mm:ss")',
+          // 支付金额
+          'payAmount': '@integer(1, 1000)',
+          // 付款对象 PayUser string
+          'payUser': '@ctitle(4)',
+          // 支付时间 ShowPayTime string
+          'showPayTime': '@integer(1, 5)',
+          // 有无确认 IsConfirm string
+          'isConfirm': function () {
+            let arr = ['Y', 'N']
+            return arr[Math.floor(Math.random() * arr.length)]
+          },
+          // 编号 WaitId int
+          'waitId': '@integer(1, 9999999999)',
+          // isSuccess: true,
+          // 支付类型
+          'payType': function () {
+            let arr = ['T1', 'T2']
+            return arr[Math.floor(Math.random() * arr.length)]
+          },
+          // 确认时间
+          'showFinanceConfirmTime': '@datetime("yyyy-MM-dd HH:mm:ss")',
+          // 服务状态(S1预约中,S2待服务,S3服务中,S4服务完成,S5已取消)
+          'serviceStatus': function () {
+            let arr = ['S1', 'S2', 'S3', 'S4', 'S5']
+            return arr[Math.floor(Math.random() * arr.length)]
+          }
+        }]
+      }
     }
   },
-  'POST /Order/InvoiceOrderDetail.json delay:100': req => {
+  'POST /A/Finance/MailInfoList.json delay:1000': (req) => {
+    const pageSize = req.body.pageSize || 20
+    return {
+      body: {
+        totalCount: pageSize * 20,
+        [`datas|${pageSize}`]: [{
+          'invoiceNo': '@integer(1, 9999999999)',
+          'receiveName': '@ctitle(4)',
+          'phone': '@integer(1, 9999999999)',
+          'address': '@ctitle(15)',
+          'expressName': '@ctitle(5)',
+          'expressNo': '@integer(1, 9999999999)',
+          'applyId': '@integer(1, 9999999999)',
+          // 状态(M:开票中,D:已寄出)
+          'status': function () {
+            let arr = ['M', 'D']
+            return arr[Math.floor(Math.random() * arr.length)]
+          }
+        }]
+      }
+    }
+  },
+  'POST /A/Finance/OrderList.json delay:1000': (req) => {
+    const pageSize = req.body.pageSize || 10
+    return {
+      body: {
+        totalCount: pageSize * 10,
+        [`datas|${pageSize}`]: [{
+          'orderNo': '@integer(1, 9999999999)',
+          'payUser': '@ctitle(10)',
+          'payAmount': '@integer(1, 1000)',
+          'orderAmount': '@integer(1, 1000)',
+          'payType': function () {
+            let arr = ['T1', 'T2']
+            return arr[Math.floor(Math.random() * arr.length)]
+          }
+        }]
+      }
+    }
+  },
+  'POST /A/Finance/Details.json delay:1000': (req) => {
     return {
       isSuccess: true,
       body: {
-        // 订单信息
-        'orderInfo': {
-          // 订单Id
-          'orderId': '@integer(1, 1000)',
-          // 订单编号
-          'orderNo': '@integer(111111111, 999999999)',
-          // 客户编号
-          'customerId': '@integer(1, 1000)',
-          // 客户姓名
-          'customerName': '@cname(2, 3)',
-          // 税源地编号
-          'sourceTaxId': '@integer(1, 1000)',
-          // 税源地名称
-          'sourceTaxName': '@ctitle(5, 11)',
-          // 商品编号
-          'companyId': '@integer(1, 1000)',
-          // 商品名称
-          'goodsName': '@ctitle(3, 6)',
-          // 站点名称
-          'companyName': '@ctitle(3, 6)',
-          // 站点类型编号
-          'companyTypeId': '@integer(1, 1000)',
-          // 站点类型名称
-          'companyTypeName': '@ctitle(3, 6)',
-          // 发票类型编号
-          invoiceTypeId: '@integer(1, 200)',
-          // 发票类型名称
-          invoiceTypeName: '@ctitle(5, 8)',
-          // 发票税率
-          invoiceTypeTax: '@integer(1, 100)',
-          // 开票金额
-          invoiceAmount: '@integer(1, 100)',
-          // 开票项目
-          invoiceContent: '@ctitle(5, 8)',
-          // 开票公司名
-          invoiceCompanyName: '@ctitle(5, 8)',
-          // 开票公司税号
-          invoiceCompanyTaxNo: /\d{12}/,
-          // 开票公司地址
-          invoiceCompanyAddress: '@ctitle(5, 8)',
-          // 开票公司电话
-          invoiceCompanyPhone: /1\d{10}/,
-          // 开票公司银行名称
-          invoiceCompanyBankName: '@ctitle(5, 8)',
-          // 开票公司银行账号
-          invoiceCompanyBankNo: /\d{12}/,
-          // 发票快递地址
-          invoiceExpressAddress: '@ctitle(5, 8)',
-          // 是否需要审批
-          'isNeedApproval|1': ['Y', 'N'],
-          // 是否加急
-          'isPriority|1': ['Y', 'N'],
-          // 服务费折扣
-          serviceFeeDiscount: '@integer(1, 100)',
-          // 服务费
-          serviceFee: '@integer(1, 100)',
-          // 合计支付金额
-          totalAmount: '@integer(1, 100)',
-          // 订单创建时间
-          showCreateTime: '@datetime',
-          // 创建人
-          createAdminUserId: '@integer(1, 100)',
-          // 提交时间
-          showSubmitTime: '@datetime',
-          // 增值税返税比率
-          zZSRatio: '@integer(1, 100)',
-          // 个税返税比率
-          gRSDSRatio: '@integer(1, 100)',
-          // 附加税返税比率
-          fJSRatio: '@integer(1, 100)',
-          // 印花税返税比率
-          yHSRatio: '@integer(1, 100)',
-          // 创建部门
-          createAdminUserDeptId: '@integer(1, 100)',
-          // 流程编号
-          workflowId: '@integer(1, 100)',
-          // 流程名称
-          workflowName: '@ctitle(5, 8)',
-          // 订单完成时间
-          showOrderCompletedTime: '@datetime'
-        },
-        // 收款信息
-        'bankReceipts|1-3': [{
-          // 收款银行名称
-          bankName: '@ctitle(3, 5)银行',
-          // 收款账户
-          bankNo: /\d{12}/,
-          // 银行回单号
-          bankBillNo: /\d{12}/,
-          // 到账日期
-          showInDate: '@datetime',
-          // 到账金额
-          inAmount: '@integer(1, 50000)',
-          // 回单图片URL
-          billImgUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1528865905353&di=8eef2357a6499129c22945af641a0c7a&imgtype=0&src=http%3A%2F%2Fphotocdn.sohu.com%2F20130530%2FImg377522814.jpg'
-        }],
-        // 发票信息
-        'invoiceInfo': {
-          // 发票号
-          invoiceNo: /\d{12}/,
-          // 发票图片URL
-          invoiceImgUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1528865905353&di=8eef2357a6499129c22945af641a0c7a&imgtype=0&src=http%3A%2F%2Fphotocdn.sohu.com%2F20130530%2FImg377522814.jpg',
-          // 快递单号
-          expressNo: /\d{12}/,
-          // 快递单回单截图URL
-          expressImgUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1528865905353&di=8eef2357a6499129c22945af641a0c7a&imgtype=0&src=http%3A%2F%2Fphotocdn.sohu.com%2F20130530%2FImg377522814.jpg',
-          // 快递公司
-          expressName: '@ctitle(3, 5)'
-        },
-        // 客服回访信息
-        'customerServiceRecord': {
-          // 评分
-          evalValue: '@integer(1, 5)',
-          // 反馈
-          feedback: '@ctitle(5, 20)'
-        }
+        'invoiceTitle': '@ctitle(4)',
+        'mobile': '@integer(1, 9999999999)',
+        'companyAddress': '@ctitle(15)',
+        'bankName': '@ctitle(5)',
+        'companyTaxNo': '@integer(1, 9999999999)',
+        'bankAccount': '@integer(1, 9999999999)'
       }
     }
+  },
+
+  'POST /A/Finance/ApplyInvoiceList.json delay:1000': (req) => {
+    const pageSize = req.body.pageSize || 20
+    return {
+      body: {
+        totalCount: pageSize * 20,
+        [`datas|${pageSize}`]: [{
+          'invoiceNo': '@integer(1, 9999999999)',
+          'applyTime': '@datetime("yyyy-MM-dd HH:mm:ss")',
+          'formatApplyTime': '@datetime("yyyy-MM-dd HH:mm:ss")',
+          'invoiceType': function () {
+            let arr = ['IO', 'IE']
+            return arr[Math.floor(Math.random() * arr.length)]
+          },
+          'orderAmount': '@integer(1, 1000)',
+
+          'status': function () {
+            let arr = ['I', 'A', 'D', 'R']
+            return arr[Math.floor(Math.random() * arr.length)]
+          },
+          'rejectReason': '@ctitle(10)',
+          'adminName': '@ctitle(4)',
+          'applyId': '@integer(1, 9999999999)',
+          // 订单号
+          'orderNo': '@integer(1000000000, 9999999999)',
+          'totalAmount': '@integer(1, 10000)',
+          'showPayTime': '@integer(1, 5)'
+        }]
+      }
+    }
+  },
+  'POST /A/TimeOrder/Query/AppointmentList.json delay:1000': (req) => {
+    const pageSize = req.body.pageSize || 20
+    return {
+      isSuccess: true,
+      body: {
+        totalCount: pageSize * 20,
+        [`datas|${pageSize}`]: [{
+          // 订单编号
+          'orderId': '@integer(1, 9999999999)',
+          // 订单号
+          'orderNo': '@integer(1000000000, 9999999999)',
+          // 预约时间
+          'showAppointmentBeginTime': '@datetime("yyyy-MM-dd HH:mm:ss")',
+          // 预约时长
+          'expectHours': '@integer(1, 5)',
+          // 服务者
+          'workerName': '@ctitle(2,4)',
+          // 公司名
+          'companyName': '@ctitle(10)公司',
+          // 地址
+          'address': '@ctitle(10)'
+        }]
+      }
+    }
+  },
+  'POST /A/TimeOrder/Query/DelayList.json delay:1000': (req) => {
+    const pageSize = req.body.pageSize || 20
+    return {
+      isSuccess: true,
+      body: {
+        totalCount: pageSize * 20,
+        [`datas|${pageSize}`]: [{
+          // 订单编号
+          'orderId': '@integer(1, 9999999999)',
+          // 订单号
+          'orderNo': '@integer(1000000000, 9999999999)',
+          // 付款对象
+          'payUser': '@ctitle(2,4)',
+          // 支付金额
+          'payAmount': '@integer(100, 500)',
+          // 支付方式
+          'payType': 'T@integer(1, 2)',
+          // 原因
+          'financeReason': '@ctitle(10, 50)',
+          // 支付时间
+          'showPayTime': '@datetime("yyyy-MM-dd HH:mm:ss")'
+        }]
+      }
+    }
+  },
+  'POST /A/User/TaxList.json delay:1000': (req) => {
+    const pageSize = req.body.pageSize || 15
+    return {
+      isSuccess: true,
+      body: {
+        totalCount: pageSize * 15,
+        [`datas|${pageSize}`]: [
+          {
+            'createTime': '@datetime("yyyy-MM-dd HH:mm:ss")', // 提交时间
+            'formatCreateTime': '@datetime("yyyy-MM-dd HH:mm:ss")', // 提交时间
+            'userName': '@cname', // 用户名
+            'mobile': '@float', // 电话
+            'otherMobile': '@float', // 其他电话
+            'soure|1': ['人人财务官网', '微信服务号', '朋友', '微信朋友圈', '微博', '今日头条'], // 来源
+            'cityName': `@cfirst@clast` // 城市
+          }
+        ]
+      }
+    }
+  },
+  'POST /A/TimeOrder/Do/DelayReason.json delay:1000': (req) => {
+    return {
+      isSuccess: true,
+      body: true
+    }
+  },
+  // 反馈列表
+  'POST /User/FeedBackList.json delay:1000': (req) => {
+    const pageSize = req.body.pageSize || 20
+    return {
+      isSuccess: true,
+      body: {
+        totalCount: pageSize * 20,
+        [`datas|${pageSize}`]: [{
+          'feedbackId': '@integer(1, 9999999999)',
+          'formatFeedbackTime': '@datetime("yyyy-MM-dd HH:mm:ss")',
+          'feedbackTime': '@datetime("yyyy-MM-dd HH:mm:ss")',
+          'userType': function () {
+            let arr = ['B', 'C']
+            return arr[Math.floor(Math.random() * arr.length)]
+          },
+          'status': function () {
+            let arr = ['W', 'O']
+            return arr[Math.floor(Math.random() * arr.length)]
+          },
+          'content': '@ctitle(10)',
+          'loginName': '@ctitle(4)'
+        }]
+      }
+    }
+  },
+  // 操作详情
+  'POST /User/FeedBackDetails.json delay:1000': (req) => {
+    return {
+      isSuccess: true,
+      body: {
+        userType: function () {
+          let arr = ['B', 'C']
+          return arr[Math.floor(Math.random() * arr.length)]
+        },
+        userName: '@ctitle(4)',
+        mobile: '@integer(1, 9999999999)',
+        actionResult: '@ctitle(15)',
+        content: '@ctitle(10)',
+        feedbackId: '@integer(1, 9999999999)'
+      }
+    }
+  },
+  // 保存备注
+  'POST /User/SaveFeedBackRemark.json delay:1000': (req, res) => {
+    res.send({
+      isSuccess: true,
+      body: {
+        isSuccess: true
+      }
+    })
+  },
+  // 标签列表
+  'POST /Tag/List.json delay:1000': (req) => {
+    const pageSize = req.body.pageSize || 20
+    return {
+      isSuccess: true,
+      body: {
+        totalCount: pageSize * 20,
+        [`datas|${pageSize}`]: [{
+          jobTagId: '@integer(1, 9999999999)',
+          jobTagName: '@ctitle(2,4)',
+          status: function () {
+            let arr = ['N', 'D']
+            return arr[Math.floor(Math.random() * arr.length)]
+          },
+          jobDescription: '@ctitle(10)'
+        }]
+      }
+    }
+  },
+  // 新增(编辑)标签
+  'POST /Tag/Operation.json delay:1000': (req) => {
+    return {
+      isSuccess: true,
+      body: {
+        isSuccess: true,
+        'JobTagName': '@ctitle(4)',
+        'JobTagId': '@integer(1, 9999999999)',
+        'JobDescription': '@ctitle(15)'
+      }
+    }
+  },
+  // 修改标签状态接口
+  'POST /Tag/UpdateStatus.json delay:1000': (req) => {
+    return {
+      isSuccess: true,
+      body: {
+        isSuccess: true
+      }
+    }
+  },
+  'POST /A/Order/Query/Log.json delay:1000': (req) => {
+    const pageSize = req.body.pageSize || 20
+    return {
+      isSuccess: true,
+      body: {
+        totalCount: pageSize * 20,
+        [`datas|${pageSize}`]: [{
+          // 日志时间
+          'showLogTime': '@datetime("yyyy-MM-dd HH:mm:ss")',
+          // 日志类型
+          'logType': '@ctitle(4,8)',
+          // 日志详情
+          'logDetail': '@ctitle(20,40)',
+          // 日志备注
+          'logRemark': '@ctitle(20,40)',
+          // 记录人
+          'logUserId': '@integer(1, 100000)',
+          // 记录人
+          'logUserName': '@ctitle(2,4)',
+          // 日志编号
+          'logId': '@integer(1, 100000)',
+          // 订单号
+          'orderId': '@integer(1, 100000)'
+        }]
+      }
+    }
+  },
+  'POST /Order/Query/ListMain.json delay:1000': (req) => {
+    const pageSize = req.body.pageSize || 20
+    return {
+      isSuccess: true,
+      body: {
+        totalCount: pageSize * 20,
+        [`datas|${pageSize}`]: [{
+          orderId: '@integer(1, 9999999999)',
+          orderNo: '@integer(1, 9999999999)',
+          continuityOrderId: '@integer(0, 1)',
+          companyUserId: '@integer(1, 9999999999)',
+          companyName: '@ctitle(4,8)',
+          orderContact: '@ctitle(2,3)',
+          orderPhone: '15988855643',
+          jobTagId: '@integer(1, 9999999999)',
+          jobTagName: '@ctitle(2,4)',
+          showBeginTime: '@datetime("yyyy-MM-dd HH:mm:ss")',
+          showEndTime: '@datetime("yyyy-MM-dd HH:mm:ss")',
+          originalWorkerNum: '@integer(1, 100)',
+          workerNum: '@integer(1, 100)',
+          applyWorkerNum: '@integer(1, 100)',
+          singleSalary: '@integer(20, 100)',
+          sumSalary: '@integer(200, 600)',
+          cityId: '@integer(1, 9999999999)',
+          cityName: '@ctitle(2, 4)市',
+          address: '@ctitle(10,15)',
+          orderStatus: '@integer(1, 4)'
+        }]
+      }
+    }
+  },
+  'POST /Order/Query/DetailMain.json delay:1000': (req) => {
+    return {
+      isSuccess: true,
+      body: {
+        orderId: '@integer(1, 9999999999)',
+        orderNo: '@integer(1, 9999999999)',
+        orderTitle: '@ctitle(4,8)',
+        showCreateTime: '@datetime("yyyy-MM-dd HH:mm:ss")',
+        continuityOrderId: '@integer(0, 1)',
+        'continuityDates|5-20': ['@datetime("yyyy-MM-dd HH:mm:ss")'],
+        companyUserId: '@integer(1, 9999999999)',
+        companyName: '@ctitle(4,8)',
+        orderContact: '@ctitle(2,3)',
+        orderPhone: '15988855643',
+        jobTagId: '@integer(1, 9999999999)',
+        jobTagName: '@ctitle(2,4)',
+        showBeginTime: '@datetime("yyyy-MM-dd HH:mm:ss")',
+        showEndTime: '@datetime("yyyy-MM-dd HH:mm:ss")',
+        originalWorkerNum: '@integer(1, 100)',
+        workerNum: '@integer(1, 100)',
+        applyWorkerNum: '@integer(1, 100)',
+        singleSalary: '@integer(20, 100)',
+        sumSalary: '@integer(200, 600)',
+        cityId: '@integer(1, 9999999999)',
+        cityName: '@ctitle(2, 4)市',
+        address: '@ctitle(10,15)',
+        orderStatus: '@integer(1, 4)',
+        'createType|1': ['C', 'P'],
+        prepayAmount: '@integer(100, 600)',
+        description: '@ctitle(20,40)',
+        orderRemark: '@ctitle(20,40)',
+        createUserName: '@cname(2, 4)'
+      }
+    }
+  },
+  'POST /Order/Query/DetailMainListSub.json delay:1000': (req) => {
+    return {
+      isSuccess: true,
+      body: {
+        'datas|15-20': [{
+          orderSubId: '@integer(1, 9999999999)',
+          orderSubNo: '@integer(1, 9999999999)',
+          workerUserId: '@integer(0, 1)',
+          workerName: '@ctitle(2, 4)',
+          workerMobile: '18566665548',
+          showApplyTime: '@datetime("yyyy-MM-dd HH:mm:ss")',
+          showClockOnTime: '@datetime("yyyy-MM-dd HH:mm:ss")',
+          clockOnAddress: '@ctitle(10,15)',
+          showClockOffTime: '@datetime("yyyy-MM-dd HH:mm:ss")',
+          clockOffAddress: '@ctitle(10,15)',
+          overType: 'S@integer(1, 7)',
+          timeStatus: '@integer(1, 4)'
+        }]
+      }
+    }
+  },
+  // 取消主订单
+  'POST /Order/Do/CancelMain.json delay:1000': (req, res) => {
+    res.send({
+      isSuccess: true,
+      body: {
+        isSuccess: true
+      }
+    })
+  },
+  // 取消子订单
+  'POST /Order/Do/CancelSub.json delay:1000': (req, res) => {
+    res.send({
+      isSuccess: true,
+      body: {
+        isSuccess: true
+      }
+    })
+  },
+  // 修改详情
+  'POST /Order/Do/Modify.json delay:1000': (req, res) => {
+    res.send({
+      isSuccess: true,
+      body: {
+        isSuccess: true
+      }
+    })
+  },
+  // 修改备注
+  'POST /Order/Do/Remark.json delay:1000': (req, res) => {
+    res.send({
+      isSuccess: true,
+      body: {
+        isSuccess: true
+      }
+    })
+  },
+  // 指派
+  'POST /Order/Do/Apply.json delay:1000': (req, res) => {
+    res.send({
+      isSuccess: true,
+      body: {
+        isSuccess: true
+      }
+    })
+  },
+  // 支付
+  'POST /Order/Do/Pay.json delay:1000': (req, res) => {
+    res.send({
+      isSuccess: true,
+      body: {
+        isSuccess: true
+      }
+    })
+  },
+  // 处理事件
+  'POST /Order/Do/EventHandel.json delay:1000': (req, res) => {
+    res.send({
+      isSuccess: true,
+      body: {
+        isSuccess: true
+      }
+    })
+  },
+  'POST /Order/Query/ListSub.json delay:1000': (req) => {
+    const pageSize = req.body.pageSize || 20
+    return {
+      isSuccess: true,
+      body: {
+        totalCount: pageSize * 20,
+        [`datas|${pageSize}`]: [{
+          orderSubId: '@integer(1, 9999999999)',
+          orderSubNo: '@integer(1, 9999999999)',
+          orderId: '@integer(1, 9999999999)',
+          orderNo: '@integer(1, 9999999999)',
+          orderTitle: '@ctitle(2,10)',
+          companyUserId: '@integer(1, 9999999999)',
+          companyName: '@ctitle(4,8)',
+          workerUserId: '@integer(0, 1)',
+          workerName: '@ctitle(2, 4)',
+          workerMobile: '18566665548',
+          showBeginTime: '@datetime("yyyy-MM-dd HH:mm:ss")',
+          showEndTime: '@datetime("yyyy-MM-dd HH:mm:ss")',
+          address: '@ctitle(10,15)',
+          singleSalary: '@integer(20, 100)',
+          adjustSalary: '@integer(20, 100)',
+          orderContact: '@ctitle(2,3)',
+          orderPhone: '15988855643',
+          showApplyTime: '@datetime("yyyy-MM-dd HH:mm:ss")',
+          showClockOnTime: '@datetime("yyyy-MM-dd HH:mm:ss")',
+          clockOnAddress: '@ctitle(10,15)',
+          showClockOffTime: '@datetime("yyyy-MM-dd HH:mm:ss")',
+          clockOffAddress: '@ctitle(10,15)',
+          subStatus: '@integer(1, 6)',
+          autoPayMinutes: '@integer(1, 5000)'
+        }]
+      }
+    }
+  },
+  'POST /Order/Query/DetailSub.json delay:1000': (req) => {
+    return {
+      isSuccess: true,
+      body: {
+        orderSubId: '@integer(1, 9999999999)',
+        orderSubNo: '@integer(1, 9999999999)',
+        orderId: '@integer(1, 9999999999)',
+        orderNo: '@integer(1, 9999999999)',
+        orderTitle: '@ctitle(2,10)',
+        companyUserId: '@integer(1, 9999999999)',
+        companyName: '@ctitle(4,8)',
+        workerUserId: '@integer(0, 1)',
+        workerName: '@ctitle(2, 4)',
+        workerMobile: '18566665548',
+        showBeginTime: '@datetime("yyyy-MM-dd HH:mm:ss")',
+        showEndTime: '@datetime("yyyy-MM-dd HH:mm:ss")',
+        address: '@ctitle(10,15)',
+        singleSalary: '@integer(20, 100)',
+        adjustSalary: '@integer(20, 100)',
+        orderContact: '@ctitle(2,3)',
+        orderPhone: '15988855643',
+        showClockOnTime: '@datetime("yyyy-MM-dd HH:mm:ss")',
+        clockOnAddress: '@ctitle(10,15)',
+        showClockOffTime: '@datetime("yyyy-MM-dd HH:mm:ss")',
+        clockOffAddress: '@ctitle(10,15)',
+        autoPayMinutes: '@integer(1, 5000)',
+        showOverTime: '@datetime("yyyy-MM-dd HH:mm:ss")',
+        workingHours: '@integer(5, 10)',
+        showCreateTime: '@datetime("yyyy-MM-dd HH:mm:ss")',
+        continuityOrderId: '@integer(0, 1)',
+        'continuityDates|5-10': ['@datetime("yyyy-MM-dd HH:mm:ss")'],
+        jobTagName: '@ctitle(2,3)',
+        originalWorkerNum: '@integer(1, 100)',
+        workerNum: '@integer(1, 100)',
+        applyWorkerNum: '@integer(1, 100)',
+        prepayAmount: '@integer(100, 500)',
+        description: '@ctitle(20,80)',
+        showApplyTime: '@datetime("yyyy-MM-dd HH:mm:ss")',
+        subStatus: '@integer(1, 6)',
+        overType: 'S@integer(1, 7)',
+        timeStatus: '@integer(1, 4)',
+        cityName: '@ctitle(2, 3)市'
+      }
+    }
+  },
+  'POST /Order/Query/ListEvent.json delay:1000': (req) => {
+    return {
+      isSuccess: true,
+      body: {
+        'datas|0-2': [{
+          eventId: '@integer(1, 9999999999)',
+          eventContent: '@ctitle(20, 40)',
+          showCreateTime: '@datetime("yyyy-MM-dd HH:mm:ss")',
+          actionUserName: '@cname(2, 3)',
+          showActionTime: '@datetime("yyyy-MM-dd HH:mm:ss")',
+          orderSubId: '@integer(1, 9999999999)',
+          orderSubNo: '@integer(1, 9999999999)',
+          'status|1': ['P', 'C'],
+          remark: '@ctitle(20, 40)'
+        }]
+      }
+    }
+  },
+  'POST /User/Like/SettingDetail.json': {
+    // 企业编号
+    'companyUserId': '@integer(10, 100)',
+    // 是否开启
+    'isOpen': '@boolean',
+    // 个数限制
+    'likeCountLimit': '@integer(1, 100)',
+    // 服务有效期
+    'likeServicesLimit': '@datetime'
+  },
+  'POST /User/Like/SettingSave.json delay:2000': true,
+  'POST /User/Like/ListC.json delay:1000': {
+    'totalCount': '@integer(10, 20)',
+    'datas|10': [{
+      // 收藏编号
+      'likeId': '@integer(1, 9999999999)',
+      // 工人编号
+      'workerUserId': '@integer(1, 9999999999)',
+      // 工人姓名
+      'workerUserName': '@cname',
+      // 性别
+      'sex|1': ['F', 'M'],
+      // 抢单资格
+      'orderStatus|1': ['A', 'B'],
+      // 抢单资格
+      'orderStatusText|1': ['A', 'B'],
+      // 状态
+      'status|1': ['A', 'B'],
+      // 状态
+      'statusText|1': ['A', 'B'],
+      // 完成单数
+      'completeOrderCount': '@integer(1, 9999999999)',
+      // 最后接单时间
+      'lastOrderTime': '@datetime',
+      // 收藏时间
+      'likeTime': '@datetime',
+      // 收藏过期时间
+      'likeExpireTime': '@datetime',
+      // 收藏类型
+      'likeType|1': ['A', 'B'],
+      // 收藏人
+      'likeUserId': '@integer(1, 9999999999)',
+      // 收藏人
+      'likeUserName': '@cname'
+    }]
   }
 }
 

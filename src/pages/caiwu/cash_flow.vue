@@ -2,8 +2,8 @@
   <x-page breadcrumb="auto" title="流水查询">
     <el-card body-style="padding: 10px" class="el-card-mini no-box-shadow no-border-radius">
       <el-form :model="searchForm" :inline="true" size="mini" class="demo-form-inline">
-        <el-form-item label="用户">
-          <el-input v-model="searchForm.userName" placeholder="姓名" style="width: 100px"/>
+        <el-form-item label="手机号">
+          <el-input v-model="searchForm.userName" placeholder="手机号" style="width: 100px"/>
         </el-form-item>
         <el-form-item label="交易时间">
           <el-date-picker
@@ -71,8 +71,7 @@
           <template slot-scope="scope">{{scope.row.transType}}</template>
         </el-table-column>
         <el-table-column label="交易对象" prop="outAccountCashId" width="120"/>
-        <el-table-column label="关联业务单号" prop="bizNo" width="160"/>
-        <el-table-column label="" prop="" min-width="160"/>
+        <el-table-column label="关联业务单号" prop="bizNo" />
       </el-table>
       <div class="text-right">
         <el-pagination
@@ -87,7 +86,7 @@
       </div>
     </el-card>
     <el-dialog v-drag-dialog title="充值扣款" width="400px" :visible.sync="dialogFormVisible">
-      <el-form :model="form" :rules="formRules" ref="form" style="margin: -30px 0;" size="mini">
+      <el-form :model="form" :rules="formRules" ref="form"  size="mini">
         <el-form-item label="手机号：" label-width="100" prop="loginName">
           <el-input v-model.lazy="form.loginName" auto-complete="off" placeholder="请输入对方手机号"></el-input>
         </el-form-item>
@@ -160,7 +159,7 @@ export default {
       dialogFormVisible: false,
       formRules: {
         loginName: [{required: true, message: '账户不能为空', trigger: 'blur'}],
-        amount: [{type: 'number', required: true, message: '金额不能为且必须为数字', trigger: 'blur'}]
+        amount: [{type: 'number', required: true, message: '金额不能为空且必须为数字', trigger: 'blur'}]
       }
     }
   },
@@ -258,5 +257,8 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
+  #x-page-cash-flow-body .el-dialog__body {
+    padding: 0px 20px;
+  }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <el-form ref="form" :model="form" label-width="80px">
+  <el-form ref="form" :model="form" size="mini" >
     <el-form-item prop="password" label="旧密码" :rules="{required: true, message: '旧密码不能为空'}">
       <el-input name="password" v-model="form.password" placeholder="当前账号的登录密码"/>
     </el-form-item>
@@ -9,7 +9,7 @@
     <el-form-item prop="rePassword" label="确认密码" :rules="{required: true, validator: checkPassword}">
       <el-input v-model="form.rePassword" placeholder="再输入一次新密码"/>
     </el-form-item>
-    <el-form-item>
+    <el-form-item class="text-right">
       <el-button type="primary" :loading="loading" @click="onSaveNewPassword">保存密码</el-button>
     </el-form-item>
   </el-form>
@@ -42,7 +42,7 @@ export default {
       try {
         await this.$refs.form.validate()
         this.loading = true
-        const isChanged = await this.$$main.adminUserUpdatePwd({
+        const isChanged = await this.$$main.userUpdatePwd({
           'oldPwd': this.form.password,
           'newPwd': this.form.newPassword
         })

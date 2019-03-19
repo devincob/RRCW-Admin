@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    title="取消兼职工作"
+    :title="title"
     v-drag-dialog="{reset: true}"
     close-on-press-escape
     :visible.sync="dialogCancelOrderDisplay"
@@ -8,6 +8,7 @@
     width="550px"
     custom-class="dialogCancelOrderDisplay"
     center>
+    <div v-if="isContinue" style="margin: -15px 0 10px 0;color: red;font-size: 15px;">提示：该子订单为连续订单，取消兼职{{ isToday === '0' ? '所有订单' : '工作'}}后将不释放订单名额。</div>
     <el-form ref="cancelOrderForm" :model="cancelOrderForm" size="small" label-width="70px">
       <el-form-item label="取消类型">
         <el-radio v-model="cancelOrderForm.overType" label="S5">平台取消</el-radio>
@@ -35,12 +36,16 @@ export default {
         orderSubId: '',
         orderSubNo: '',
         overType: 'S5',
-        cancelReason: ''
+        cancelReason: '',
+        isToday: ''
       }
     }
   },
   props: {
-    params: Object
+    params: Object,
+    isToday: {default: 1},
+    title: {default: '取消兼职工作'},
+    isContinue: Boolean
   },
   methods: {
     show(){
@@ -48,7 +53,8 @@ export default {
         orderSubId: this.params.orderSubId,
         orderSubNo: this.params.orderSubNo,
         overType: 'S5',
-        cancelReason: ''
+        cancelReason: '',
+        isToday: this.isToday || 1
       }
       if (this.params.workerUserId) {
         this.dialogCancelOrderDisplay = true
@@ -72,7 +78,8 @@ export default {
         await this.$$main.orderDoCancelSub({
           orderSubId: this.cancelOrderForm.orderSubId,
           overType: this.cancelOrderForm.overType || 'S5',
-          cancelReason: this.cancelOrderForm.cancelReason || ''
+          cancelReason: this.cancelOrderForm.cancelReason || '',
+          isToday: this.cancelOrderForm.isToday || 1
         })
         this.$message({
           message: `子订单 ${this.cancelOrderForm.orderSubNo} 已取消`,

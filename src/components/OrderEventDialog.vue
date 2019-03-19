@@ -1,5 +1,5 @@
 <template>
-  <span>
+  <span class="el-button" style="padding: 0;border: none">
     <el-button
       :type="btnType"
       :size="btnSize"

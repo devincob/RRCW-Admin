@@ -6,42 +6,78 @@
     <div style="max-width:1024px;min-width: 800px;">
       <el-card v-if="!info.overType" style="display:flex;justify-content:flex-end;">
         <div>
+          <!-- 取消兼职工作 -->
+          <CancelGrabOrderDialog
+            ref="cancelGrabOrderDialog"
+            :is-continue="!!info.continuityOrderId"
+            :params="cancelForm"
+            @success="onCancelSuccess"
+            @error="onCancelError"
+          />
+          <!-- 取消兼职该日订单 -->
+          <CancelGrabOrderDialog
+            ref="cancelTodayOrderDialog"
+            :is-continue="!!info.continuityOrderId"
+            :params="cancelForm"
+            is-today="1"
+            title="取消兼职该日订单"
+            @success="onCancelSuccess"
+            @error="onCancelError"
+          />
+          <!-- 取消兼职所有订单 -->
+          <CancelGrabOrderDialog
+            ref="cancelAllOrderDialog"
+            :is-continue="!!info.continuityOrderId"
+            :params="cancelForm"
+            is-today="0"
+            title="取消兼职所有订单"
+            @success="onCancelSuccess"
+            @error="onCancelError"
+          />
+          <el-button
+            v-if="(info.subStatus === 1 || info.subStatus === 2) && info.workerUserId && info.continuityOrderId"
+            type="danger"
+            size="small"
+            @click="onCancelClick('cancelTodayOrderDialog')"
+          >
+            取消兼职该日订单
+          </el-button>
+          <el-button
+            v-if="(info.subStatus === 1 || info.subStatus === 2) && info.workerUserId && info.continuityOrderId"
+            type="danger"
+            size="small"
+            @click="onCancelClick('cancelAllOrderDialog')"
+          >
+            取消兼职所有订单
+          </el-button>
           <sub-order-dismiss-dialog
-            v-if="info.subStatus === 3"
+            v-if="info.subStatus === 3 || info.subStatus === 4"
             :order-sub-id="info.orderSubId"
-            btn-type="danger"
-            btn-size="small"
             type="A"
             @success="refreshPage"
           >
             企业退工
           </sub-order-dismiss-dialog>
           <sub-order-dismiss-dialog
-            v-if="info.subStatus === 3"
+            v-if="info.subStatus === 3 || info.subStatus === 4"
             :order-sub-id="info.orderSubId"
-            btn-type="danger"
-            btn-size="small"
-            type="B"
-            @success="refreshPage"
-          >
-            企业取消
-          </sub-order-dismiss-dialog>
-          <sub-order-dismiss-dialog
-            v-if="info.subStatus === 3"
-            :order-sub-id="info.orderSubId"
-            btn-type="danger"
-            btn-size="small"
             type="C"
             @success="refreshPage"
           >
             旷工（兼职取消）
           </sub-order-dismiss-dialog>
           <el-button
-            v-if="info.subStatus === 1 || info.subStatus === 2"
+            v-if="info.workerUserId && (info.subStatus === 1 || info.subStatus === 2) &&!info.continuityOrderId"
             type="danger"
             size="small"
-            @click="onCancelClick"
-          >{{info.workerUserId ? '取消兼职工作' : '取消名额'}}</el-button>
+            @click="onCancelClick('cancelGrabOrderDialog')"
+          >取消兼职工作</el-button>
+          <el-button
+            v-if="!info.workerUserId && (info.subStatus === 1 || info.subStatus === 2)"
+            type="danger"
+            size="small"
+            @click="onCancelClick('cancelGrabOrderDialog')"
+          >取消名额</el-button>
           <order-assign-dialog
             v-if="!info.workerUserId && (info.subStatus === 1 || info.subStatus === 2)"
             :order-sub-id="info.orderSubId"
@@ -136,13 +172,63 @@
           </el-table>
         </div>
       </el-card>
+      <el-card v-if="info.workerUserId && info.continuityOrderId && info.continuityOrderId !== ''">
+        <div slot="header">
+          <el-row style="height: 20px">
+            <el-col :span="12">连续订单</el-col>
+            <el-col :span="12" class="text-right">
+              <el-button type="text" style="padding: 0" @click="showSubOrderBody = !showSubOrderBody">
+                <span :style="{color: showSubOrderBody ? '#aaa' : '#66b1ff'}">展开</span>/<span :style="{color: showSubOrderBody ? '#66b1ff' : '#aaa'}">折叠</span>
+              </el-button>
+            </el-col>
+          </el-row>
+        </div>
+        <div v-show="showSubOrderBody">
+          <el-table
+            :data="subOrderList"
+            :border="true"
+            :highlight-current-row="true"
+            v-loading="loading"
+            element-loading-text="拼命加载中..."
+            element-loading-spinner="el-icon-loading"
+            element-loading-background="rgba(255, 255, 255, 0.8)"
+            size="mini"
+            style="width: 100%;margin-top: 10px;">
+            <el-table-column prop="orderSubNo" label="上班日期" width="130">
+              <template slot-scope="scope">
+                <div>{{$utils.dateFormat(scope.row.beginTime, 'MM-dd 周www')}}</div>
+                <o-tag v-if="scope.row.overPay && scope.row.overPay === 'Y'" background="#f56c6c">完</o-tag>
+                <o-tag v-else background="#ffd034">日</o-tag>
+                <o-tag v-if="scope.row.applyType && scope.row.applyType === 'W'" background="#14d0bc">抢</o-tag>
+                <o-tag v-if="scope.row.applyType && (scope.row.applyType === 'C' || scope.row.applyType === 'P')" background="#e6a23c">派</o-tag>
+                <o-tag v-if="scope.row.hasEating && scope.row.hasEating === 'Y'" background="#409eff">饭</o-tag>
+                <o-tag v-if="scope.row.hasEvent && scope.row.hasEvent === 2" background="#4cbb15">事</o-tag>
+                <o-tag v-if="scope.row.hasEvent && scope.row.hasEvent === 1" background="#909399">事</o-tag>
+                <o-tag v-if="scope.row.isTrain === 'Y'" background="#00a8ff">训</o-tag>
+              </template>
+            </el-table-column>
+            <el-table-column prop="showClockOnTime" label="上班时间地点" min-width="200">
+              <template slot-scope="scope">
+                <div>{{scope.row.showClockOnTime && scope.row.showClockOnTime.indexOf('0001') === -1 ? scope.row.showClockOnTime : ''}}</div>
+                <div>{{scope.row.clockOnAddress || ''}}</div>
+              </template>
+            </el-table-column>
+            <el-table-column prop="showClockOffTime" label="下班时间地点" min-width="200">
+              <template slot-scope="scope">
+                <div>{{scope.row.showClockOffTime && scope.row.showClockOnTime.indexOf('0001') === -1 ? scope.row.showClockOnTime : ''}}</div>
+                <div>{{scope.row.clockOffAddress}}</div>
+              </template>
+            </el-table-column>
+            <el-table-column prop="subStatusText" label="状态" width="100"/>
+            <el-table-column prop="cityName" label="操作" width="60">
+              <template slot-scope="scope">
+                <a :href="`/order/suborder-detail?ordersubid=${scope.row.orderSubId}`" target="_blank">详情</a>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+      </el-card>
     </div>
-    <CancelGrabOrderDialog
-      ref="cancelGrabOrderDialog"
-      :params="cancelForm"
-      @success="onCancelSuccess"
-      @error="onCancelError"
-    />
     <PayOrderDialog
       ref="payOrderDialog"
       :order-sub-id="orderSubId + ''"
@@ -158,6 +244,7 @@ import OrderAdjustDialog from '../../components/OrderAdjustDialog'
 import SubOrderDetail from '../../components/SubOrderDetail'
 import EventSubOrderDetailDialog from '../../components/EventSubOrderDetailDialog'
 import SubOrderDismissDialog from '../../components/SubOrderDismissDialog'
+import OTag from '../../components/OTag'
 export default {
   name: 'suborder-detail',
   components: {
@@ -167,12 +254,16 @@ export default {
     OrderAdjustDialog,
     SubOrderDetail,
     EventSubOrderDetailDialog,
-    SubOrderDismissDialog
+    SubOrderDismissDialog,
+    OTag
   },
   data() {
     return {
       orderSubId: 0,
       info: {},
+      totalCount: 0,
+      subOrderList: [],
+      showSubOrderBody: true,
       eventInfo: {},
       eventForm: {
         eventContent: ''
@@ -199,6 +290,7 @@ export default {
     },
     refreshPage(){
       this.querySubOrderDetails()
+      this.querySubOrderList()
       this.queryEventDetails()
     },
     async querySubOrderDetails() {
@@ -239,7 +331,7 @@ export default {
       try {
         await this.$$main.orderDoEventCreate({
           orderSubId: this.orderSubId,
-          changeAmount: this.info.singleSalary || 0,
+          changeAmount: (Number(this.info.singleSalary) || 0) + (Number(this.info.singleServiceCharge) || 0),
           ...this.eventForm
         })
         this.$message({
@@ -280,7 +372,7 @@ export default {
         loading.close()
       }
     },
-    onCancelClick() {
+    onCancelClick(ref) {
       this.cancelForm = {
         workerUserId: this.info.workerUserId || '',
         workerName: this.info.workerName || '',
@@ -290,7 +382,7 @@ export default {
         cancelReason: ''
       }
       this.$nextTick(() => {
-        this.$refs['cancelGrabOrderDialog'].show()
+        this.$refs[ref].show()
       })
     },
     onCancelSuccess() {
@@ -301,6 +393,15 @@ export default {
     },
     onAssignSuccess(id) {
       window.location = `/order/suborder-detail?ordersubid=${id}`
+    },
+    async querySubOrderList(){
+      try {
+        this.subOrderList = await this.$$main.orderQueryDetailSubListSub({
+          orderSubId: this.orderSubId
+        })
+      } catch (e) {
+        e.message && this.$message.error(e.message)
+      }
     }
   },
   mounted() {

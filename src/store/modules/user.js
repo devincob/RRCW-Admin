@@ -1,5 +1,6 @@
 import {getState} from '../plugins'
 import {listToTree} from '../../libs/utils'
+import {deepCopy} from '../../libs/deepCopy'
 
 export default {
   state: getState('user') || {
@@ -11,7 +12,7 @@ export default {
     userCheckLogin: state => {
       return !!(state.userInfo && (state.userInfo.authToken || state.userInfo.sessionId))
     },
-    userMenus: state => state.menus && state.menus.length ? listToTree(JSON.parse(JSON.stringify(state.menus))) : [],
+    userMenus: state => state.menus && state.menus.length ? listToTree(deepCopy(state.menus)) : [],
     menuIsCollapse: state => state.menuIsCollapse
   },
   actions: {

@@ -24,18 +24,6 @@
               <el-option :label="item.jobTagName" :value="item.jobTagId" v-for="item in tagList" :key="item.jobTagId"/>
             </el-select>
           </el-form-item>
-          <el-form-item label="发布时间">
-            <el-date-picker
-              popper-class="orders-date-picker"
-              style="width: 220px"
-              type="daterange"
-              align="right"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-              :picker-options="pickerOptions"
-              v-model="form.createTime">
-            </el-date-picker>
-          </el-form-item>
           <el-form-item label="工作时间">
             <el-date-picker
               popper-class="orders-date-picker"
@@ -44,6 +32,7 @@
               align="right"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
+              value-format="yyyy-MM-dd"
               :picker-options="pickerOptions"
               v-model="form.workTime">
             </el-date-picker>
@@ -167,9 +156,6 @@ export default {
         orderPhoneCondition: '',
         companyNameCondition: '',
         jobTagId: '',
-        createTime: [],
-        createTimeBeginCondition: '',
-        createTimeEndCondition: '',
         workTime: [],
         workTimeBeginCondition: '',
         workTimeEndCondition: '',
@@ -212,23 +198,11 @@ export default {
     }
   },
   watch: {
-    'form.createTime': {
-      handler: function (val) {
-        if (val && val.length > 0) {
-          this.form.createTimeBeginCondition = this.$utils.dateFormat(val[0], 'yyyy-MM-dd')
-          this.form.createTimeEndCondition = this.$utils.dateFormat(val[1], 'yyyy-MM-dd')
-        } else {
-          this.form.createTimeBeginCondition = ''
-          this.form.createTimeEndCondition = ''
-        }
-      },
-      deep: true
-    },
     'form.workTime': {
       handler: function (val) {
         if (val && val.length > 0) {
-          this.form.workTimeBeginCondition = this.$utils.dateFormat(val[0], 'yyyy-MM-dd')
-          this.form.workTimeEndCondition = this.$utils.dateFormat(val[1], 'yyyy-MM-dd')
+          this.form.workTimeBeginCondition = val[0]
+          this.form.workTimeEndCondition = val[1]
         } else {
           this.form.workTimeBeginCondition = ''
           this.form.workTimeEndCondition = ''
@@ -347,9 +321,6 @@ export default {
         orderPhoneCondition: '',
         companyNameCondition: '',
         jobTagId: '',
-        createTime: [],
-        createTimeBeginCondition: '',
-        createTimeEndCondition: '',
         workTime: [],
         workTimeBeginCondition: '',
         workTimeEndCondition: '',

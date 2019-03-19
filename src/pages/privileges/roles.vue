@@ -74,7 +74,7 @@ export default {
         return
       }
       const loader = this.$loading({text: '正在加载权限信息', target: this.$refs.permissionPanel.$el})
-      this.$$main.rolePermissionList({
+      this.$$main.userRoleDetails({
         adminRoleId: role.roleId
       }).then(({permissions}) => {
         let checkedIds = []
@@ -86,7 +86,7 @@ export default {
             'title': item.menuName,
             'icon': item.icon || 'el-icon-menu',
             'path': item.menuLink,
-            'disabled': item.isShow !== 'Y',
+            'disabled': false,
             'checked': item.checked
           }
         })
@@ -102,7 +102,7 @@ export default {
   methods: {
     async loadRoles(){
       try {
-        const roles = await this.$$main.roleList()
+        const roles = await this.$$main.userRoleList()
         this.roles = roles.map(item => {
           return {
             edit: false,
@@ -121,9 +121,9 @@ export default {
         try {
           let isDeleted
           if (role.roleId !== 0) {
-            isDeleted = await this.$$main.roleUpdate({
+            isDeleted = await this.$$main.userRoleOperation({
               adminRoleId: role.roleId,
-              status: 'D'
+              isDelete: 'Y'
             })
           } else {
             isDeleted = true
@@ -145,10 +145,10 @@ export default {
       if (role.edit) {
         const $loader = this.$loading({text: '正在保存权限名称', target: this.$refs.roleCard.$el})
         try {
-          const isOk = await this.$$main.roleModify({
+          const isOk = await this.$$main.userRoleOperation({
             adminRoleId: role.roleId,
             adminRoleName: role.roleName,
-            status: 'N'
+            isDelete: 'N'
           })
           role.edit = !isOk
           isOk ? this.$message.success('已保存') : this.$message.error('保存失败，请稍后再试。')
@@ -181,41 +181,19 @@ export default {
       if (data.children) {
         data.children.forEach(d => {
           tree.setChecked(d.id, node.checked)
-          if (d.children) {
-            d.children.forEach(c => {
-              tree.setChecked(c.id, node.checked)
-            })
-          }
         })
       }
       if (data.pid) {
-        const parent = tree.getNode(data.pid)
         if (node.checked){
           tree.setChecked(data.pid, node.checked)
-          if (parent.data.pid) {
-            tree.setChecked(parent.data.pid, node.checked)
-          }
         } else {
+          const parent = tree.getNode(data.pid)
           const childNodes = parent.childNodes
           let i = childNodes.length
           childNodes.forEach(item => {
             if (!item.checked) i--
           })
           if (!i) tree.setChecked(data.pid, node.checked)
-          if (parent.parent && parent.parent.childNodes) {
-            let checkedCount = 0
-            parent.parent.childNodes.forEach(item => {
-              if (item.checked) checkedCount++
-              if (item.childNodes && item.childNodes.length) {
-                item.childNodes.forEach(it => {
-                  if (it.checked) checkedCount++
-                })
-              }
-            })
-            if (!checkedCount) {
-              tree.setChecked(parent.parent.data.id, node.checked)
-            }
-          }
         }
       }
     },
@@ -225,7 +203,7 @@ export default {
     async savePermissions(){
       const loader = this.$loading({text: '正在保存权限'})
       try {
-        const isSaveSuccess = await this.$$main.rolePermissionModify({
+        const isSaveSuccess = await this.$$main.userRolePut({
           adminRoleId: this.currentRole.roleId,
           menuIds: this.$refs.tree.getCheckedKeys()
         })

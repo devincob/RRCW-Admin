@@ -66,7 +66,7 @@
         </el-table-column>
         <el-table-column label="手机号码" prop="contactPhone" min-width="80"/>
         <el-table-column label="确认支付时间" prop="autoPayHour"/>
-        <el-table-column label="服务费" prop="serviceChargeRate" width="80"/>
+        <!--<el-table-column label="服务费" prop="serviceChargeRate" width="80"/>-->
         <el-table-column label="授信额度" prop="creditLine">
           <span slot-scope="scope">{{scope.row.residualCreditLine}}/{{scope.row.creditLine}}</span>
         </el-table-column>
@@ -77,9 +77,10 @@
           <template slot-scope="scope">{{statusText[scope.row.status]}}</template>
         </el-table-column>
         <el-table-column sortable="custom" sort-by="registerTime" label="注册时间" width="140" prop="formatRegisterTime"/>
-        <el-table-column label="操作" width="100" align="center" header-align="center">
+        <el-table-column label="操作" fixed="right" width="200" align="center" header-align="center">
           <template slot-scope="scope">
             <router-link :to="`/user/company-detail?cid=${scope.row.companyUserId}`" target="_blank">详情</router-link>
+            <router-link :to="`/user/company-salary-deploy?cid=${scope.row.companyUserId}&cname=${scope.row.companyUserName}`" target="_blank">薪资配置</router-link>
           </template>
         </el-table-column>
       </el-table>
@@ -155,6 +156,7 @@ export default {
         this.tableData = data.datas
         this.loading = false
       } catch (e) {
+        console.log(e)
         this.$message.error(e.message)
       } finally {
         this.loading = false

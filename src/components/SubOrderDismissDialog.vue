@@ -18,8 +18,8 @@
       custom-class="dialogDismissDisplay"
       center>
       <el-form ref="dismissForm" :model="dismissForm" :rules="dismissRules" size="small" label-width="70px">
-        <el-form-item label="退工原因" prop="reason">
-          <el-input ref="reasonInput" type="textarea" :rows="4" :placeholder="`请输入${typeText[type].placeholder}原因及对应需要调整的工资，输入完成后系统将自动生成订单事件`" v-model.trim="dismissForm.reason"/>
+        <el-form-item :label="typeText[type].label" prop="reason">
+          <el-input ref="reasonInput" type="textarea" :rows="4" :placeholder="`请输入${typeText[type].placeholder}原因及对应需要调整的工资，输入完成后系统将自动生成订单事件，但不做工资调整。`" v-model.trim="dismissForm.reason"/>
         </el-form-item>
         <el-form-item style="margin-top: 25px;text-align: center" label-width="0px">
           <el-button size="medium" style="margin-right: 10px" @click="dialogDismissDisplay = false">取消</el-button>
@@ -42,15 +42,13 @@ export default {
       typeText: {
         A: {
           title: '企业退工',
-          placeholder: '企业退工'
-        },
-        B: {
-          title: '企业取消',
-          placeholder: '企业取消'
+          placeholder: '企业退工',
+          label: '退工原因'
         },
         C: {
           title: '兼职取消(旷工)',
-          placeholder: '兼职取消'
+          placeholder: '兼职取消',
+          label: '旷工原因'
         }
       },
       dismissRules: {
@@ -62,8 +60,8 @@ export default {
   },
   props: {
     type: {default: 'A'},
-    btnType: {default: ''},
-    btnSize: {default: ''},
+    btnType: {default: 'danger'},
+    btnSize: {default: 'small'},
     orderSubId: {default: ''},
     showBtn: {default: true}
   },
@@ -82,32 +80,10 @@ export default {
     onSubmit(){
       this.$refs['dismissForm'].validate((valid) => {
         if (valid) {
-          this.type === 'A' && this.doCancel()
-          this.type === 'B' && this.doDismiss()
+          this.type === 'A' && this.doDismiss()
           this.type === 'C' && this.onAbsenteeism()
         }
       })
-    },
-    async doCancel(){
-      const loading = this.$loading({
-        text: '正在操作',
-        spinner: 'el-icon-loading',
-        target: this.dialogDismissDisplay ? '.dialogDismissDisplay' : 'body'
-      })
-      try {
-        await this.$$main.orderDoCCancel(this.dismissForm)
-        this.$message({
-          message: '操作成功',
-          type: 'success'
-        })
-        this.$emit('success')
-        this.dialogDismissDisplay = false
-      } catch (e) {
-        this.$emit('error', e)
-        e.message && this.$message.error(e.message)
-      } finally {
-        loading.close()
-      }
     },
     async doDismiss(){
       const loading = this.$loading({

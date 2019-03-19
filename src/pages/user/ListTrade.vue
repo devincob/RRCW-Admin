@@ -1,5 +1,5 @@
 <template>
-  <el-card class="el-card-mini no-border-radius no-box-shadow list-trade">
+  <el-card class="el-card-mini no-border-radius no-box-shadow list-trade no-border">
     <div slot="header">账户资金明细 (资金账号: {{accountInfo.AccountCashId}}, 账户余额: {{accountInfo.Amount|currency}})</div>
     <!-- 表格数据 -->
     <el-table
@@ -94,7 +94,6 @@ export default {
           })
           this.accountInfo = info
         }
-        console.log(this.accountInfo)
       } catch (e) {
         console.log(e)
       } finally {

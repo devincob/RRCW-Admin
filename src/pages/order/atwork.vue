@@ -63,6 +63,7 @@
         <el-table-column fixed prop="showBeginTime" label="上班日期" min-width="140">
           <template slot-scope="scope">
             <div>{{$utils.dateFormat(scope.row.showBeginTime, 'MM-dd 周www')}}</div>
+            <o-tag v-if="scope.row.continuityOrderId" background="#ff6600">连</o-tag>
             <o-tag v-if="scope.row.overPay && scope.row.overPay === 'Y'" background="#f56c6c">完</o-tag>
             <o-tag v-else background="#ffd034">日</o-tag>
             <o-tag v-if="scope.row.applyType && scope.row.applyType === 'W'" background="#14d0bc">抢</o-tag>
@@ -152,6 +153,7 @@
     </el-card>
     <CancelGrabOrderDialog
       ref="cancelGrabOrderDialog"
+      :is-continue="subIsContinue"
       :params="cancelForm"
       @success="onCancelSuccess"
       @error="onCancelError"/>
@@ -196,6 +198,7 @@ export default {
         jobTagId: '',
         applyType: ''
       },
+      subIsContinue: false,
       cancelForm: {
         workerUserId: '',
         workerName: '',
@@ -341,12 +344,13 @@ export default {
         loading.close()
       }
     },
-    onCancelClick(scope){
+    onCancelClick({row}){
+      this.subIsContinue = !!row.continuityOrderId
       this.cancelForm = {
-        workerUserId: scope.row.workerUserId || '',
-        workerName: scope.row.workerName || '',
-        orderSubId: scope.row.orderSubId || '',
-        orderSubNo: scope.row.orderSubNo || '',
+        workerUserId: row.workerUserId || '',
+        workerName: row.workerName || '',
+        orderSubId: row.orderSubId || '',
+        orderSubNo: row.orderSubNo || '',
         overType: '',
         cancelReason: ''
       }

@@ -26,6 +26,7 @@
               align="right"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
+              value-format="yyyy-MM-dd"
               :picker-options="pickerOptions"
               v-model="form.createTime">
             </el-date-picker>
@@ -41,6 +42,8 @@
               <el-option label="取消" value="6"/>
               <el-option label="超时无人抢" value="7"/>
               <el-option label="已确认未支付" value="8"/>
+              <el-option label="企业退工" value="9"/>
+              <el-option label="兼职取消(旷工)" value="10"/>
             </el-select>
           </el-form-item>
           <el-form-item label="培训订单">
@@ -104,6 +107,7 @@
         <el-table-column fixed prop="showBeginTime" label="上班日期" min-width="100">
           <template slot-scope="scope">
             <div>{{$utils.dateFormat(scope.row.showBeginTime, 'MM-dd 周www')}}</div>
+            <o-tag v-if="scope.row.continuityOrderId" background="#ff6600">连</o-tag>
             <o-tag v-if="scope.row.overPay && scope.row.overPay === 'Y'" background="#f56c6c">完</o-tag>
             <o-tag v-else background="#ffd034">日</o-tag>
             <o-tag v-if="scope.row.applyType && scope.row.applyType === 'W'" background="#14d0bc">抢</o-tag>
@@ -177,12 +181,14 @@
             <el-button @click="onCancelClick(scope)" type="danger" size="mini" v-if="!scope.row.overType && (scope.row.subStatus === 1 || scope.row.subStatus === 2)">{{scope.row.workerUserId ? '取消兼职工作' : '取消名额'}}</el-button>
             <order-assign-dialog
               v-if="!scope.row.overType && !scope.row.workerUserId && (scope.row.subStatus === 1 || scope.row.subStatus === 2)"
+              style="margin: 2px 0 0 0"
               :order-sub-id="scope.row.orderSubId"
               :order-id="scope.row.orderId"
               btn-type="primary"
               btn-size="mini"
               @success="queryOrderList">指派</order-assign-dialog>
-              <order-event-dialog
+            <order-event-dialog
+              style="margin: 2px 0 0 0"
               btn-type="warning"
               btn-size="mini"
               :order-sub-id="scope.row.orderSubId"
@@ -206,6 +212,7 @@
     </el-card>
     <CancelGrabOrderDialog
       ref="cancelGrabOrderDialog"
+      :is-continue="subIsContinue"
       :params="cancelForm"
       @success="onCancelSuccess"
       @error="onCancelError"/>
@@ -282,6 +289,7 @@ export default {
           }
         }]
       },
+      subIsContinue: false,
       cancelForm: {
         workerUserId: '',
         workerName: '',
@@ -297,8 +305,8 @@ export default {
     'form.createTime': {
       handler: function (val) {
         if (val && val.length > 0) {
-          this.form.workTimeBeginCondition = this.$utils.dateFormat(val[0], 'yyyy-MM-dd')
-          this.form.workTimeEndCondition = this.$utils.dateFormat(val[1], 'yyyy-MM-dd')
+          this.form.workTimeBeginCondition = val[0]
+          this.form.workTimeEndCondition = val[1]
         } else {
           this.form.workTimeBeginCondition = ''
           this.form.workTimeEndCondition = ''
@@ -352,19 +360,8 @@ export default {
     formatSalary(row){
       let salary = `${this.$options.filters['currency']((row.singleSalary + (row.singleServiceCharge || 0)), '', 2)}元 / ${this.$options.filters['currency'](row.singleSalary, '', 2)}元 / ${this.$options.filters['currency'](row.adjustSalary, '', 2)}元`
       const h = this.$createElement
-      let color = ''
-      let amount = 0
-      if (row.totalChangeAmount && row.totalChangeAmount > 0){
-        color = '#ff0000'
-        amount = `+${this.$options.filters['currency'](row.totalChangeAmount, '', 2)}`
-      } else if (row.totalChangeAmount && row.totalChangeAmount < 0){
-        color = '#00cc00'
-        amount = this.$options.filters['currency'](row.totalChangeAmount, '', 2)
-      } else {
-        amount = this.$options.filters['currency'](row.totalChangeAmount, '', 2)
-      }
       return h({
-        template: `<div><div>${salary}</div><span style="color: ${color}">调：${amount}元</span></div>`
+        template: `<div>${salary}</div>`
       })
     },
     workerNumHeader(h, { column, $index }){
@@ -511,12 +508,13 @@ export default {
         loading.close()
       }
     },
-    onCancelClick(scope){
+    onCancelClick({row}){
+      this.subIsContinue = !!row.continuityOrderId
       this.cancelForm = {
-        workerUserId: scope.row.workerUserId || '',
-        workerName: scope.row.workerName || '',
-        orderSubId: scope.row.orderSubId || '',
-        orderSubNo: scope.row.orderSubNo || '',
+        workerUserId: row.workerUserId || '',
+        workerName: row.workerName || '',
+        orderSubId: row.orderSubId || '',
+        orderSubNo: row.orderSubNo || '',
         overType: '',
         cancelReason: ''
       }

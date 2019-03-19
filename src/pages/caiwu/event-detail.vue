@@ -132,9 +132,11 @@ export default {
       if (!valid){
         return
       }
+      const submitText = ['保存', '处理完成', '不处理', '提交审核']
       const types = ['是否要保存当前事件?', '是否要完成当前事件?', '是否不处理当前事件?', '是否要提交审核？']
-      this.$confirm(types[type], '提示', {
-        confirmButtonText: '保存',
+      const dismissTypes = ['是否要保存当前事件?', '该订单兼职被标记为旷工，请确认是否已调整工资。若已调整或无需调整请忽略。', '该订单兼职被标记为旷工，请确认是否已调整工资。若已调整或无需调整请忽略。', '是否要提交审核？']
+      this.$confirm(this.orderInfo.overType === 'S9' ? dismissTypes[type] : types[type], '提示', {
+        confirmButtonText: submitText[type],
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {

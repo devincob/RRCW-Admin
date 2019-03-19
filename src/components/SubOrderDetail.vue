@@ -20,6 +20,9 @@
             <td>
               {{info.orderTitle}}
               <o-tag
+                v-if="info.continuityOrderId"
+                background="#ff6600">连</o-tag>
+              <o-tag
                 v-if="info.overPay && info.overPay === 'Y'"
                 background="#f56c6c"
               >完</o-tag>

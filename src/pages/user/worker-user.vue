@@ -132,7 +132,7 @@ export default {
       searchFormRegisterTime: null,
       realNameStatusText: {PA: '通过', UP: '未通过', CT: '审核中'},
       orderStatusText: {A: '全部', N: '正常', D: '异常'},
-      statusText: {A: '全部', N: '正常', D: '封号'},
+      statusText: {A: '全部', N: '正常', D: '封号', C: '注销'},
       sexText: {M: '男', F: '女', U: '未知'},
       tableData: [],
       userType: '',

@@ -23,6 +23,7 @@
               align="right"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
+              value-format="yyyy-MM-dd"
               :picker-options="pickerOptions"
               v-model="form.createTime">
             </el-date-picker>
@@ -65,6 +66,7 @@
         <el-table-column fixed prop="showBeginTime" label="上班日期" min-width="100">
           <template slot-scope="scope">
             <div>{{$utils.dateFormat(scope.row.showBeginTime, 'MM-dd 周www')}}</div>
+            <o-tag v-if="scope.row.continuityOrderId" background="#ff6600">连</o-tag>
             <o-tag v-if="scope.row.overPay && scope.row.overPay === 'Y'" background="#f56c6c">完</o-tag>
             <o-tag v-else background="#ffd034">日</o-tag>
             <o-tag v-if="scope.row.hasEating && scope.row.hasEating === 'Y'" background="#409eff">饭</o-tag>
@@ -218,8 +220,8 @@ export default {
     'form.createTime': {
       handler: function (val) {
         if (val && val.length > 0) {
-          this.form.workTimeBeginCondition = this.$utils.dateFormat(val[0], 'yyyy-MM-dd')
-          this.form.workTimeEndCondition = this.$utils.dateFormat(val[1], 'yyyy-MM-dd')
+          this.form.workTimeBeginCondition = val[0]
+          this.form.workTimeEndCondition = val[1]
         } else {
           this.form.workTimeBeginCondition = ''
           this.form.workTimeEndCondition = ''

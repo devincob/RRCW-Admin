@@ -43,6 +43,7 @@
         <el-table-column fixed prop="showBeginTime" label="上班日期" min-width="140">
           <template slot-scope="scope">
             <div>{{$utils.dateFormat(scope.row.showBeginTime, 'MM-dd 周www')}}</div>
+            <o-tag v-if="scope.row.continuityOrderId" background="#ff6600">连</o-tag>
             <o-tag v-if="scope.row.overPay && scope.row.overPay === 'Y'" background="#f56c6c">完</o-tag>
             <o-tag v-else background="#ffd034">日</o-tag>
             <o-tag v-if="scope.row.applyType && scope.row.applyType === 'W'" background="#14d0bc">抢</o-tag>

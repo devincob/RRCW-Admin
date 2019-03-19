@@ -3,7 +3,7 @@
     <div slot="header">
       <div class="table-header-title">
         <div>契约精神分数明细 (当前契约分数：{{accountInfo ? accountInfo.Point : 0}}分)</div>
-        <el-button type="primary" size="mini" @click="$emit('btn-click', accountInfo.Point)">调整契约分数</el-button>
+        <el-button type="primary" size="mini" @click="onSpiritOfContractDialog(accountInfo.Point)">调整契约分数</el-button>
       </div>
     </div>
     <el-table
@@ -39,6 +39,23 @@
         :total="totalCount">
       </el-pagination>
     </div>
+    <el-dialog v-drag-dialog="{reset: true}"
+               close-on-press-escape
+               title="调整契约精神分数"
+               :visible.sync="changeSpiritOfContractDialog"
+               width="500px">
+      <el-form size="small" label-width="100px">
+        <el-form-item label="调整分数：">
+          <el-input-number :min="0" :max="100" v-model="spiritOfContract" :step="0.1"/>
+        </el-form-item>
+        <el-form-item label="调整原因：">
+          <el-input type="textarea" :rows="4" v-model="spiritOfContractRemark" placeholder="请输入调整原因" style="width: 97%"/>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" size="small" @click="changeContractPoint">调整分数</el-button>
+      </span>
+    </el-dialog>
   </el-card>
 </template>
 
@@ -58,7 +75,10 @@ export default {
       pageSize: 15,
       pageIndex: 1,
       loading: false,
-      accountInfo: {}
+      accountInfo: {},
+      spiritOfContract: 0,
+      spiritOfContractRemark: '',
+      changeSpiritOfContractDialog: false
     }
   },
   watch: {
@@ -73,6 +93,30 @@ export default {
     }
   },
   methods: {
+    onSpiritOfContractDialog(point){
+      this.changeSpiritOfContractDialog = true
+      this.spiritOfContract = point
+    },
+    async changeContractPoint(){
+      const loader = this.$loading({
+        lock: true,
+        text: '请稍等...'
+      })
+      try {
+        const res = await this.$$main.userDoChangeContract({
+          'workerUserId': this.userId,
+          'changePoint': this.spiritOfContract,
+          'changeReason': this.spiritOfContractRemark
+        })
+        res && this.$message.success('已调整！')
+        this.loadListContract()
+        this.changeSpiritOfContractDialog = false
+      } catch (e) {
+        e && e.message && this.$message.error(e.message)
+      } finally {
+        loader.close()
+      }
+    },
     async loadListContract(){
       if (!this.userId) return
       try {
@@ -91,8 +135,11 @@ export default {
             info[item.key] = item.value
           })
           this.accountInfo = info
+        } else {
+          this.accountInfo = {
+            Point: 0
+          }
         }
-        console.log(this.accountInfo)
       } catch (e) {
         console.log(e)
       } finally {
@@ -101,7 +148,6 @@ export default {
     }
   },
   mounted(){
-    console.log(this.userId)
     this.loadListContract()
   }
 }

@@ -41,29 +41,6 @@
             >账户状态：{{form.companyStatus === 'D' ? '禁用' : '正常'}}，可用余额：{{form.companyAmount|currency('', 2)}}元，授信余额：{{form.residualCreditLine|currency('', 2)}}元</span>
           </div>
         </el-form-item>
-        <!-- <el-form-item
-          label="选择企业"
-          prop="companyName"
-        >
-          <company-select
-            ref="bSearch"
-            @onCompanySelected="onCompanySelected"
-            style="width: 400px"
-          >
-            <el-input
-              slot="search"
-              v-model="form.searchCompanyName"
-              @input="onBSearch"
-              @blur="onBSearchBlur"
-              type="text"
-              placeholder="请输入公司名称进行搜索"
-            />
-          </company-select>
-          <span
-            style="color:#888888;font-size:12px"
-            v-if="(form.companyAmount || form.companyAmount === 0) && form.companyStatus"
-          >账户状态：{{form.companyStatus === 'D' ? '禁用' : '正常'}}，可用余额：{{form.companyAmount|currency('', 2)}}元，授信余额：{{form.residualCreditLine|currency('', 2)}}元</span>
-        </el-form-item> -->
         <el-form-item label="工作标题">
           {{form.orderTitle}}
           <el-input
@@ -73,25 +50,13 @@
           />
         </el-form-item>
         <el-form-item
-          label="工作城市"
-          prop="address"
+          label="城市岗位"
+          prop="jobTagId"
         >
-          <el-row>
-            <el-col :span="8">
-              <city-select
-                customBoxClass="cityBoxClass"
-                customClass="citySelectClass"
-                ref="citySelect"
-                @onProvinceSelected="onProvinceSelected"
-                @onCitySelected="onCitySelected"
-              />
-            </el-col>
-            <el-col
-              :span="6"
-              style="margin-left: 5px;"
-            >
-            </el-col>
-          </el-row>
+          <el-cascader
+            :options="cityTags"
+            v-model="cityTagSelect"
+          ></el-cascader>
         </el-form-item>
         <el-form-item
           label="工作地址"
@@ -110,29 +75,6 @@
           />
         </el-form-item>
         <el-form-item
-          label="工作岗位"
-          prop="jobTagId"
-        >
-          <span
-            v-if="jobTagNull"
-            style="color: red;font-size:12px"
-          >该城市暂无岗位</span>
-          <el-select
-            v-else
-            v-model="form.jobTagId"
-            :placeholder="form.cityName ? '请选择工作岗位' : '请先选择城市'"
-            @change="onJobTagSelect"
-          >
-            <el-option
-              v-for="item in jobTagList"
-              :key="item.jobTagId"
-              :label="item.jobTagName"
-              :value="item.jobTagId"
-            >
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item
           label="岗位名称"
           prop="jobTagName"
           v-if="form.jobTagId === 0"
@@ -147,8 +89,7 @@
           prop="showWorkDays"
         >
           <el-popover
-            ref="pop-date-picker"
-            placement="top"
+            ref="popDatePicker"
             width="360"
             v-model="popDatePickerDisplay"
           >
@@ -160,7 +101,7 @@
           <el-input
             v-model="form.showWorkDays"
             type="text"
-            v-popover:pop-date-picker
+            v-popover:popDatePicker
             placeholder="请选择工作日期"
           />
           <el-checkbox
@@ -491,12 +432,6 @@
             placeholder="请选择培训地点"
             readonly
           />
-          <search-map-modal
-            :appendToBody="true"
-            :cityName="form.cityName"
-            @searchDone="onTrainSearchDone"
-            ref="searchTrainMapModal"
-          />
         </el-form-item>
         <el-form-item
           label="培训价格"
@@ -552,6 +487,12 @@
         >发布</el-button>
       </span>
     </el-dialog>
+    <search-map-modal
+      :appendToBody="true"
+      :cityName="form.cityName"
+      @searchDone="onTrainSearchDone"
+      ref="searchTrainMapModal"
+    />
   </x-page>
 </template>
 
@@ -700,6 +641,8 @@ export default {
     }
     return {
       popDatePickerDisplay: false,
+      cityTags: [],
+      cityTagSelect: [],
       jobTagList: [],
       jobTagNull: false,
       companys: [],
@@ -865,15 +808,23 @@ export default {
     }
   },
   watch: {
-    'form.distictId': {
-      handler(val) {
-        if (!val || val === '') {
-          this.jobTagList = []
-        } else {
-          this.queryJobTagList()
-        }
-      },
-      deep: true
+    cityTagSelect(value){
+      this.form.address = ''
+      this.form.addressLat = ''
+      this.form.addressLng = ''
+      if (!value || value.length < 2) {
+        return
+      }
+      let sCity = this.cityTags.find(item => {
+        return item.value === value[0]
+      })
+      this.form.distictId = value[0]
+      this.form.cityName = sCity.label
+      let sTag = sCity.children.find(item => {
+        return item.value === value[1]
+      })
+      this.form.jobTagId = value[1]
+      this.form.jobTagName = sTag.label
     },
     'form.age': {
       handler(val) {
@@ -917,6 +868,7 @@ export default {
   },
   methods: {
     async onPageShow() {
+      this.queryCityTags()
       this.$$main.companyCanUseList().then({
         status: 'N'
       }).then(res => {
@@ -925,12 +877,28 @@ export default {
         err && err.message && this.$message.error(err.message)
       })
     },
-    onBSearch() {
-      // this.$refs['bSearch'].onSearchInput(this.form.searchCompanyName)
-    },
-    onBSearchBlur() {
-      this.form.searchCompanyName = this.form.companyName
-      // this.$refs['bSearch'].onInputBlur()
+    async queryCityTags() { // 获得城市接口 SAUserProvinceCityList
+      this.cityTags = []
+      try {
+        const list = await this.$$main.tagQueryOpened({companyUserId: this.companyUserId})
+        if (list) {
+          this.cityTags = list.map((item) => {
+            return {
+              value: item.districtId,
+              label: item.districtName,
+              children: item.tagInfos.map(child => {
+                return {
+                  value: child.jobTagId,
+                  label: child.jobTagName
+                }
+              })
+            }
+          })
+          console.log(this.cityTags)
+        }
+      } catch (e) {
+        e.message && this.$message.error(e.message)
+      }
     },
     onCompanySelected(index) {
       if (this.selectCompanyIndex === index) {
@@ -950,13 +918,6 @@ export default {
       this.form.orderTitle = (res && res.shortName) || res.companyUserName || ''
       this.form.orderTitleExpand = ''
     },
-    onProvinceSelected(item) {
-      this.form.provinceName = item.provinceName
-    },
-    onCitySelected(item) {
-      this.form.cityName = item.districtName
-      this.form.distictId = item.distictId
-    },
     onSearchDone(res) {
       this.form.address = res.address
       this.form.addressLat = res.lat
@@ -965,32 +926,6 @@ export default {
     onDateChange(res) {
       this.form.workDays = res
       this.form.showWorkDays = res.join(',')
-    },
-    onJobTagSelect(res) {
-      this.jobTagList && this.jobTagList.forEach((item) => {
-        if (item.jobTagId === res && item.jobTagId !== 0) {
-          this.form.jobTagName = item.jobTagName
-          this.form.singleSalary = item.lowHourSalary
-        } else if (item.jobTagId === res && item.jobTagId === 0) {
-          this.form.jobTagName = ''
-          this.form.singleSalary = item.lowHourSalary
-        }
-      })
-    },
-    async queryJobTagList() {
-      try {
-        let list = await this.$$main.tagOrderUse({
-          districtId: this.form.distictId
-        })
-        if (list && list.length > 0) {
-          this.jobTagList = list
-          this.jobTagNull = false
-        } else {
-          this.jobTagNull = true
-        }
-      } catch (e) {
-        e.message && this.$message.error(e.message)
-      }
     },
     onSubmit() {
       this.$refs['form'].validate((valid) => {
@@ -1125,6 +1060,8 @@ export default {
         hasEating: 'N',
         overPay: 'N'
       }
+      this.cityTagSelect = []
+      this.selectCompanyIndex = -1
       this.$nextTick(() => {
         this.$refs['form'].clearValidate()
         this.$refs['publishDatePicker'].clearChooseDates()

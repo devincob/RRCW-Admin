@@ -1,59 +1,51 @@
 <template>
-  <x-page  breadcrumb="auto" title="开通城市">
+  <x-page  breadcrumb="auto" title="企业薪资配置">
     <el-row>
-      <el-col :span="3" style="min-width: 270px;padding-right: 20px;">
+      <el-col :span="5" style="min-width: 300px;padding-right: 20px;">
         <el-card ref="cityCard" class="el-card-mini no-border-radius no-box-shadow" body-style="padding: 5px;">
           <div slot="header">
-            <span>城市</span>
+            <span>城市已开通标签</span>
+            <span v-if="companyUserId">({{companyName}})</span>
           </div>
-          <x-empty v-if="!all_list || !all_list.length" text="请稍等，正在加载城市数据" no-title-icon/>
-          <el-tree v-else
-                   node-key="distictId"
-                   :default-expanded-keys="[1050]"
-                   :data="all_list"
-                   :props="defaultProps"
-                   accordion
-                   @node-click="onSelectChange">
+          <x-empty v-if="!deptList || !deptList.length" text="请稍等，正在加载数据" no-title-icon/>
+          <el-tree
+            :data="deptList"
+            node-key="id"
+            :default-expanded-keys="[1050]"
+            @node-click="getCurrentNode">
+          <div style="width: 100%;display: flex" class="custom-tree-node" slot-scope="{ node, data }">
+            <div style="display: flex;justify-content: center;align-items: center;">{{ node.label }}</div>
+            <div v-if="!data.city" style="width: 100%;padding-right: 20px;text-align: right">
+              <el-button
+                type="text"
+                size="mini"
+                @click.stop="() => setSalary(data, node)">
+                 薪资配置
+              </el-button>
+            </div>
+          </div>
           </el-tree>
-        </el-card>
-      </el-col>
-      <el-col :span="5" style="min-width: 300px;padding-right: 20px;">
-        <el-card ref="labelCard" class="el-card-mini no-border-radius no-box-shadow" style="min-height: 300px;">
-          <div slot="header">
-        <span>编辑标签
-          <span v-if="cityName">({{cityName}})</span>
-        </span>
-            <el-button v-if="cityName" style="float: right; font-size: 14px;" type="text" @click="keepOpenLabel">保存</el-button>
-          </div>
-          <x-empty v-if="!allTags||!this.allTags.length" title="未选择城市" text="请在城市列表选择需要编辑标签的城市"/>
-          <div v-else>
-            <el-row>
-              <el-col>
-                <div v-for="(item, index) in allTags" :key="index" class="allTags_tagList">
-                  <el-checkbox v-model="item.isCheck" style=" float: left;width: 150px;">
-                    {{item.jobTagName}}
-                  </el-checkbox>
-                  <el-button type="text" v-if="item.isCheck" @click="setSalary(item)">薪资配置</el-button>
-                </div>
-              </el-col>
-            </el-row>
-          </div>
+
         </el-card>
       </el-col>
       <el-col :span="10" style="min-width: 600px;">
-        <el-card ref="dealCard" class="el-card-mini no-border-radius no-box-shadow" style="min-height: 300px;">
+        <el-card ref="dealCard" class="el-card-mini no-border-radius no-box-shadow" style="min-height: 300px; max-height: 750px;">
           <div slot="header">
-        <span style="margin-left: 15px">标签薪资配置
-          <span v-if="cityName">({{cityName}} <span v-if="jobTagName">>{{jobTagName}}</span>)
-         </span>
+        <span style="margin-left: 15px">企业标签薪资配置
+          <span v-if="listHeaderTitle">>{{listHeaderTitle}}</span>
         </span>
-            <el-button v-if="form.districtId&&jobTagName" style="float: right; font-size: 14px;" type="text" @click="submitForm('form')">保存
+            <el-button v-if="districtId" style="float: right; font-size: 14px;" type="text" @click="submitForm('form')"
+            >保存
             </el-button>
           </div>
-          <div v-if="form.districtId&& jobTagName">
-            <div style="padding: 0 15px;">
+          <x-empty v-if="!districtId" title="未选择标签" text="请在左边标签列表，点击企业标签薪资配置。"/>
+          <div v-else>
+            <div style="padding: 0 15px;" >
               <div class="el-step">
                 <div class="el-step__title">订单价格配置
+                  <div class="el-step__icon is-icon" >
+                    <i class="el-step__icon-inner el-icon-setSalary" style="font-size: 16px;"></i>
+                  </div>
                 </div>
                 <div class="el-step_content">
                   <div class="el-step_middle-line-line">
@@ -65,6 +57,9 @@
             <div style="margin-top: 15px; padding: 0 15px;">
               <el-form ref="form" :model="form"  :rules="rules" label-width="120px" size="small "
                        v-loading="loading">
+                <el-form-item label="启用该配置：" prop="salarySettingOpen">
+                  <el-checkbox v-model="form.salarySettingOpen" true-label="Y" false-label="N">启用</el-checkbox>
+                </el-form-item>
                 <el-form-item label="计费模式：" prop="salaryMode">
                   <el-radio-group v-model="form.salaryMode">
                     <el-radio label="H">工时模式</el-radio>
@@ -92,7 +87,7 @@
                     value-format="HH:mm:ss"
                     v-model="eveBeginTime"
                     placeholder="请输入开始时间"/>
-                  <span><el-checkbox class="open-city_time-checked" v-model="nextDay"  style="padding: 0 13px;">至次日</el-checkbox></span>
+                  <span><el-checkbox class="company-salary-deploy_time-checked" v-model="nextDay"  style="padding: 0 13px;">至次日</el-checkbox></span>
                   <el-time-picker
                     style="width: 148px;"
                     format="HH:mm"
@@ -111,7 +106,10 @@
                 <el-row>
                   <el-col>
                     <div class="el-step">
-                      <div class="el-step__title" >服务费配置
+                      <div class="el-step__title">服务费配置
+                        <div class="el-step__icon is-icon">
+                          <i class="el-step__icon-inner el-icon-setSalary" style="font-size: 16px;"></i>
+                        </div>
                       </div>
                       <div class="el-step_content">
                         <div class="el-step_middle-line-line">
@@ -121,29 +119,34 @@
                     </div>
                   </el-col>
                 </el-row>
+                <el-form-item label="启用该配置：" prop="serviceSettingOpen">
+                  <el-checkbox v-model="form.serviceSettingOpen" true-label="Y" false-label="N">启用</el-checkbox>
+                </el-form-item>
                 <el-form-item label="计费模式：" style="margin-top: 15px;" prop="serviceMode">
                   <el-radio-group v-model="form.serviceMode">
                     <el-radio label="H">工时模式</el-radio>
                     <el-radio label="T">总价模式</el-radio>
+                    <!--服务费模式(时薪,总价)-->
                   </el-radio-group>
                 </el-form-item>
                 <el-form-item :label="form.serviceMode === 'H' ? '工时服务费' : '服务费'" prop="serviceAmount">
-                  <el-input v-model.number="form.serviceAmount" class="iptWidth" :placeholder="form.serviceMode === 'H' ? '请输入工时服务费' : '请输入服务费'" />
+                  <el-input v-model.number="form.serviceAmount" class="iptWidth"
+                            :placeholder="form.serviceMode === 'H' ? '请输入工时服务费' : '请输入服务费'"/>
                   <span class="iptWidth_after">元</span>
                 </el-form-item>
               </el-form>
             </div>
           </div>
-          <x-empty v-else  title="未选择标签" text="请在标签列表选择一个已开通的标签"/>
         </el-card>
       </el-col>
     </el-row>
   </x-page>
+
 </template>
 
 <script>
 export default {
-  name: 'open-City',
+  name: 'company-salary-deploy',
   data() {
     const workTime = (rule, value, callback) => {
       if (!this.form.eveBeginTime || this.form.eveBeginTime === '') {
@@ -184,7 +187,7 @@ export default {
     }
     let validateOverMinute = (rule, value, callback) => {
       let rgb = /^[1-9]\d*$/
-      if (value instanceof Number || !rgb.test(value / 15)){
+      if (value instanceof Number || !rgb.test(value / 15) || !rgb.test(value / 15)){
         callback(new Error('跳价分钟必须是15分钟为倍数的数值'))
       } else {
         callback()
@@ -195,24 +198,26 @@ export default {
       eveEndTime: '19:30:00',
       loading: false,
       nextDay: false,
-      jobTagName: '',
-      jobTagId: 0,
+      deptList: [],
+      listHeaderTitle: '', //
+      companyName: '', // 公司企业或者个人id
+      companyUserId: 0, // 公司企业或者个人id
       form: {
         eveBeginTime: '18:30:00',
         eveEndTime: '19:30:00',
+        companyUserId: 0,
         lowHour: null,
+        districtId: 0,
         lowSalary: null,
         overMinute: null,
         overSalary: null,
         evePlusSalary: null,
         eatingSalary: null,
         jobTagId: 0,
-        companyUserId: 0,
-        districtId: 0,
         salaryMode: 'H',
         serviceMode: 'H',
-        serviceSettingOpen: 'N',
-        salarySettingOpen: 'N',
+        serviceSettingOpen: 'Y',
+        salarySettingOpen: 'Y',
         serviceAmount: null
       },
       defaultProps: {
@@ -223,7 +228,7 @@ export default {
       allTags: [],
       selectArr: [],
       all_list: [], // city列表
-      distictId: 0,
+      districtId: 0,
       rules: {
         salaryMode: [
           {required: true, message: '请选择计费形式', trigger: 'change'}
@@ -248,8 +253,8 @@ export default {
           {type: 'array', required: true, message: '请选择时间', trigger: ['blur', 'change']}
         ],
         eveBeginTime: [
-          { required: true, message: '请选择开始时间', trigger: 'change' },
-          { validator: workTime, trigger: 'change' }
+          {required: true, message: '请选择开始时间', trigger: ['blur', 'change']},
+          { validator: workTime, trigger: ['blur', 'change'] }
         ],
         evePlusSalary: [
           {required: true, message: '请输入夜班附加费', trigger: ['blur', 'change']},
@@ -274,52 +279,54 @@ export default {
       return this.$store.getters.getRegion || []
     }
   },
-  watch: {
-  },
   created() {
   },
   methods: {
-    async setSalary(item){
+    getCurrentNode: async function (data, node, components) {
       this.nextDay = false
-      this.jobTagName = item.jobTagName
-      this.jobTagId = item.jobTagId
+      let arr = this.getParentNode(node, [])
+      arr = arr.reverse().join('>')
+      this.listHeaderTitle = arr
+      let districtId = node.parent && node.parent.data && node.parent.data.districtId ? node.parent.data.districtId : 0
+      this.districtId = districtId
+      if (!districtId || districtId === 0) {
+        return false
+      }
       try {
         if (this.loading){
           return
         }
         this.loading = true
         let datas = await this.$$main.tagQuerySalarySetting({
-          companyUserId: 0, // 企业编号
-          districtId: this.distictId, // 城市编号
-          jobTagId: this.jobTagId // 标签
+          companyUserId: this.companyUserId, // 公司企业或者个人id
+          districtId: this.districtId, // 城市对应的id
+          jobTagId: data.jobTagId // 标签对应的id
         })
         let startTime = ''
         let endTime = ''
         this.nextDay = !!(datas.eveBeginTime && datas.eveEndTime && new Date(datas.eveEndTime).getDate() > new Date(datas.eveBeginTime).getDate())
-        if (datas.eveBeginTime){
+        if (datas.eveBeginTime) {
           startTime = this.$utils.dateFormat(datas.eveBeginTime, 'hh:mm:ss')
         }
-        if (datas.eveEndTime){
+        if (datas.eveEndTime) {
           endTime = this.$utils.dateFormat(datas.eveEndTime, 'hh:mm:ss')
         }
-        this.form.companyUserId = datas.companyUserId || 0
-        this.form.districtId = datas.districtId || this.distictId
-        this.form.jobTagId = datas.jobTagId || this.jobTagId
-        this.form.eatingSalary = datas.eatingSalary || null
-        this.eveBeginTime = startTime || '18:30:00'
-        this.eveEndTime = endTime || '19:30:00'
+        this.form.companyUserId = datas.companyUserId || this.companyUserId
+        this.form.districtId = datas.districtId || districtId
         this.form.eveBeginTime = startTime || '18:30:00'
         this.form.eveEndTime = endTime || '19:30:00'
+        this.form.jobTagId = datas.jobTagId || data.id
         this.form.jobTagName = datas.jobTagName || ''
         this.form.lowHour = datas.lowHour || null
         this.form.lowSalary = datas.lowSalary || null
         this.form.overMinute = datas.overMinute || null
         this.form.overSalary = datas.overSalary || null
         this.form.evePlusSalary = datas.evePlusSalary || null
+        this.form.eatingSalary = datas.eatingSalary || null
         this.form.salaryMode = datas.salaryMode || 'H'
         this.form.serviceMode = datas.serviceMode || 'H'
-        this.form.serviceSettingOpen = 'N'
-        this.form.salarySettingOpen = 'N'
+        this.form.serviceSettingOpen = datas.serviceSettingOpen || 'Y'
+        this.form.salarySettingOpen = datas.salarySettingOpen || 'Y'
         this.form.serviceAmount = datas.serviceAmount || null
       } catch (e) {
         e.message && this.$message.error(e.message)
@@ -330,15 +337,73 @@ export default {
         this.$refs['form'] && this.$refs['form'].clearValidate()
       })
     },
-    async submitForm(formName) { // 提交每个标签对应的配置
+    getParentNode(node, arr){
+      let r = node.data.label ? [...arr, node.data.label] : arr
+      if (node.parent){
+        return this.getParentNode(node.parent, r)
+      }
+      return r
+    },
+    async setSalary(data, node){
+      this.nextDay = false
+      let arr = this.getParentNode(node, [])
+      arr = arr.reverse().join('>')
+      this.listHeaderTitle = arr
+      let districtId = node.parent && node.parent.data && node.parent.data.districtId ? node.parent.data.districtId : 0
+      this.districtId = districtId
+      try {
+        if (this.loading){
+          return
+        }
+        this.loading = true
+        let datas = await this.$$main.tagQuerySalarySetting({
+          companyUserId: this.companyUserId, // 公司企业或者个人id
+          districtId: this.districtId, // 城市对应的id
+          jobTagId: data.jobTagId // 标签对应的id
+        })
+        let startTime = ''
+        let endTime = ''
+        this.nextDay = !!(datas.eveBeginTime && datas.eveEndTime && new Date(datas.eveEndTime).getDate() > new Date(datas.eveBeginTime).getDate())
+        if (datas.eveBeginTime){
+          startTime = this.$utils.dateFormat(datas.eveBeginTime, 'hh:mm:ss')
+        }
+        if (datas.eveEndTime){
+          endTime = this.$utils.dateFormat(datas.eveEndTime, 'hh:mm:ss')
+        }
+        this.form.companyUserId = datas.companyUserId || this.companyUserId
+        this.form.districtId = datas.districtId || districtId
+        this.eveBeginTime = startTime || '18:30:00'
+        this.eveEndTime = endTime || '19:30:00'
+        this.form.eveBeginTime = startTime || '18:30:00'
+        this.form.eveEndTime = endTime || '19:30:00'
+        this.form.jobTagId = datas.jobTagId || data.id
+        this.form.jobTagName = datas.jobTagName || 0
+        this.form.lowHour = datas.lowHour || null
+        this.form.lowSalary = datas.lowSalary || null
+        this.form.overMinute = datas.overMinute || null
+        this.form.overSalary = datas.overSalary || null
+        this.form.evePlusSalary = datas.evePlusSalary || null
+        this.form.eatingSalary = datas.eatingSalary || null
+        this.form.salaryMode = datas.salaryMode || 'H'
+        this.form.serviceMode = datas.serviceMode || 'H'
+        this.form.serviceSettingOpen = datas.serviceSettingOpen || 'Y'
+        this.form.salarySettingOpen = datas.salarySettingOpen || 'Y'
+        this.form.serviceAmount = datas.serviceAmount || null
+      } catch (e) {
+        e.message && this.$message.error(e.message)
+      } finally {
+        this.loading = false
+      }
+      this.$nextTick(() => {
+        this.$refs['form'] && this.$refs['form'].clearValidate()
+      })
+    },
+    submitForm(formName) {
       if (this.loading){
         return
       }
       this.form.eveBeginTime = this.eveBeginTime
       this.form.eveEndTime = this.eveEndTime
-      if (!this.form.districtId){
-        return this.$message.error('请选择城市标签')
-      }
       if (this.nextDay){
         this.form.eveBeginTime = this.form.eveBeginTime && this.form.eveBeginTime.length > 8 ? this.form.eveBeginTime : '2019-03-13 ' + this.form.eveBeginTime
         this.form.eveEndTime = this.form.eveEndTime && this.form.eveEndTime.length > 8 ? this.form.eveEndTime : '2019-03-14 ' + this.form.eveEndTime
@@ -350,101 +415,52 @@ export default {
         if (valid) {
           this.keepSetSalary()
         } else {
-          console.log('error submit!!')
           return false
         }
       })
     },
-    async keepSetSalary(){ // 保存每个标签对应的配置
+    async keepSetSalary(){
       try {
         if (this.loading){
           return
         }
         this.loading = true
-        let datas = await this.$$main.tagDoSaveSalarySetting(this.form)
-        if (datas){
-          this.$message.success('保存成功')
-          this.form.eveBeginTime = this.form.eveBeginTime && this.$utils.dateFormat(this.form.eveBeginTime, 'hh:mm:ss')
-          this.form.eveEndTime = this.form.eveEndTime && this.$utils.dateFormat(this.form.eveEndTime, 'hh:mm:ss')
-          this.eveBeginTime = this.form.eveBeginTime
-          this.eveEndTime = this.form.eveEndTime
-        }
+        await this.$$main.tagDoSaveSalarySetting(this.form)
+        this.$message.success('保存成功')
+        this.form.eveBeginTime = this.form.eveBeginTime && this.$utils.dateFormat(this.form.eveBeginTime, 'hh:mm:ss')
+        this.form.eveEndTime = this.form.eveEndTime && this.$utils.dateFormat(this.form.eveEndTime, 'hh:mm:ss')
+        this.eveBeginTime = this.form.eveBeginTime
+        this.eveEndTime = this.form.eveEndTime
       } catch (e) {
         e.message && this.$message.error(e.message)
       } finally {
         this.loading = false
       }
     },
-    keepOpenLabel() { //  保存每个城市对应的标签的开通情况
-      this.selectArr = []
-      this.allTags && this.allTags.map((item) => {
-        if (item.isCheck) {
-          this.selectArr.push(item)
-        } else {
-          this.selectArr.forEach((it, index) => {
-            if (item.jobTagId === it.jobTagId) {
-              this.selectArr.splice(index, 1)
-            }
-          })
-        }
-      })
-      this.$$main.tagSaveCityTag({
-        distictId: this.distictId,
-        jobTagData: this.selectArr
-      }).then((res) => {
-        if (res) {
-          this.$message.success('保存成功')
-        }
-      }).catch((e) => {
-        this.$message.error(e.message)
-      })
-    },
-    formatLists(list) { // 格式化省份数据
-      this.all_list = list.map(x => {
-        return {
-          label: x.provinceName,
-          req: false,
-          parentId: x.parentId,
-          children: x.children && x.children.map(city => {
-            return {
-              req: true,
-              label: city.label,
-              distictId: city.distictId
-            }
-          })
-        }
-      })
-    },
-    onSelectChange(e) {
-      this.jobTagName = ''
-      this.allTags = [] // 选择城市之前之前数据清空||重置&&搜索词清空
-      this.cityName = e.label
-      if (e && e.req) {
-        this.distictId = e.distictId
-        this.queryAllTags(this.distictId)
-      }
-    },
     onPageShow() { // 从b端列表传过来的用户id
-      // this.$message.success('进入的是开通城市！')
+      this.companyUserId = Number(this.$route.query.cid) || 0
+      this.companyName = this.$route.query.cname || '用户未命名'
     },
-    async queryAllTags(distictId) { // 获得城市接口 SAUserProvinceCityList
-      // this.$refs['form'].resetFields()
+    async loadDatas() { // 获得城市接口 SAUserProvinceCityList
       this.allTags = []
       const loading = this.$loading({
         text: '正在操作',
         spinner: 'el-icon-loading'
       })
       try {
-        const tagList = await this.$$main.tagCityTagList({distictId: distictId})
-        tagList && tagList.map((item) => {
-          if (item.isCheck === 'N') {
-            item.isCheck = false
-          }
-          if (item.isCheck === 'Y') {
-            item.isCheck = true
-          }
+        const deptList = await this.$$main.tagQueryOpened({companyUserId: this.companyUserId})
+        deptList && deptList.map((item) => {
+          item.id = item.districtId
+          item.city = true
+          item.label = item.districtName
+          item.children = item.tagInfos.map(child => {
+            child.id = child.jobTagId
+            child.label = child.jobTagName
+            return child
+          })
+          return item
         })
-        this.allTags = tagList
+        this.deptList = deptList
       } catch (e) {
         e.message && this.$message.error(e.message)
       } finally {
@@ -453,15 +469,13 @@ export default {
     }
   },
   mounted() {
-    if (!this.regionInfo || this.regionInfo.length < 1) {
-      this.$store.dispatch('setRegion')
-    }
-    this.formatLists(this.regionInfo || [])
+    this.loadDatas()
   }
 }
 </script>
+
 <style>
-  .open-city_time-checked .el-checkbox__label{
+  .company-salary-deploy_time-checked .el-checkbox__label{
     display: inline-block;
     padding-left: 5px;
     line-height: 19px;

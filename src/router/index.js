@@ -37,6 +37,7 @@ const router = new Router({
     {path: '/', component: MainLayout, children: Routes}
   ].concat(parseRoutes([
     {path: '/login', component: require('../pages/login')},
+    {path: '/working-status-h5', component: require('../pages/working-status-h5')},
     {path: '*', component: require('../components/NotFound')}
   ]))
 })

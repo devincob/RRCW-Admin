@@ -1,318 +1,238 @@
 <template>
-  <x-page
-    breadcrumb="auto"
-    class="index-page"
-    style="padding:24px 12px;"
-    title="人人财务交易管理系统"
-  >
-    <!--<el-row>-->
-    <!--<el-col :span="6" style="padding-right: 12px;padding-left: 12px;">-->
-    <!--<IndexStatCard title="今日新增开户订单" popover="今日内新提交的开户订单数量" :valueCount="stat.aoCount"/>-->
-    <!--</el-col>-->
-    <!--<el-col :span="6" style="padding-right: 12px;padding-left: 12px;">-->
-    <!--<IndexStatCard title="本月完成开户订单" popover="当前自然月内完成的开户订单数量" :valueCount="stat.aoCompletedCount"/>-->
-    <!--</el-col>-->
-    <!--<el-col :span="6" style="padding-right: 12px;padding-left: 12px;">-->
-    <!--<IndexStatCard title="今日新增开票订单" popover="今日内新提交的开票订单数量" :valueCount="stat.ioCount"/>-->
-    <!--</el-col>-->
-    <!--<el-col :span="6" style="padding-right: 12px;padding-left: 12px;">-->
-    <!--<IndexStatCard title="本月完成开票订单" popover="当前自然月内完成的开票订单数量" :valueCount="stat.ioCompletedCount"/>-->
-    <!--</el-col>-->
-    <!--</el-row>-->
+  <x-page breadcrumb="auto" style="padding:24px 12px;" title="斜杠兼职管理系统">
     <el-row>
-      <el-col
-        :span="24"
-        style="padding: 0 12px;"
-      >
-        <el-card class="my-card-table el-card-mini">
-          <div slot="header"><span
-              style="font-size: 14px;"
-              class="text-bold"
-            >待处理开户订单</span></div>
-          <el-table
-            size="mini"
-            :data="tableData"
-            :border="true"
-            :highlight-current-row="true"
-          >
-            <el-table-column
-              prop="orderNo"
-              label="订单号"
-              width="200"
-            >
-              <div slot-scope="scope">
-                <router-link
-                  :to="(scope.row.workflowId === 0 ? '/order/account-order-create?orderid=' : '/order/account-order-details?orderid=') + scope.row.orderId"
-                  target="_blank"
-                >{{scope.row.orderNo}}</router-link>
-                <el-tag
-                  size="mini"
-                  v-if="scope.row.isPriority === 'Y'"
-                  type="danger"
-                >急</el-tag>
+      <el-col v-for="item in 4" :key="item" :span="6" style="padding-right: 12px;padding-left: 12px;">
+        <el-card class="el-card-mini no-border-radius no-box-shadow">
+          <div class="chartCard___UIZrG">
+            <div class="chartTop___12THo">
+              <div class="avatar___3-D5e"></div>
+              <div class="metaWrap___2qUnZ">
+                <div class="meta___39rjj"><span>今日新增B端用户</span><span class="action___1zsmB"><i
+                  class="anticon anticon-info-circle-o"></i></span></div>
+                <div class="total___2GhVz">{{Math.ceil(12561 * item * Math.random())}}人</div>
               </div>
-            </el-table-column>
-            <el-table-column
-              prop="createAdminUserName"
-              label="创建人"
-            />
-            <el-table-column
-              prop="customerName"
-              label="客户姓名"
-            />
-            <el-table-column
-              prop="sourceTaxName"
-              label="税源地"
-            />
-            <el-table-column
-              prop="goodsName"
-              label="商品"
-            />
-            <el-table-column
-              prop="totalAmount"
-              label="交易费"
-            >
-              <span slot-scope="scope">{{scope.row.totalAmount | currency}}</span>
-            </el-table-column>
-            <el-table-column
-              prop="realDepositFee"
-              label="押金"
-            >
-              <span slot-scope="scope">{{scope.row.realDepositFee | currency}}</span>
-            </el-table-column>
-            <el-table-column
-              prop="workflowName"
-              label="状态"
-              :render-header="renderAccountStatusHeader"
-            >
-              <template slot-scope="scope">
-                {{scope.row.workflowName}}
-                <el-button
-                  type="text"
-                  @click="onRemoveOrder(scope.row, 'AO')"
-                  v-if="scope.row.workflowId === 0"
-                  size="mini"
-                >删除</el-button>
-              </template>
-            </el-table-column>
-            <!--<el-table-column prop="createTime" label="下单日期"/>-->
-          </el-table>
+            </div>
+            <div class="content___2bOfA" style="height: 46px;">
+              <div class="contentFixed___nL801">
+                <div class="trendItem___2r2dT" title="" style="margin-right: 16px;"><span>周同比<span
+                  class="trendText___HsrVC">{{(12 * item * Math.random() * 10).toFixed(2)}}%</span></span><span class="up___2EwY8"><i
+                  class="anticon anticon-caret-up"></i></span></div>
+                <div class="trendItem___2r2dT" title=""><span>日环比<span class="trendText___HsrVC">{{(11 * item * Math.random() * 10).toFixed(2)}}%</span></span><span
+                  class="down___35xDq"><i class="anticon anticon-caret-down"></i></span></div>
+              </div>
+            </div>
+            <div class="footer___2qHVO">
+              <div class="field___9S4u4"><span>日均销售额</span><span>￥12,423</span></div>
+            </div>
+          </div>
         </el-card>
       </el-col>
-      <el-col
-        :span="24"
-        style="padding: 0 12px;"
-      >
-        <el-card class="my-card-table el-card-mini ">
-          <div slot="header"><span
-              style="font-size: 14px;"
-              class="text-bold"
-            >待处理开票订单</span></div>
-          <el-table
-            size="mini"
-            :data="tableData2"
-            :border="true"
-            :highlight-current-row="true"
-            style="width: 100%"
-          >
-            <el-table-column
-              prop="orderNo"
-              label="订单号"
-              width="200"
-            >
-              <div slot-scope="scope">
-                <router-link
-                  :to="(scope.row.workflowId === 0 ? '/order/invoice-order-create?orderid=' : '/order/invoice-order-details?orderid=') + scope.row.orderId"
-                  target="_blank"
-                >{{scope.row.orderNo}}</router-link>
-                <el-tag
-                  size="mini"
-                  v-if="scope.row.isPriority === 'Y'"
-                  type="danger"
-                >急</el-tag>
-              </div>
-            </el-table-column>
-            <el-table-column
-              prop="createAdminUserName"
-              label="创建人"
-            />
-            <el-table-column
-              prop="customerName"
-              label="客户姓名"
-            />
-            <el-table-column
-              prop="companyName"
-              label="站点名称"
-            >
-              <span
-                slot-scope="scope"
-                :title="scope.row.companyName"
-              >{{scope.row.companyName}}</span>
-            </el-table-column>
-            <!--<el-table-column prop="companyName" label="站点名称" min-width="200">-->
-            <!--<company-details-dialog slot-scope="scope" :company-id="scope.row.companyId">-->
-            <!--<span>{{scope.row.companyName}}</span>-->
-            <!--</company-details-dialog>-->
-            <!--</el-table-column>-->
-            <el-table-column
-              prop="sourceTaxName"
-              label="税源地"
-            />
-            <el-table-column
-              prop="goodsName"
-              label="商品"
-            />
-            <el-table-column
-              prop="totalAmount"
-              label="发票类型"
-            >
-              <span slot-scope="scope">{{scope.row.invoiceTypeName}}</span>
-            </el-table-column>
-            <el-table-column
-              prop="realDepositFee"
-              label="开票金额"
-            >
-              <span slot-scope="scope">{{scope.row.invoiceAmount | currency}}</span>
-            </el-table-column>
-            <el-table-column
-              prop="workflowName"
-              label="状态"
-              :render-header="renderInvoiceStatusHeader"
-            >
-              <template slot-scope="scope">
-                {{scope.row.workflowName}}
-                <el-button
-                  type="text"
-                  @click="onRemoveOrder(scope.row, 'IO')"
-                  v-if="scope.row.workflowId === 0"
-                  size="mini"
-                >删除</el-button>
-              </template>
-            </el-table-column>
-            <!--<el-table-column prop="createTime" label="下单日期"/>-->
-          </el-table>
+    </el-row>
+    <el-row>
+      <el-col :span="24" style="padding: 12px;">
+        <el-card class="el-card-mini no-box-shadow no-border-radius mt-lg">
+          <div style="position: absolute;right: 24px;z-index: 1;">
+            <el-select v-model="year" size="mini" placeholder="请选择年份">
+              <el-option
+                label="2018"
+                value="2018">
+              </el-option>
+              <el-option
+                label="2017"
+                value="2017">
+              </el-option>
+            </el-select>
+          </div>
+          <e-chart ref="charts" :options="chartData" style="width: 100%;height: 400px;"/>
         </el-card>
       </el-col>
     </el-row>
   </x-page>
 </template>
 <script>
-import IndexStatCard from '../components/IndexStatCard'
-import CompanyDetailsDialog from '../components/CompanyDetailsDialog'
+import HelloWorld from '../components/HelloWorld'
+import TableDemo from '../components/TableDemo'
 
+const colors = ['#d06324', '#3C7ED2']
 export default {
   components: {
-    CompanyDetailsDialog,
-    IndexStatCard
+    TableDemo,
+    HelloWorld
   },
   name: 'index',
-  data() {
+  data () {
     return {
-      stat: {
-        aoCompletedCount: 0,
-        aoCount: 0,
-        ioCompletedCount: 0,
-        ioCount: 0
+      chartData: {
+        title: {
+          text: '订单量统计图'
+        },
+        color: colors,
+        legend: {
+          data: ['金额/元', '订单量']
+        },
+        grid: [{left: 65, right: 45}],
+        xAxis: [
+          {
+            type: 'category',
+            data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
+          }
+        ],
+        yAxis: [
+          {
+            type: 'value',
+            name: '金额',
+            min: 0,
+            max: 326 * 100,
+            axisLabel: {
+              formatter: '￥{value}'
+            },
+            position: 'left'
+          },
+          {
+            type: 'value',
+            name: '订单量',
+            min: 0,
+            max: 1000,
+            axisLabel: {
+              formatter: '{value}'
+            },
+            position: 'right'
+          }
+        ],
+        series: [
+          {
+            name: '金额/元',
+            type: 'line',
+            yAxisIndex: 0,
+            data: [12.0, 4.9, 117.0, 23.2, 325.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3].map(i => i * 99)
+          },
+          {
+            name: '订单量',
+            type: 'bar',
+            barMaxWidth: 30,
+            yAxisIndex: 1,
+            data: [12.0, 4.9, 117.0, 23.2, 325.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3]
+          }
+        ]
       },
-      tableData: [],
-      tableData2: []
+      year: '2018'
     }
   },
   watch: {
-  },
-  methods: {
-    onPageShow() {
-      this.loadStat()
-      this.loadList()
-    },
-    loadList() {
-      this.$$main.indexAOForHandle().then(res => {
-        this.tableData = res
-      })
-      this.$$main.indexIOForHandle().then(res => {
-        this.tableData2 = res
-      })
-    },
-    async loadStat() {
-      try {
-        this.stat = await this.$$main.indexData()
-      } catch (e) {
-        console.log(e)
-      }
-    },
-    renderAccountStatusHeader(h, { column }) {
-      return h({
-        template: `<span>${column.label}<el-popover
-            trigger="hover">
-            <span style="font-size: 12px;">${`订单流程状态说明：
-O订单开始
-->商务提交订单：商务人员填写下单信息
-->待直属领导审批：审批下单信息
-->待CEO审批：审批特殊需求
-->待跟单处理：跟进订单信息
-->待客服确认：客服想客户确认订单信息
-->待财务收款：财务根据收款处理订单
-->待交易员处理：交易人员根据订单拟定站点注册信息
-->待交易员更新进度：交易员更新站点的注册信息至系统
-->待交易员验收：站点注册成功后，交易员验收站点材料
-->待商务交付：将站点材料交付至客户
-->待跟单归档：跟单人员将订单信息纸质化归档
-->待客服回访：客服电话回访客户
-O订单完成`.replace(/\n/g, '<br>')}</span>
-            <i class="el-icon-question" style="font-size: 16px;cursor: pointer;color: #303133" slot="reference"></i>
-          </el-popover></span>`
-      })
-    },
-    renderInvoiceStatusHeader(h, { column }) {
-      return h({
-        template: `<span>${column.label}<el-popover
-            trigger="hover">
-            <span style="font-size: 12px;">${`订单流程状态说明：
-O订单开始
-->商务提交订单：商务人员填写下单信息
-->待直属领导审批：审批下单信息
-->待CEO审批：审批特殊需求
-->待跟单处理：跟进订单信息
-->待客服确认：客服想客户确认订单信息
-->待财务收款：财务根据收款处理订单
-->待交易员更新处理：交易员更新发票信息
-->待跟单确认处理：跟单确认客户是否收到发票
-->待客服回访：客服电话回访客户
-O订单完成`.replace(/\n/g, '<br>')}</span>
-            <i class="el-icon-question" style="font-size: 16px;cursor: pointer;color: #303133" slot="reference"></i>
-          </el-popover></span>`
-      })
-    },
-    async onRemoveOrder(row, type) {
-      const opt = await this.$confirm('确定要删除草稿吗？', '删除提示')
-      if (opt === 'confirm') {
-        const loader = this.$loading()
-        try {
-          const res = await (type === 'AO' ? this.$$main.orderAODelete({ orderId: row.orderId }) : this.$$main.orderIODelete({ orderId: row.orderId }))
-          loader.close()
-          if (res) {
-            this.$message.success('已删除草稿')
-            this.loadList()
+    year() {
+      this.$refs.charts.mergeOptions({
+        series: [
+          {
+            name: '金额/元',
+            type: 'line',
+            yAxisIndex: 0,
+            data: [12.0, 4.9, 117.0, 23.2, 325.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3].map(i => i * 99 * Math.random())
+          },
+          {
+            name: '订单量',
+            type: 'bar',
+            barMaxWidth: 30,
+            yAxisIndex: 1,
+            data: [12.0, 4.9, 117.0, 23.2, 325.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3].map(i => i * Math.random())
           }
-        } catch (e) {
-          loader.close()
-          this.$message.error(e.message)
-        }
-      }
+        ]
+      })
     }
   },
-  mounted() {
+  methods: {
+    onPageShow () {
+    },
+    onPageResize(){
+      this.$refs.charts.resize()
+    }
   }
 }
 </script>
 <style>
-.my-card-table .el-card__body {
-  padding: 10px;
-}
-.my-card-table .el-table--mini .el-table__empty-block {
-  min-height: 100px;
-}
-.index-page .el-table--mini .el-button--mini {
-  padding: 0;
-}
+  .chartCard___UIZrG {
+    position: relative
+  }
+
+  .chartCard___UIZrG .chartTop___12THo {
+    position: relative;
+    overflow: hidden;
+    width: 100%
+  }
+
+  .chartCard___UIZrG .chartTopMargin___1CrSt {
+    margin-bottom: 12px
+  }
+
+  .chartCard___UIZrG .chartTopHasMargin___11yq_ {
+    margin-bottom: 20px
+  }
+
+  .chartCard___UIZrG .metaWrap___2qUnZ {
+    float: left
+  }
+
+  .chartCard___UIZrG .avatar___3-D5e {
+    position: relative;
+    top: 4px;
+    float: left;
+    margin-right: 20px
+  }
+
+  .chartCard___UIZrG .avatar___3-D5e img {
+    border-radius: 100%
+  }
+
+  .chartCard___UIZrG .meta___39rjj {
+    color: rgba(0, 0, 0, .45);
+    font-size: 14px;
+    line-height: 22px;
+    height: 22px
+  }
+
+  .chartCard___UIZrG .action___1zsmB {
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    right: 0
+  }
+
+  .chartCard___UIZrG .total___2GhVz {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-all;
+    white-space: nowrap;
+    color: rgba(0, 0, 0, .85);
+    margin-top: 4px;
+    margin-bottom: 0;
+    font-size: 30px;
+    line-height: 38px;
+    height: 38px
+  }
+
+  .chartCard___UIZrG .content___2bOfA {
+    margin-bottom: 12px;
+    position: relative;
+    width: 100%
+  }
+
+  .chartCard___UIZrG .contentFixed___nL801 {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%
+  }
+
+  .chartCard___UIZrG .footer___2qHVO {
+    border-top: 1px solid #e8e8e8;
+    padding-top: 9px;
+    margin-top: 8px
+  }
+
+  .chartCard___UIZrG .footer___2qHVO > * {
+    position: relative
+  }
+
+  .chartCard___UIZrG .footerMargin___2-daU {
+    margin-top: 20px
+  }
 </style>

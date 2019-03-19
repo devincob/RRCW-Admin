@@ -88,6 +88,7 @@
     <el-dialog
       v-drag-dialog="{reset: true}"
       title="反馈详情"
+      :close-on-click-modal="false"
       :visible.sync="centerDialogVisible"
       width="600px"
       center>

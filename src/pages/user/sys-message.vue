@@ -77,7 +77,7 @@
       </div>
     </el-card>
     <el-dialog v-drag-dialog title="发布通知" width="400px" :visible.sync="dialogFormVisible">
-      <el-form :model="messageForm" :rules="messageFormRules" ref="messageForm" style="margin: -30px 0;" size="mini">
+      <el-form :model="messageForm" :rules="messageFormRules" ref="messageForm" style="margin: 0px 10px;" size="mini">
         <el-form-item label="消息类型：" prop="messageType">
           <el-select v-model="messageForm.messageType" style="width: 80px" placeholder="请选择">
             <el-option label="企业" value="C"/>
