@@ -9,16 +9,26 @@
 <script>
 export default {
   name: 'App',
+  data(){
+    return {
+      isShowLogoutModal: false
+    }
+  },
   mounted(){
     const $body = this.$$(document.body)
     setTimeout(() => $body.addClass('x-app-ready'), 100)
     setTimeout(() => $body.addClass('x-app-loading-hide'), 400)
     // 处理登录已过期
     this.$$(document).on('login_expired', (e, err) => {
+      if (this.isShowLogoutModal) return
+      this.isShowLogoutModal = true
       this.$message.error(err.message || '登录已过期，请重新登录')
       setTimeout(() => {
         this.$confirm('是否重新登录?', err.message || '登录已过期，请重新登录', {
           confirmButtonText: '重新登录',
+          onClose: () => {
+            this.isShowLogoutModal = false
+          },
           callback: t => {
             if (t === 'confirm') {
               this.$store.dispatch('clearUserInfo')

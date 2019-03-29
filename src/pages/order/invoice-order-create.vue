@@ -4,7 +4,12 @@
         <el-form ref="form" :model="form" :rules="formRules" label-width="150px" size="small">
           <el-form-item label="订单号" prop="orderNo">
             <el-input v-model="form.orderNo" placeholder="系统自动生成" readonly/>
-            <el-button type="text" size="mini" style="margin-left: 10px;" @click="orderLogListDialogDisplay = true" v-if="orderId && orderId !== ''">查看操作记录</el-button>
+            <order-log-dialog
+              v-if="orderId && orderId !== ''"
+              :order-id="orderId"
+              order-type="I"
+              style="margin-left: 10px;"
+            >查看操作记录</order-log-dialog>
           </el-form-item>
           <el-form-item prop="companyId">
             <label slot="label"><span class="red-text">* </span>站点</label>
@@ -122,7 +127,7 @@
                 <x-image v-if="form.invoiceContractUrl" :src="form.invoiceContractUrl" class="avatar"/>
                 <i v-else class="el-icon-plus avatar-uploader-icon" style="display: block"></i>
               </el-upload>
-              <el-button type="text" @click="onPreviewClick(form.invoiceContractUrl)" size="mini" v-if="form.invoiceContractUrl">查看原文件</el-button>
+              <preview-button type="text" alwaysShow newWindowOpen :src="form.invoiceContractUrl" size="mini" v-if="form.invoiceContractUrl">查看原文件</preview-button>
               <preview-button type="text" :src="form.invoiceContractUrl" size="mini" v-if="form.invoiceContractUrl">预览原文件</preview-button>
             </div>
           </el-form-item>
@@ -138,6 +143,9 @@
             <el-input v-if="form.serviceFeeDiscount === 0 || form.serviceFeeDiscount === 1" v-model="noServiceFee" disabled placeholder="请输入0~1之间的小数"/>
             <el-input v-else v-model="form.serviceFeeDiscount" disabled placeholder="选择站点后自动获取"/>
           </el-form-item>
+          <el-form-item label="订单备注：">
+            <el-input type="textarea" v-model="form.invoiceOrderRemark" placeholder="请输入订单备注，该备注仅限系统人员可见"/>
+          </el-form-item>
           <div class="mini-item">
             <p>服务费：<span>+{{transFee | currency}}</span></p>
             <p>服务费减免：<span>-{{serviceFee | currency}}</span></p>
@@ -149,22 +157,6 @@
           </el-form-item>
         </el-form>
       </el-card>
-      <el-dialog
-        title="订单日志"
-        :visible.sync="orderLogListDialogDisplay"
-        width="900px"
-        custom-class="order-log-list-dialog"
-        center>
-        <el-table
-          :data="orderLogList"
-          size="mini"
-          style="width: 100%;">
-          <el-table-column prop="actionUserName" label="姓名" min-width="70"/>
-          <el-table-column prop="actionUserRoleName" label="角色" min-width="70"/>
-          <el-table-column prop="actionContent" label="操作内容" min-width="200"/>
-          <el-table-column prop="actionTime" label="操作时间" min-width="100"/>
-        </el-table>
-      </el-dialog>
     </x-page>
 </template>
 
@@ -172,9 +164,10 @@
 import ExpressInfoDialog from '../../components/ExpressInfoDialog'
 import InvoiceInfoDialog from '../../components/InvoiceInfoDialog'
 import PreviewButton from '../../components/PreviewButton'
+import OrderLogDialog from '../../components/OrderLogDialog'
 export default {
   name: 'invoice-order-create',
-  components: {ExpressInfoDialog, InvoiceInfoDialog, PreviewButton},
+  components: {ExpressInfoDialog, InvoiceInfoDialog, PreviewButton, OrderLogDialog},
   data() {
     const validateServiceFee = (rule, value, callback) => {
       if (value < 0 || value > 1) {
@@ -185,8 +178,6 @@ export default {
     }
     return {
       orderId: '',
-      orderLogListDialogDisplay: false,
-      orderLogList: [],
       invoiceTypeList: [],
       noServiceFee: '无折扣',
       form: {
@@ -215,7 +206,8 @@ export default {
         serviceFeeDiscount: '', // 服务费折扣
         orderId: '', // 订单Id
         invoiceTypeName: '', // 发票类型
-        invoiceContractUrl: '' // 开票合同
+        invoiceContractUrl: '', // 开票合同
+        invoiceOrderRemark: '' // 备注
       },
       formRules: {
         serviceFeeDiscount: [{
@@ -231,9 +223,6 @@ export default {
     }
   },
   watch: {
-    orderLogListDialogDisplay(val){
-      val && this.queryOrderLogList()
-    },
     'form.invoiceTypeName': {
       handler(val){
         if (val && val.indexOf('专票') === -1){
@@ -288,16 +277,6 @@ export default {
       await this.queryCompanyList()
       this.orderId && this.orderId !== '' && this.queryOrderInfo()
     },
-    async queryOrderLogList(){
-      try {
-        this.orderLogList = await this.$$main.orderLogList({
-          orderId: this.orderId,
-          orderType: 'I'
-        })
-      } catch (e) {
-        e.message && this.$message.error(e.message)
-      }
-    },
     async queryOrderInfo(){
       const loading = this.$loading({
         text: '正在操作',
@@ -324,36 +303,6 @@ export default {
       } finally {
         loading.close()
       }
-    },
-    displayImage(src){
-      let displaySrc = this.getUploadImageUrl(src, 'middle')
-      const h = this.$createElement
-      this.$msgbox({
-        showConfirmButton: false,
-        message: h('div', null, [
-          h('el-button', {
-            attrs: {
-              type: 'text'
-            },
-            on: {
-              click: () => {
-                this.onPreviewClick(src)
-              }
-            }
-          }, '查看原图'),
-          h('img', {
-            attrs: {
-              src: displaySrc
-            },
-            style: {
-              width: '100%'
-            }
-          })
-        ])
-      })
-    },
-    onPreviewClick(src){
-      window.open(this.getUploadImageUrl(src, null))
     },
     async queryCustomerList(){
       try {
@@ -490,7 +439,8 @@ export default {
         serviceFeeDiscount: '', // 服务费折扣
         orderId: '', // 订单Id
         invoiceTypeName: '', // 发票类型
-        invoiceContractUrl: ''
+        invoiceContractUrl: '',
+        invoiceOrderRemark: '' // 备注
       }
     },
     async onCompanyChange(companyId, isAfterDetails = false){

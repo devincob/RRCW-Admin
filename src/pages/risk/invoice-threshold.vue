@@ -83,9 +83,8 @@
                 <el-form-item label="预警阈值：" prop="newThreshold">
                   <el-input v-model.number="form.newThreshold" placeholder="默认90%进入预警阶段"/> %
                 </el-form-item>
-                <el-form-item label="代开是否受限：">
+                <el-form-item v-if="goodsItem.goodsName.indexOf('B') === -1" label="代开是否受限：">
                   <el-checkbox v-model="form.newIsRestrict" true-label="Y" false-label="N">限制</el-checkbox>
-                  （该配置仅{{goodsItem.goodsName || ''}}专票有效）
                 </el-form-item>
                 <hr/>
                 <div class="title">非新开户站点阈值</div>
@@ -137,9 +136,8 @@
                 <el-form-item label="预警阈值：" prop="oldThreshold">
                   <el-input v-model.number="form.oldThreshold" placeholder="默认90%进入预警阶段"/> %
                 </el-form-item>
-                <el-form-item label="代开是否受限：">
+                <el-form-item v-if="goodsItem.goodsName.indexOf('B') === -1" label="代开是否受限：">
                   <el-checkbox v-model="form.oldIsRestrict" true-label="Y" false-label="N">限制</el-checkbox>
-                  （该配置仅{{goodsItem.goodsName || ''}}专票有效）
                 </el-form-item>
               </el-form>
               <el-button size="small" type="primary" @click="onSaveClick">保存</el-button>

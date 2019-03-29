@@ -69,6 +69,7 @@
         element-loading-background="rgba(255, 255, 255, 0.8)"
         :border="true"
         :highlight-current-row="true"
+        @sort-change="onSortChange"
         size="mini"
         style="width: 100%;">
         <el-table-column  prop="orderNo" label="订单号" min-width="210">
@@ -101,7 +102,7 @@
         <el-table-column prop="realDepositFee" label="押金" width="100" align="right" :formatter="(row) => `${$options.filters['currency'](row.realDepositFee, '', 2)}`"/>
         <el-table-column prop="handleAdminUserName" label="待处理人" align="center" width="100"/>
         <el-table-column prop="workflowName" label="状态" :render-header="renderStatusHeader" width="120"/>
-        <el-table-column prop="submitTime" label="商务提交时间" width="150"/>
+        <el-table-column prop="submitTime" sortable="custom" sort-by="submitTime" label="商务提交时间" width="150"/>
         <el-table-column prop="orderCompletedTime" label="订单完成时间" width="150"/>
         <el-table-column prop="createTime" label="创建时间" width="150"/>
       </el-table>
@@ -150,6 +151,7 @@ export default {
         orderCompletedBeginTime: '',
         orderCompletedEndTime: ''
       },
+      sorts: {},
       totalCount: 0,
       sourceTaxList: [], // 税源地列表
       goodsList: [], // 商品列表
@@ -248,7 +250,10 @@ export default {
           return
         }
         this.loading = true
-        const data = await this.$$main.orderAccountOrderQuery(this.form)
+        const data = await this.$$main.orderAccountOrderQuery({
+          ...this.form,
+          ...this.sorts
+        })
         this.totalCount = data.totalCount
         this.orderList = data.datas
       } catch (e) {
@@ -296,6 +301,19 @@ O订单完成
             <i class="el-icon-question" style="font-size: 16px;cursor: pointer;color: #303133" slot="reference"></i>
           </el-popover></span>`
       })
+    },
+    onSortChange(sort){
+      if (sort && sort.column) {
+        this.sorts = {
+          sorts: {
+            sortName: sort.column.sortBy,
+            sortType: sort.order === 'descending' ? 'D' : 'A'
+          }
+        }
+      } else {
+        this.sorts = {}
+      }
+      this.queryAccountOrders()
     }
   },
   mounted() {

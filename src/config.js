@@ -31,10 +31,10 @@ const config = {
    */
   getImageUrlPath: function () {
     let urls = {
-      'D': 'http://static.jz.com',
+      'D': 'http://static.caiwu.com', // http://192.168.1.130/res/ResReadOlnyServer.ashx
       'T': 'http://test.statics.maosui.com/Res/ResReadOlnyServer.ashx',
-      // 'P': 'http://static.wenwujz.com'
-      'P': 'http://static.jz.com'
+      // 'P': getServerConfig(config.serverConfigVersion, 'ImageUrl', 'http://statics.maosui.com/Res/ResReadOlnyServer.ashx')
+      'P': 'http://statics.i-caiwu.com'
     }
     return urls[this.appMode]
   },
@@ -56,12 +56,11 @@ const config = {
   },
   getRestfulUrl: function () {
     let urls = {
-      D: 'api.admin.jz.com',
+      D: 'api.admin.ts.caiwu.com',
       // D: '127.0.0.1:3001',
-      T: 'test.mc.api.maosui.com',
+      T: 'test.api.admin.ts.i-caiwu.com',
       // P: getServerConfig(config.serverConfigVersion, 'RestfulUrl', 'mc.api.maosui.com')
-      // P: 'api.admin.wenwujz.com'
-      P: 'api.admin.jz.com'
+      P: 'api.admin.ts.i-caiwu.com'
     }
     return urls[this.appMode]
   },

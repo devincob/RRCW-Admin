@@ -53,7 +53,7 @@
             <span>{{scope.row.companyName}}</span>
           </CompanyDetailsDialog>
         </el-table-column>
-        <el-table-column label="开票折扣率" align="right" width="100" prop="serviceFeeDiscount"/>
+        <el-table-column label="服务费折扣" align="right" width="100" prop="serviceFeeDiscount"/>
         <el-table-column label="站点类型" prop="companyTypeName" min-width="120"/>
         <el-table-column label="所属客户" prop="customerName" width="80">
           <CustomerDetailsDialog slot-scope="scope" :customer-id="scope.row.customerId">
@@ -135,9 +135,6 @@ export default {
     }
   },
   methods: {
-    onSearchClick(){
-      this.loadLogs()
-    },
     async loadCompanyList(){
       this.loading = true
       try {
@@ -146,7 +143,6 @@ export default {
           pageSize: this.pageSize,
           ...this.searchForm
         })
-        console.log(result)
         this.totalCount = result.totalCount
         this.tableData = result.datas
       } catch (e) {

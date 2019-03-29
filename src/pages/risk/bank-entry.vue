@@ -53,7 +53,7 @@
         <el-table-column label="交易方名称" prop="traderName" min-width="80"/>
         <el-table-column label="摘要" prop="remark" min-width="120"/>
         <el-table-column label="贷方发生额" prop="inAmount" width="100" align="right"  :formatter="(row) => `${$options.filters['currency'](row.inAmount, '', 2)}`"/>
-        <el-table-column label="贷方发生额" prop="outAmount" width="100" align="right" :formatter="(row) => `${$options.filters['currency'](row.outAmount, '', 2)}`"/>
+        <el-table-column label="借方发生额" prop="outAmount" width="100" align="right" :formatter="(row) => `${$options.filters['currency'](row.outAmount, '', 2)}`"/>
         <el-table-column label="余额" prop="lastAmount" width="100" align="right"  :formatter="(row) => `${$options.filters['currency'](row.lastAmount, '', 2)}`"/>
         <el-table-column label="银行" prop="bankName" width="120"/>
         <el-table-column label="录入日期" prop="createTime" width="130"/>
@@ -77,6 +77,7 @@
         </el-pagination>
       </div>
       <el-dialog  :title="recordTitle" v-drag-dialog="{reset: true}"
+                  :close-on-click-modal="clickModal"
                   :visible.sync="dialogRecordVisible"
                   :before-close="recordBeforeClose"
                   width="540px">
@@ -205,6 +206,7 @@ export default {
   components: {TaxSourceDetailsDialog, CustomerDetailsDialog, GoodsDetailsDialog, CompanyDetailsDialog},
   data() {
     return {
+      clickModal: false,
       companyList: [], // 站点列表
       bankList: [], // bank列表
       recordTitle: '录入银行流水',
@@ -487,7 +489,7 @@ export default {
     },
     onDeleteClick(row){ // 点击删除按钮
       this.recordFlowForm.waterId = row.waterId
-      this.$confirm('确认删除？').then(() => {
+      this.$alert('确认删除？').then(() => {
         this.deleteClick()
       }).catch()
     },

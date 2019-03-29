@@ -92,6 +92,7 @@ export default {
     font-size: 30px;
     line-height: 38px;
     height: 38px;
+    font-family: 'BTC-NUM';
   }
 
   .chartCard___UIZrG .content___2bOfA {

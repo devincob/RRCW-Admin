@@ -70,6 +70,8 @@
     <el-dialog v-drag-dialog
                title="录入流水"
                width="540px"
+               :close-on-click-modal="false"
+               :close-on-press-escape="false"
                :visible.sync="dialogVisible">
       <el-form size="mini"
                :model="inFlowForm"
@@ -139,6 +141,8 @@
     <el-dialog title="导入站点流水"
                width="540px"
                v-drag-dialog
+               :close-on-click-modal="false"
+               :close-on-press-escape="false"
                :visible.sync="dialogImportVisible">
       <el-form ref="importFlowForm" :model="importFlowForm" size="mini" label-width="150px">
         <el-form-item label="选择站点">

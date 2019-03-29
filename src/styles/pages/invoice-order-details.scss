@@ -141,3 +141,24 @@
   height: 178px;
   display: block;
 }
+.expressDialog{
+  table{
+    width: 100%;
+    line-height: 30px;
+    text-align: center;
+    border-collapse: collapse;
+    border: 1px solid #b5b5b5;
+    word-break: break-all;
+    margin-top: -15px;
+    tr,td{
+      border: 1px solid #b5b5b5;
+      div{
+        text-align: left;
+        line-height: 22px;
+      }
+    }
+    td:last-child{
+      padding:0 5px
+    }
+  }
+}

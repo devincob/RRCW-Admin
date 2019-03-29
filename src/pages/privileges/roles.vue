@@ -1,10 +1,10 @@
 <template>
-  <x-page breadcrumb="auto" title="角色权限管理">
+  <x-page breadcrumb="auto" title="系统角色管理">
     <div style="display: flex;">
       <div style="width: 300px;min-width: 300px;padding-right: 24px;">
         <el-card ref="roleCard" class="el-card-mini no-border-radius no-box-shadow" body-style="padding: 5px;">
           <div slot="header" class="clearfix">
-            <span>角色管理</span>
+            <span>系统角色</span>
             <el-button type="text" @click="onAddRoleClick" class="pull-right"><i class="el-icon-plus"></i> 添加角色</el-button>
           </div>
           <x-empty v-if="!roles || !roles.length" text="请稍等，正在加载角色数据" no-title-icon/>
@@ -74,7 +74,7 @@ export default {
         return
       }
       const loader = this.$loading({text: '正在加载权限信息', target: this.$refs.permissionPanel.$el})
-      this.$$main.userRoleDetails({
+      this.$$main.rolePermissionList({
         adminRoleId: role.roleId
       }).then(({permissions}) => {
         let checkedIds = []
@@ -86,7 +86,7 @@ export default {
             'title': item.menuName,
             'icon': item.icon || 'el-icon-menu',
             'path': item.menuLink,
-            'disabled': false,
+            'disabled': item.isShow !== 'Y',
             'checked': item.checked
           }
         })
@@ -102,7 +102,7 @@ export default {
   methods: {
     async loadRoles(){
       try {
-        const roles = await this.$$main.userRoleList()
+        const roles = await this.$$main.roleList()
         this.roles = roles.map(item => {
           return {
             edit: false,
@@ -121,9 +121,9 @@ export default {
         try {
           let isDeleted
           if (role.roleId !== 0) {
-            isDeleted = await this.$$main.userRoleOperation({
+            isDeleted = await this.$$main.roleUpdate({
               adminRoleId: role.roleId,
-              isDelete: 'Y'
+              status: 'D'
             })
           } else {
             isDeleted = true
@@ -145,10 +145,10 @@ export default {
       if (role.edit) {
         const $loader = this.$loading({text: '正在保存权限名称', target: this.$refs.roleCard.$el})
         try {
-          const isOk = await this.$$main.userRoleOperation({
+          const isOk = await this.$$main.roleModify({
             adminRoleId: role.roleId,
             adminRoleName: role.roleName,
-            isDelete: 'N'
+            status: 'N'
           })
           role.edit = !isOk
           isOk ? this.$message.success('已保存') : this.$message.error('保存失败，请稍后再试。')
@@ -181,19 +181,41 @@ export default {
       if (data.children) {
         data.children.forEach(d => {
           tree.setChecked(d.id, node.checked)
+          if (d.children) {
+            d.children.forEach(c => {
+              tree.setChecked(c.id, node.checked)
+            })
+          }
         })
       }
       if (data.pid) {
+        const parent = tree.getNode(data.pid)
         if (node.checked){
           tree.setChecked(data.pid, node.checked)
+          if (parent.data.pid) {
+            tree.setChecked(parent.data.pid, node.checked)
+          }
         } else {
-          const parent = tree.getNode(data.pid)
           const childNodes = parent.childNodes
           let i = childNodes.length
           childNodes.forEach(item => {
             if (!item.checked) i--
           })
           if (!i) tree.setChecked(data.pid, node.checked)
+          if (parent.parent && parent.parent.childNodes) {
+            let checkedCount = 0
+            parent.parent.childNodes.forEach(item => {
+              if (item.checked) checkedCount++
+              if (item.childNodes && item.childNodes.length) {
+                item.childNodes.forEach(it => {
+                  if (it.checked) checkedCount++
+                })
+              }
+            })
+            if (!checkedCount) {
+              tree.setChecked(parent.parent.data.id, node.checked)
+            }
+          }
         }
       }
     },
@@ -203,7 +225,7 @@ export default {
     async savePermissions(){
       const loader = this.$loading({text: '正在保存权限'})
       try {
-        const isSaveSuccess = await this.$$main.userRolePut({
+        const isSaveSuccess = await this.$$main.rolePermissionModify({
           adminRoleId: this.currentRole.roleId,
           menuIds: this.$refs.tree.getCheckedKeys()
         })

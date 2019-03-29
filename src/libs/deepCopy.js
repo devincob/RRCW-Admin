@@ -49,3 +49,5 @@ export function deepCopy(obj, cache) {
 
   return copy
 }
+
+export default deepCopy

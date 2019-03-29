@@ -6,11 +6,11 @@
     <div style="min-width:800px;max-width:1024px">
       <el-row style="margin-bottom: 10px;">
         <el-col :span="24">
-          <el-button
-            type="text"
-            size="mini"
-            @click="orderLogListDialogDisplay = true"
-          >查看操作记录</el-button>
+          <order-log-dialog
+            v-if="orderId && orderId !== ''"
+            :order-id="orderId"
+            order-type="A"
+          >查看操作记录</order-log-dialog>
           <preview-button
             v-if="info.orderInfo && info.orderInfo.workflowId >= 1000"
             type="text"
@@ -107,10 +107,15 @@
               size="mini"
               @click="displayNextDialog()"
             >提交订单</el-button>
-            <el-button
-              size="mini"
-              @click="bankReceiptDialogDisplay = true"
-            >录入收款信息</el-button>
+            <bank-receipt-dialog
+              :order-id="orderId"
+              :bank-receipts="info.bankReceipts"
+              btnType=""
+              type="A"
+              @editSuccess="queryOrderInfo"
+              @deleteSuccess="queryOrderInfo">
+              录入收款信息
+            </bank-receipt-dialog>
             <el-button
               size="mini"
               @click="displayRejectDialog()"
@@ -911,159 +916,6 @@
       <!--订单已完成，共耗时30天4小时（2018-05-02~2018-05-20）。-->
       <!--</el-card>-->
     </div>
-    <el-dialog
-      title="收款信息"
-      :visible.sync="bankReceiptDialogDisplay"
-      :close-on-click-modal="false"
-      width="800px"
-      center
-    >
-      <el-form
-        ref="bankReceiptForm"
-        :model="bankReceiptForm"
-        label-width="100px"
-        size="small"
-      >
-        <div
-          style="border: 1px solid #cecece;padding: 15px 0;margin-bottom: 5px;"
-          v-for="(item, index) in bankReceiptList"
-          :key="index"
-        >
-          <el-row>
-            <el-col
-              :span="11"
-              :offset="1"
-            >
-              <el-form-item
-                label="收款方式"
-                prop="bankNo"
-              >
-                <el-select
-                  v-model="item.bankType"
-                  placeholder="请选择"
-                  style="width: 100%"
-                >
-                  <el-option
-                    v-for="item in bankTypeList"
-                    :key="item.key"
-                    :label="item.value"
-                    :value="item.key"
-                  >
-                  </el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item
-                label="流水号"
-                prop="bankBillNo"
-              >
-                <el-input
-                  v-model="item.bankBillNo"
-                  placeholder="流水号"
-                />
-              </el-form-item>
-              <el-form-item
-                label="到账时间"
-                prop="inDate"
-              >
-                <el-date-picker
-                  style="width: 100%;"
-                  v-model="item.inDate"
-                  type="datetime"
-                  value-format="yyyy/MM/dd HH:mm:ss"
-                  placeholder="到账时间"
-                >
-                </el-date-picker>
-              </el-form-item>
-              <el-form-item
-                label="收款金额"
-                prop="inAmount"
-              >
-                <el-input
-                  v-model="item.inAmount"
-                  placeholder="到账金额"
-                  style="width: 92%"
-                /> 元
-              </el-form-item>
-            </el-col>
-            <el-col
-              :span="10"
-              :offset="1"
-            >
-              <el-form-item
-                label="上传回单截图"
-                prop="billImgUrl"
-                class="account-upload"
-              >
-                <div>
-                  <el-upload
-                    :class="['avatar-uploader', `billImgUrl${item.bankReceiptId}`]"
-                    :action="$$main.getUrl('/Common/ImageUpload')"
-                    :show-file-list="false"
-                    :before-upload="() => {openLoading(`.billImgUrl${item.bankReceiptId}`)}"
-                    :on-error="closeLoading"
-                    :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (item.billImgUrl = res.body.imageUrl) }"
-                  >
-                    <x-image
-                      v-if="item.billImgUrl"
-                      :src="item.billImgUrl"
-                      class="avatar"
-                    />
-                    <i
-                      v-else
-                      class="el-icon-plus avatar-uploader-icon"
-                      style="display: block"
-                    ></i>
-                  </el-upload>
-                  <preview-button
-                    type="text"
-                    size="mini"
-                    always-show
-                    new-window-open
-                    :src="item.billImgUrl"
-                    v-if="item.billImgUrl"
-                  >查看原文件</preview-button>
-                  <preview-button
-                    type="text"
-                    size="mini"
-                    :src="item.billImgUrl"
-                    v-if="item.billImgUrl"
-                  >预览原文件</preview-button>
-                </div>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col
-              :span="23"
-              style="text-align: right"
-            >
-              <el-button
-                size="mini"
-                type="primary"
-                @click="editBankReceipt(item, index)"
-              >保存</el-button>
-              <el-button
-                size="mini"
-                type="danger"
-                @click="delectBankReceipt(item, index)"
-              >删除</el-button>
-            </el-col>
-          </el-row>
-        </div>
-        <el-row style="margin-top: 15px;">
-          <el-col
-            :span="24"
-            style="text-align: center"
-          >
-            <el-button
-              size="mini"
-              type="text"
-              @click="addBankReceipt"
-            ><i class="el-icon-circle-plus-outline"></i>添加收款信息</el-button>
-          </el-col>
-        </el-row>
-      </el-form>
-    </el-dialog>
     <el-dialog
       title="站点信息"
       :visible.sync="companyRegisterInfoDialogDisplay"
@@ -2034,86 +1886,27 @@
         >确认</el-button>
       </span>
     </el-dialog>
-    <el-dialog
-      title="订单日志"
-      :visible.sync="orderLogListDialogDisplay"
-      width="900px"
-      custom-class="order-log-list-dialog"
-      center
-    >
-      <el-table
-        :data="orderLogList"
-        size="mini"
-        style="width: 100%;"
-      >
-        <el-table-column
-          prop="actionUserName"
-          label="姓名"
-          min-width="70"
-        />
-        <el-table-column
-          prop="actionUserRoleName"
-          label="角色"
-          min-width="70"
-        />
-        <el-table-column
-          prop="actionContent"
-          label="操作内容"
-          min-width="200"
-        />
-        <el-table-column
-          prop="actionTime"
-          label="操作时间"
-          min-width="100"
-        />
-      </el-table>
-    </el-dialog>
   </x-page>
 </template>
 
 <script>
 import PreviewButton from '../../components/PreviewButton'
+import BankReceiptDialog from '../../components/BankReceiptDialog'
+import OrderLogDialog from '../../components/OrderLogDialog'
 export default {
   name: 'account-order-details',
-  components: { PreviewButton },
+  components: { PreviewButton, BankReceiptDialog, OrderLogDialog },
   data() {
     return {
       orderId: '',
       uploadLoading: null,
       info: {},
-      orderLogListDialogDisplay: false,
-      orderLogList: [],
-      bankTypeList: [{
-        key: 'B',
-        value: '银行'
-      }, {
-        key: 'A',
-        value: '支付宝'
-      }, {
-        key: 'W',
-        value: '微信'
-      }],
       bankTypes: {
         B: '银行',
         A: '支付宝',
         W: '微信',
         N: '-'
       },
-      bankReceiptDialogDisplay: false,
-      bankReceiptList: [],
-      bankReceiptForm: {
-        bankReceiptId: '', // 银行收款Id
-        orderId: '', // 订单Id
-        bankName: '', // 收款银行名称
-        bankNo: '', // 收款银行账户
-        bankType: '',
-        bankBillNo: '', // 银行回单号
-        inDate: '', // 到账日期
-        inAmount: '', // 到账金额
-        billImgUrl: '', // 回单图片URL
-        orderType: 'A' // 订单类型(A/I)
-      },
-      bankReceiptRules: [],
       companyRegisterInfoDialogDisplay: false,
       companyRegisterInfoForm: {
         orderId: '', // 订单Id
@@ -2195,9 +1988,6 @@ export default {
     }
   },
   watch: {
-    orderLogListDialogDisplay(val) {
-      val && this.queryOrderLogList()
-    },
     'customerServiceRecordForm.eval': {
       handler: function (val) {
         this.customerServiceRecordForm.evalValue = Number(val || 0) * 2
@@ -2206,16 +1996,6 @@ export default {
     }
   },
   methods: {
-    async queryOrderLogList() {
-      try {
-        this.orderLogList = await this.$$main.orderLogList({
-          orderId: this.orderId,
-          orderType: 'A'
-        })
-      } catch (e) {
-        e.message && this.$message.error(e.message)
-      }
-    },
     async queryOrderInfo() {
       const loading = this.$loading({
         text: '正在操作',
@@ -2226,25 +2006,7 @@ export default {
           orderId: this.orderId
         })
         this.info.orderInfo && this.info.orderInfo.sourceTaxId && this.querySourceTaxSupplierList()
-        this.bankReceiptList = []
-        if (this.info.bankReceipts && this.info.bankReceipts.length > 0) {
-          this.info.bankReceipts.forEach((item) => {
-            this.bankReceiptList.push({
-              bankType: item.bankType,
-              bankReceiptId: item.bankReceiptId, // 银行收款Id
-              orderId: this.orderId, // 订单Id
-              bankName: item.bankName, // 收款银行名称
-              bankNo: item.bankNo, // 收款银行账户
-              bankBillNo: item.bankBillNo, // 银行回单号
-              inDate: item.showInDate, // 到账日期
-              inAmount: item.inAmount, // 到账金额
-              billImgUrl: item.billImgUrl, // 回单图片URL
-              orderType: 'A' // 订单类型(A/I)
-            })
-          })
-        } else {
-          this.addBankReceipt()
-        }
+
         let regInfo = this.info.companyRegInfo
         if (regInfo) {
           if (regInfo.companyName && regInfo.companyName !== '') {
@@ -2368,7 +2130,8 @@ export default {
         cancelButtonText: '取消',
         inputType: 'textarea',
         inputPattern: /\S+/,
-        inputErrorMessage: `请输入${text}原因`
+        inputErrorMessage: `请输入${text}原因`,
+        closeOnClickModal: false
       }).then(({ value }) => {
         if (type === 'wait') {
           this.doOrderWait(value)
@@ -2434,60 +2197,6 @@ export default {
           orderType: 'A',
           rejectReason: reason
         })
-        this.$message({
-          message: `操作成功`,
-          type: 'success'
-        })
-        this.queryOrderInfo()
-      } catch (e) {
-        e.message && this.$message.error(e.message)
-      } finally {
-        loading.close()
-      }
-    },
-    addBankReceipt() {
-      this.bankReceiptList.push({
-        bankReceiptId: '', // 银行收款Id
-        orderId: this.orderId, // 订单Id
-        bankName: '', // 收款银行名称
-        bankNo: '', // 收款银行账户
-        bankBillNo: '', // 银行回单号
-        inDate: '', // 到账日期
-        inAmount: '', // 到账金额
-        billImgUrl: '', // 回单图片URL
-        orderType: 'A' // 订单类型(A/I)
-      })
-    },
-    async editBankReceipt(form, index) {
-      const loading = this.$loading({
-        text: '正在操作',
-        spinner: 'el-icon-loading'
-      })
-      try {
-        this.bankReceiptList[index].bankReceiptId = await this.$$main.orderAOEditBankReceipt(form)
-        this.$message({
-          message: `保存成功`,
-          type: 'success'
-        })
-        this.queryOrderInfo()
-      } catch (e) {
-        e.message && this.$message.error(e.message)
-      } finally {
-        loading.close()
-      }
-    },
-    async delectBankReceipt(form, index) {
-      if (!form.bankReceiptId || form.bankReceiptId === '') {
-        this.bankReceiptList.splice(index, 1)
-        return
-      }
-      const loading = this.$loading({
-        text: '正在操作',
-        spinner: 'el-icon-loading'
-      })
-      try {
-        await this.$$main.orderAODeleteBankReceipt(form)
-        this.bankReceiptList.splice(index, 1)
         this.$message({
           message: `操作成功`,
           type: 'success'
@@ -2642,12 +2351,14 @@ export default {
     },
     closeLoading() {
       this.uploadLoading.close()
+    },
+    onPageShow(){
+      this.orderId = (this.$route.query && this.$route.query.orderid) || ''
+      this.queryCompanyTypeList()
+      this.queryOrderInfo()
     }
   },
   mounted() {
-    this.orderId = (this.$route.query && this.$route.query.orderid) || ''
-    this.queryCompanyTypeList()
-    this.queryOrderInfo()
   }
 }
 </script>

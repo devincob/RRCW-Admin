@@ -39,22 +39,6 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="订单状态">
-            <el-select placeholder="订单状态" v-model="form.workflowId" style="width: 120px">
-              <el-option label="全部" value=""/>
-              <el-option label="草稿" value="-1"/>
-              <el-option label="待直属领导审批" value="2000"/>
-              <el-option label="待CEO审批" value="2010"/>
-              <el-option label="待跟单处理" value="2060"/>
-              <el-option label="待客服确认" value="2080"/>
-              <el-option label="待财务收款" value="2090"/>
-              <el-option label="待交易员处理" value="2110"/>
-              <el-option label="待交易员更新处理" value="2120"/>
-              <el-option label="待跟单确认处理" value="2130"/>
-              <el-option label="待客服回访" value="2140"/>
-              <el-option label="已完成" value="5000"/>
-            </el-select>
-          </el-form-item>
           <el-form-item label="商务提交时间">
             <el-date-picker
               popper-class="orders-date-picker"
@@ -63,6 +47,7 @@
               align="right"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
+              value-format="yyyy-MM-dd"
               :picker-options="pickerOptions"
               v-model="form.submitTime">
             </el-date-picker>
@@ -75,12 +60,26 @@
               align="right"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
+              value-format="yyyy-MM-dd"
               :picker-options="pickerOptions"
               v-model="form.orderCompletedTime">
             </el-date-picker>
           </el-form-item>
           <el-form-item label="客户名称">
             <el-input placeholder="请输入客户名称" v-model="form.customerName" style="width: 200px"/>
+          </el-form-item>
+          <el-form-item label="站点名称">
+            <el-input placeholder="请输入站点名称" v-model="form.companyName" style="width: 200px"/>
+          </el-form-item>
+          <el-form-item label="订单状态">
+            <el-select placeholder="订单状态" multiple collapse-tags v-model="form.workflowIds" style="width: 200px">
+              <el-option
+                v-for="item in statusOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="queryInvoiceOrders">搜索</el-button>
@@ -164,6 +163,31 @@ export default {
   components: {TaxSourceDetailsDialog, CustomerDetailsDialog, GoodsDetailsDialog, CompanyDetailsDialog},
   data() {
     return {
+      statusOptions: [{
+        value: '',
+        label: '全部'
+      }, {
+        value: '-1',
+        label: '草稿'
+      }, {
+        label: '待直属领导审批',
+        value: '2000'
+      }, {
+        label: '待CEO审批',
+        value: '2010'
+      }, {
+        label: '待财务收款',
+        value: '2090'
+      }, {
+        label: '待交易员处理',
+        value: '2110'
+      }, {
+        label: '待交易员更新处理',
+        value: '2120'
+      }, {
+        label: '已完成',
+        value: '5000'
+      }],
       form: {
         pageIndex: 1,
         pageSize: 20,
@@ -171,13 +195,14 @@ export default {
         sourceTaxId: '',
         // 商品编号
         goodsId: '',
-        workflowId: '',
-        // 所属商务
+        workflowIds: [],
         createAdminUserId: '',
         // 订单好
         orderNo: '',
         // 客户姓名
         customerName: '',
+        // 站点名称
+        companyName: '',
         submitTime: '',
         // 提交订单开始时间
         submitBeginTime: '',
@@ -238,8 +263,8 @@ export default {
     'form.submitTime': {
       handler: function (val) {
         if (val && val.length > 0) {
-          this.form.submitBeginTime = this.$utils.dateFormat(val[0], 'yyyy-MM-dd')
-          this.form.submitEndTime = this.$utils.dateFormat(val[1], 'yyyy-MM-dd')
+          this.form.submitBeginTime = val[0]
+          this.form.submitEndTime = val[1]
         } else {
           this.form.submitBeginTime = ''
           this.form.submitEndTime = ''
@@ -250,8 +275,8 @@ export default {
     'form.orderCompletedTime': {
       handler: function (val) {
         if (val && val.length > 0) {
-          this.form.orderCompletedBeginTime = this.$utils.dateFormat(val[0], 'yyyy-MM-dd')
-          this.form.orderCompletedEndTime = this.$utils.dateFormat(val[1], 'yyyy-MM-dd')
+          this.form.orderCompletedBeginTime = val[0]
+          this.form.orderCompletedEndTime = val[1]
         } else {
           this.form.orderCompletedBeginTime = ''
           this.form.orderCompletedEndTime = ''
@@ -310,9 +335,10 @@ export default {
         sourceTaxId: '',
         goodsId: '',
         createAdminUserId: '',
-        workflowId: '',
+        workflowIds: [],
         orderNo: '',
         customerName: '',
+        companyName: '',
         submitTime: '',
         submitBeginTime: '',
         submitEndTime: '',

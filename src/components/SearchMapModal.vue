@@ -1,20 +1,20 @@
 <template>
   <el-dialog
-    :visible.sync="showMapSelect"
+    :visible="showMapSelect"
     title="地图搜索"
-    width="60%"
-    v-drag-dialog="{reset: true}"
-    close-on-press-escape
-    >
+    width="50%"
+    :show-close="false"
+    :mask-closable="false"
+    :append-to-body="appendToBody">
     <template v-if="mapReady && showMapSelect">
-      <div class="amap-page-container" style="padding-top:10px">
+      <div class="amap-page-container">
         <el-amap-search-box ref="searchBox" class="search-box" :search-option="searchParams" :on-search-result="onSearchResult" :events="events"></el-amap-search-box>
         <el-amap :vid="vid" :center="mapCenter" :zoom="12">
           <el-amap-marker :title="marker.content" :position="marker.position" :events="marker.events" :draggable="true" :animation="marker.animation" :raiseOnDrag="true"></el-amap-marker>
         </el-amap>
       </div>
     </template>
-    <div slot="footer" style="padding-top:20px">
+    <div slot="footer">
       <el-button :native-type="'button'" @click="showMapSelect = false">取消</el-button>
       <el-button :native-type="'button'" @click="onSearchDone()" type="primary">确认</el-button>
     </div>
@@ -37,12 +37,7 @@ export default{
     appendToBody: {
       type: Boolean,
       'default': false
-    },
-    disableChangeSearchAddress: {
-      type: Boolean,
-      'default': true
-    },
-    defaultAddress: String
+    }
   },
   data: function () {
     return {
@@ -88,6 +83,7 @@ export default{
   methods: {
     open() {
       this.showMapSelect = true
+
       if (this.address && this.lat && this.lng) {
         this.setTimeout(() => {
           this.$refs.searchBox.keyword = this.address
@@ -96,12 +92,6 @@ export default{
             lat: this.lat
           }])
         }, 500)
-        return
-      } else if (this.defaultAddress) {
-        this._getGeolocation(this.cityName + this.defaultAddress, result => {
-          this.setSearchShow(result, 10, false)
-          this.$refs.searchBox.keyword = this.defaultAddress
-        }, false)
         return
       }
       let defaultCity = this.cityName || '上海市'
@@ -133,18 +123,17 @@ export default{
         this.lng = lng
         this.lat = lat
         this.mapCenter = [lng, lat]
-        this.setGeoAddress([lng, lat], !this.disableChangeSearchAddress)
         this.zoom = 16
       }
     },
-    _getGeolocation(address, callback, changeSearchBox = true) {
+    _getGeolocation(address, callback) {
       this.AMap.service('AMap.Geocoder', () => { // 回调函数
         // 实例化Geocoder
         let geocoder = new this.AMap.Geocoder()
         this.zoom = 16
         geocoder.getLocation(address, (status, result) => {
           if (status === 'complete' && result.info === 'OK') {
-            this.setGeoAddress([result.geocodes[0].location.lng, result.geocodes[0].location.lat], changeSearchBox)
+            this.setGeoAddress([result.geocodes[0].location.lng, result.geocodes[0].location.lat])
             if (callback && typeof callback === 'function') {
               callback(result)
             }
@@ -166,14 +155,13 @@ export default{
         })
       })
     },
-    setGeoAddress(address, changeSearchBox = true) {
+    setGeoAddress(address) {
       this._getGeoAddress(address, (res) => {
         let address = res.regeocode.addressComponent
-        this.regeocode = res.regeocode
-        if (changeSearchBox) this.$refs.searchBox.keyword = `${address.street}${address.streetNumber}${address.building}`
+        this.$refs.searchBox.keyword = `${address.street}${address.streetNumber}${address.building}`
       })
     },
-    setSearchShow(result, zoom, changeSearchBox = true) {
+    setSearchShow(result, zoom) {
       this.lat = result.geocodes[0].location.lat
       this.lng = result.geocodes[0].location.lng
       this.mapCenter = [this.lng, this.lat]
@@ -186,7 +174,7 @@ export default{
             this.marker.position = [e.lnglat.lng, e.lnglat.lat]
             this.lng = e.lnglat.lng
             this.lat = e.lnglat.lat
-            this.setGeoAddress([e.lnglat.lng, e.lnglat.lat], changeSearchBox)
+            this.setGeoAddress([e.lnglat.lng, e.lnglat.lat])
           }
         }
       }
@@ -203,7 +191,7 @@ export default{
         lat: this.lat,
         lng: this.lng,
         address: this.address
-      }, this.regeocode || {})
+      })
       this.showMapSelect = false
     }
   },

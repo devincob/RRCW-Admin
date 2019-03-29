@@ -1,10 +1,10 @@
 <template>
   <x-page breadcrumb="auto" title="账户管理">
     <el-card class="el-card-mini no-border-radius no-box-shadow" body-style="padding: 10px">
-      <span slot="header">管理员账号列表</span>
+      <!--<span slot="header">管理员账号列表</span>-->
       <el-form :model="searchForm" :inline="true" size="mini" class="demo-form-inline clearfix">
-        <el-form-item label="登录名">
-          <el-input v-model="searchForm.userName" placeholder="管理员登录名"/>
+        <el-form-item label="姓名">
+          <el-input v-model="searchForm.userName" placeholder="请输入姓名查找"/>
         </el-form-item>
         <el-form-item>
           <el-button @click="onSearchClick" type="primary">查询</el-button>
@@ -14,12 +14,11 @@
         </el-form-item>
       </el-form>
       <el-table :data="users"
-                :highlight-current-row="true"
-                :border="true"
                 v-loading="loading"
                 element-loading-text="拼命加载中..."
                 element-loading-spinner="el-icon-loading"
                 element-loading-background="rgba(255, 255, 255, 0.8)"
+                stripe
                 @sort-change="onSortChange"
                 size="mini"
                 style="width: 100%;border-top:1px #eee solid">
@@ -28,7 +27,8 @@
         <el-table-column label="姓名" prop="userName" width="100"/>
         <el-table-column label="手机号" prop="mobile"/>
         <el-table-column label="邮箱" prop="userMail"/>
-        <el-table-column label="角色" prop="adminRoleName"/>
+        <el-table-column label="系统角色" prop="adminRoleName"/>
+        <el-table-column label="流程角色" prop="flowRoleName"/>
         <el-table-column label="状态" prop="status">
           <span slot-scope="scope" :class="{
                 'text-success':scope.row.status === 'N',
@@ -37,7 +37,7 @@
             {{statusText[scope.row.status]}}
           </span>
         </el-table-column>
-        <el-table-column sortable="custom" sort-by="createTime" label="创建时间" prop="formatCreateTime"/>
+        <el-table-column sortable="custom" sort-by="createTime" label="创建时间" prop="showCreateTime"/>
         <el-table-column label="操作" width="100" align="center" header-align="center">
           <template slot-scope="scope">
             <el-button type="text" size="mini" class="no-padding" @click="onEditClick(scope.row)">编辑</el-button>
@@ -59,6 +59,8 @@
     </el-card>
     <!-- 管理员 编辑/创建 表单 -->
     <el-dialog v-drag-dialog
+               :close-on-click-modal="false"
+               :close-on-press-escape="false"
                width="500px"
                :title="(dialogForm.adminUserId ? '编辑管理员['+dialogForm.userName+']': '创建管理员账号')"
                :visible.sync="centerDialogVisible">
@@ -78,10 +80,21 @@
         <el-form-item label="电子邮箱" prop="userMail" :rules="{required: true, message: '电子邮箱为必填项'}">
           <el-input v-model="dialogForm.userMail" placeholder="联系邮箱"/>
         </el-form-item>
-        <el-form-item label="角色" prop="adminRoleId" :rules="{required: true, message: '角色为必选项'}">
-          <el-select placeholder="请选择一个角色" v-model="dialogForm.adminRoleId">
+        <el-form-item label="系统角色" prop="adminRoleId" :rules="{required: true, message: '角色为必选项'}">
+          <el-select placeholder="请选择一个系统角色" v-model="dialogForm.adminRoleId">
             <el-option v-for="(item, index) in roles" :key="index" :value="item.adminRoleId" :label="item.adminRoleName"/>
           </el-select>
+        </el-form-item>
+        <el-form-item label="流程角色">
+          <el-select placeholder="请选择一个流程角色" v-model="dialogForm.flowRoleId">
+            <el-option v-for="(item, index) in flowRoles" :key="index" :value="item.flowRoleId" :label="item.flowRoleName"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="职位">
+          <el-input v-model="dialogForm.position" placeholder="请输入职位" style="width: 192px"/>
+        </el-form-item>
+        <el-form-item label="数据隔离">
+          <el-switch v-model="dialogForm.dataControl"/>
         </el-form-item>
         <el-form-item label="状态">
           <el-select v-model="dialogForm.status">
@@ -106,8 +119,12 @@ const formDefaultData = {
   userMail: '',
   mobile: '',
   status: 'N',
-  adminRoleId: null
+  adminRoleId: null,
+  flowRoleId: null,
+  dataControl: true,
+  position: ''
 }
+
 export default {
   name: 'accounts',
   data(){
@@ -117,6 +134,7 @@ export default {
       loading: false,
       users: [],
       roles: [],
+      flowRoles: [],
       totalCount: 0,
       searchForm: {
         userName: ''
@@ -127,7 +145,8 @@ export default {
         sortType: 'D',
         sortName: 'createTime'
       },
-      statusText: {N: '正常', D: '禁用'}
+      statusText: {N: '正常', D: '禁用'},
+      selectedOptions: null
     }
   },
   watch: {
@@ -141,6 +160,7 @@ export default {
       if (!val) {
         // 重置表单数据
         this.dialogForm = {...formDefaultData}
+        this.selectedOptions = []
         // 重置表单验证状态
         this.$refs.form.resetFields()
       }
@@ -149,7 +169,7 @@ export default {
   methods: {
     async loadRoles(){
       try {
-        const roles = await this.$$main.userRoleList()
+        const roles = await this.$$main.roleList()
         this.roles = roles.map(item => {
           return {
             edit: false,
@@ -161,17 +181,43 @@ export default {
         e && e.message && this.$message.error(e.message)
       }
     },
+    async loadFlows(){
+      try {
+        this.flowRoles = await this.$$main.roleListFlow()
+      } catch (e) {
+        e && e.message && this.$message.error(e.message)
+      }
+    },
     onSearchClick(){
       this.loadAdmins()
     },
-    onEditClick(row){
-      let adminInfo = {}
-      Object.keys(row).forEach(key => {
-        if (['createTime', 'formatCreateTime', 'loginPwd', 'adminRoleName', 'adminRoleNames', 'adminRoleIds'].indexOf(key) === -1) adminInfo[key] = row[key]
-      })
-      adminInfo.loginPwd = ''
-      this.dialogForm = adminInfo
-      this.centerDialogVisible = true
+    async onEditClick(row){
+      // Object.keys(row).forEach(key => {
+      //   if (['createTime', 'formatCreateTime', 'loginPwd', 'adminRoleName', 'adminRoleNames', 'adminRoleIds'].indexOf(key) === -1) adminInfo[key] = row[key]
+      // })
+      //
+      // adminInfo.loginPwd = ''
+      try {
+        const adminInfo = await this.$$main.adminUserDetail({
+          adminUserId: row.adminUserId
+        })
+        this.dialogForm = {
+          adminUserId: adminInfo.adminUserId,
+          loginName: adminInfo.loginName,
+          userName: adminInfo.userName,
+          loginPwd: adminInfo.loginPwd,
+          userMail: adminInfo.userMail,
+          mobile: adminInfo.mobile,
+          status: adminInfo.status,
+          position: adminInfo.position,
+          adminRoleId: adminInfo.adminRoleId,
+          flowRoleId: adminInfo.flowRoleId || null,
+          dataControl: adminInfo.dataControl === 'Y'
+        }
+        this.centerDialogVisible = true
+      } catch (e) {
+        console.log(e)
+      }
     },
     // async onRemoveClick(row){
     //   try {
@@ -209,9 +255,9 @@ export default {
           target: this.$refs.form.$el,
           text: '正在保存信息'
         })
-        const result = await this.$$main.userOperationAdmin({
+        const result = await this.$$main.adminUserModify({
           ...this.dialogForm,
-          adminRoleIds: [this.dialogForm.adminRoleId]
+          dataControl: this.dialogForm.dataControl ? 'Y' : 'N'
         })
         if (result) {
           this.$message.success('保存成功')
@@ -228,7 +274,7 @@ export default {
     async loadAdmins(){
       this.loading = true
       try {
-        const data = await this.$$main.userAdminList({
+        const data = await this.$$main.adminUserList({
           pageSize: this.pageSize,
           pageIndex: this.pageIndex,
           userName: this.searchForm.userName,
@@ -246,7 +292,7 @@ export default {
   mounted(){
     this.loadAdmins()
     this.loadRoles()
-    console.log(this.$refs)
+    this.loadFlows()
   }
 }
 </script>

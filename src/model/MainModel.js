@@ -1,79 +1,449 @@
 /*
 **本代码由生成器自动生成，请勿手动修改
-**生成时间：2019-03-07 11:50:41
+**生成时间：2019-03-28 10:57:11
 */
 import Model from '../libs/model'
 export default class MSModel extends Model {
   /**
-   *名称：银行列表 路由：/Common/BankList
+   *名称：业绩.商务数据 路由：/Achievement/Bussiness/Data
    *@param {*} params 向服务器传送的参数,对应Request
    *@param {Function} [callback]  回调函数
    *Request:
    {
-       //
-       "":
+       //开始时间
+       "beginTime":DateTime
+       //结束时间
+       "endTime":DateTime
    }
 
    *Response:
    {
-       //银行类型
-       "bankType":string
-       //银行名称
-       "bankName":string
+       //订单总数
+       "orderCount":int
+       //进行中
+       "orderDoingCount":int
+       //完成数
+       "orderCompletedCount":int
+       //订单金额
+       "orderAmount":string
+       //待确认
+       "orderDoingAmount":string
+       //已确认
+       "orderCompletedAmount":string
    }
 
    */
-  commonBankList(params, callback){
-    return this.modelExecute('/Common/BankList', params, callback)
+  achievementBussinessData(params, callback){
+    return this.modelExecute('/Achievement/Bussiness/Data', params, callback)
   }
   /**
-   *名称：行政区域 路由：/Common/District
+   *名称：业绩.商务订单 路由：/Achievement/Bussiness/Orders
    *@param {*} params 向服务器传送的参数,对应Request
    *@param {Function} [callback]  回调函数
    *Request:
    {
-       //
-       "":
+       //开始时间
+       "beginTime":DateTime
+       //结束时间
+       "endTime":DateTime
+       //1待我处理,2财务收款,3交易员处理,4已完成
+       "queryType":int
    }
 
    *Response:
    {
-       //区域编号
-       "districtId":int
-       //区域名称
-       "districtName":string
+       //订单Id
+       "orderId":int
+       //订单编号
+       "orderNo":string
+       //客户编号
+       "customerId":int
+       //客户姓名
+       "customerName":string
+       //税源地名称
+       "sourceTaxName":string
+       //商品名称
+       "goodsName":string
+       //开票金额
+       "invoiceAmount":decimal
+       //发票类型
+       "invoiceTypeName":string
+       //是否加急
+       "isPriority":string
+       //流程名称
+       "workflowName":string
+       //流程Id
+       "workflowId":int
+       //创建时间
+       "createTime":string
+       //0轮到我加急,1轮到我,3其他
+       "myHandle":int
+       //订单完成时间
+       "orderCompletedTime":string
+       //税源地编号
+       "sourceTaxId":int
+       //当前处理人
+       "handleAdminUserName":string
+       //商务提交时间
+       "submitTime":string
+       //站点名称
+       "companyName":string
+       //站点Id
+       "companyId":int
+       //商品编号
+       "goodsId":int
+       //是否差额订单
+       "isDiff":string
+       //商务编号
+       "createAdminUserId":int
+       //商务名
+       "bussinessName":string
    }
 
    */
-  commonDistrict(params, callback){
-    return this.modelExecute('/Common/District', params, callback)
+  achievementBussinessOrders(params, callback){
+    return this.modelExecute('/Achievement/Bussiness/Orders', params, callback)
   }
   /**
-   *名称：Common.反馈 路由：/Common/Feedback
+   *名称：人员.详情 路由：/AdminUser/Detail
    *@param {*} params 向服务器传送的参数,对应Request
    *@param {Function} [callback]  回调函数
    *Request:
    {
+       //管理员编号
+       "adminUserId":int
+   }
+
+   *Response:
+   {
+       //登录账号
+       "loginName":string
        //姓名
-       "name":string
+       "userName":string
+       //联系电话
+       "mobile":string
        //邮箱
-       "email":string
-       //电话
-       "phone":string
-       //标题
-       "title":string
-       //内容
-       "content":string
+       "userMail":string
+       //系统角色编号
+       "adminRoleId":int
+       //创建时间(string)
+       "showCreateTime":string
+       //状态
+       "status":string
+       //管理员编号
+       "adminUserId":int
+       //系统角色
+       "adminRoleName":string
+       //流程角色编号
+       "flowRoleId":int
+       //流程角色
+       "flowRoleName":string
+       //数据隔离(Y/N)
+       "dataControl":string
+       //职位
+       "position":string
+   }
+
+   */
+  adminUserDetail(params, callback){
+    return this.modelExecute('/AdminUser/Detail', params, callback)
+  }
+  /**
+   *名称：人员.列表 路由：/AdminUser/List
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //用户名
+       "userName":string
+   }
+
+   *Response:
+   {
+       //系统角色编号
+       "adminRoleId":int
+       //登录账号
+       "loginName":string
+       //姓名
+       "userName":string
+       //联系电话
+       "mobile":string
+       //邮箱
+       "userMail":string
+       //状态
+       "status":string
+       //管理员编号
+       "adminUserId":int
+       //创建时间(string)
+       "showCreateTime":string
+       //流程角色编号
+       "flowRoleId":int
+       //系统角色
+       "adminRoleName":string
+       //流程角色
+       "flowRoleName":string
+       //数据隔离(Y/N)
+       "dataControl":string
+       //职位
+       "position":string
+   }
+
+   */
+  adminUserList(params, callback){
+    return this.modelExecute('/AdminUser/List', params, callback)
+  }
+  /**
+   *名称：人员.新增/编辑 路由：/AdminUser/Modify
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //登录名
+       "loginName":string
+       //密码
+       "loginPwd":string
+       //姓名
+       "userName":string
+       //联系电话
+       "mobile":string
+       //邮箱
+       "userMail":string
+       //系统角色
+       "adminRoleId":int
+       //管理员编号
+       "adminUserId":int
+       //状态(N/D)
+       "status":string
+       //流程角色
+       "flowRoleId":int
+       //职位
+       "position":string
+       //数据隔离(Y/N)
+       "dataControl":string
+   }
+
+   *Response:
+   int
+   */
+  adminUserModify(params, callback){
+    return this.modelExecute('/AdminUser/Modify', params, callback)
+  }
+  /**
+   *名称：人员.修改状态 路由：/AdminUser/Update
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //管理员编号
+       "adminUserId":int
+       //状态(N/D)
+       "status":string
    }
 
    *Response:
    bool
    */
-  commonFeedback(params, callback){
-    return this.modelExecute('/Common/Feedback', params, callback)
+  adminUserUpdate(params, callback){
+    return this.modelExecute('/AdminUser/Update', params, callback)
   }
   /**
-   *名称：上传图片 路由：/Common/ImageUpload
+   *名称：人员.修改密码 路由：/AdminUser/UpdatePwd
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //原密码
+       "oldPwd":string
+       //新密码
+       "newPwd":string
+   }
+
+   *Response:
+   bool
+   */
+  adminUserUpdatePwd(params, callback){
+    return this.modelExecute('/AdminUser/UpdatePwd', params, callback)
+  }
+  /**
+   *名称：渠道.详情 路由：/Channel/Detail
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //渠道编号
+       "channelId":int
+   }
+
+   *Response:
+   {
+       //渠道编号
+       "channelId":int
+       //渠道名称
+       "channelName":string
+       //渠道联系人
+       "channelContact":string
+       //渠道联系电话
+       "channelPhone":string
+       //渠道分成比例
+       "channelRatio":string
+       //渠道状态
+       "channelStatus":string
+   }
+
+   */
+  channelDetail(params, callback){
+    return this.modelExecute('/Channel/Detail', params, callback)
+  }
+  /**
+   *名称：渠道.列表 路由：/Channel/List
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //渠道名称
+       "channelName":string
+       //渠道联系人
+       "channelContact":string
+   }
+
+   *Response:
+   {
+       //渠道编号
+       "channelId":int
+       //渠道名称
+       "channelName":string
+       //渠道联系人
+       "channelContact":string
+       //渠道联系电话
+       "channelPhone":string
+       //渠道分成比例
+       "channelRatio":string
+       //渠道状态
+       "channelStatus":string
+   }
+
+   */
+  channelList(params, callback){
+    return this.modelExecute('/Channel/List', params, callback)
+  }
+  /**
+   *名称：渠道.新增/编辑 路由：/Channel/Modify
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //渠道编号
+       "channelId":int
+       //渠道名称
+       "channelName":string
+       //渠道联系人
+       "channelContact":string
+       //渠道联系电话
+       "channelPhone":string
+       //渠道分成比例
+       "channelRatio":int
+       //状态(N,D)
+       "channelStatus":string
+   }
+
+   *Response:
+   int
+   */
+  channelModify(params, callback){
+    return this.modelExecute('/Channel/Modify', params, callback)
+  }
+  /**
+   *名称：渠道.修改状态 路由：/Channel/Update
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //渠道编号
+       "channelId":int
+       //状态(N/D)
+       "channelStatus":string
+   }
+
+   *Response:
+   bool
+   */
+  channelUpdate(params, callback){
+    return this.modelExecute('/Channel/Update', params, callback)
+  }
+  /**
+   *名称：通用.查询公司开票信息 路由：/Common/Company/Invoce
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //公司编号
+       "companyId":string
+   }
+
+   *Response:
+   {
+       //公司名称
+       "companyName":string
+       //公司税号
+       "companyTaxNo":string
+       //公司注册地址
+       "companyAddress":string
+       //公司电话
+       "companyPhone":string
+       //开户银行
+       "companyBankName":string
+       //开户银行账号
+       "companyBankAccount":string
+   }
+
+   */
+  commonCompanyInvoce(params, callback){
+    return this.modelExecute('/Common/Company/Invoce', params, callback)
+  }
+  /**
+   *名称：通用.生成验证码 路由：/Common/CreateCode
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //
+       "":
+   }
+
+   *Response:
+   {
+       //验证码序列号
+       "codeSn":string
+       //BASEB4编码
+       "base64Image":string
+   }
+
+   */
+  commonCreateCode(params, callback){
+    return this.modelExecute('/Common/CreateCode', params, callback)
+  }
+  /**
+   *名称：通用.获取服务器时间 路由：/Common/GetServerTime
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //
+       "":
+   }
+
+   *Response:
+   {
+       //时间
+       "serverTime":string
+   }
+
+   */
+  commonGetServerTime(params, callback){
+    return this.modelExecute('/Common/GetServerTime', params, callback)
+  }
+  /**
+   *名称：通用.上传图片 路由：/Common/ImageUpload
    *@param {*} params 向服务器传送的参数,对应Request
    *@param {Function} [callback]  回调函数
    *Request:
@@ -93,3446 +463,351 @@ export default class MSModel extends Model {
     return this.modelExecute('/Common/ImageUpload', params, callback)
   }
   /**
-   *名称：Common.获取服务器时间 路由：/GetServerTime
+   *名称：通用.查询公司信息 路由：/Common/Invoice/Company
    *@param {*} params 向服务器传送的参数,对应Request
    *@param {Function} [callback]  回调函数
    *Request:
    {
-       //
-       "":
+       //公司名称
+       "companyName":string
    }
 
    *Response:
    {
-       //时间
-       "serverTime":string
+       //公司编号
+       "companyId":string
+       //公司名称
+       "companyName":string
    }
 
    */
-  getServerTime(params, callback){
-    return this.modelExecute('/GetServerTime', params, callback)
+  commonInvoiceQuery(params, callback){
+    return this.modelExecute('/Common/Invoice/Company', params, callback)
   }
   /**
-   *名称：企业.可发单企业列表 路由：/Company/CanUse/List
+   *名称：通用.商务列表 路由：/Common/ListBelongAdminUser
    *@param {*} params 向服务器传送的参数,对应Request
    *@param {Function} [callback]  回调函数
    *Request:
    {
-       //
-       "":
+       //部门编号
+       "deptId":int
    }
 
    *Response:
-   {
-       //用户编号
-       "companyUserId":int
-       //名称
-       "companyUserName":string
-       //用户类型(C:企业,P:个人)
-       "userType":string
-       //手机号码
-       "contactPhone":string
-       //联系人
-       "contact":string
-       //自动确认支付时间
-       "autoPayHour":int
-       //注册时间
-       "registerTime":DateTime
-       //注册时间(string)
-       "formatRegisterTime":string
-       //发单状态(N/D)
-       "orderStatus":string
-       //账号状态
-       "status":string
-       //余额
-       "amount":int
-       //服务费
-       "serviceChargeRate":decimal
-       //授信额度
-       "creditLine":decimal
-       //剩余授信额度
-       "residualCreditLine":decimal
-       //企业简称
-       "shortName":string
-   }
-
-   */
-  companyCanUseList(params, callback){
-    return this.modelExecute('/Company/CanUse/List', params, callback)
-  }
-  /**
-   *名称：Message.Do.修改状态 路由：/Message/Do/ChangeStatus
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
    {
        //编号
-       "messageId":int
-       //状态(N正常,D禁用X删除)
-       "messageStatus":string
-   }
-
-   *Response:
-   bool
-   */
-  messageDoChangeStatus(params, callback){
-    return this.modelExecute('/Message/Do/ChangeStatus', params, callback)
-  }
-  /**
-   *名称：Message.Do.发布系统通知 路由：/Message/Do/Create
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //通知内容
-       "messageContent":string
-       //类型(W工人C企业)
-       "messageType":string
-   }
-
-   *Response:
-   int
-   */
-  messageDoCreate(params, callback){
-    return this.modelExecute('/Message/Do/Create', params, callback)
-  }
-  /**
-   *名称：Message.Query.列表 路由：/Message/Query/List
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //系统消息类型(C企业,W工人)
-       "messageTypeCondition":string
-       //状态(N正常D停用)
-       "messageStatusCondition":string
-   }
-
-   *Response:
-   {
-       //通知编号
-       "messageId":int
-       //通知内容
-       "messageContent":string
-       //通知类型
-       "messageType":string
-       //通知状态
-       "messageStatus":string
-       //发布人
-       "createUserId":int
-       //发布人
-       "createUserName":string
-       //发布时间
-       "showCreateTime":string
-   }
-
-   */
-  messageQueryList(params, callback){
-    return this.modelExecute('/Message/Query/List', params, callback)
-  }
-  /**
-   *名称：Notice.Do.设置已读 路由：/Notice/Do/Read
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //通知编号,不传是全部
-       "noticeId":int
-   }
-
-   *Response:
-   bool
-   */
-  noticeDoRead(params, callback){
-    return this.modelExecute('/Notice/Do/Read', params, callback)
-  }
-  /**
-   *名称：Notice.Query.列表 路由：/Notice/Query/List
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //
-       "":
-   }
-
-   *Response:
-   {
-       //通知时间
-       "noticeTime":string
-       //已读
-       "isRead":string
-       //通知编号
-       "noticeId":int
-       //业务类型(M主订单,S子订单)
-       "bizType":string
-       //业务编号
-       "bizId":int
-       //内容
-       "content":string
-   }
-
-   */
-  noticeQueryList(params, callback){
-    return this.modelExecute('/Notice/Query/List', params, callback)
-  }
-  /**
-   *名称：Notice.Query.条数 路由：/Notice/Query/NoReadCount
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //
-       "":
-   }
-
-   *Response:
-   {
-       //未读条数
-       "noReadCount":int
-   }
-
-   */
-  noticeQueryNoReadCount(params, callback){
-    return this.modelExecute('/Notice/Query/NoReadCount', params, callback)
-  }
-  /**
-   *名称：订单发布-选取企业 路由：/Order/CompanyQuery
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //公司名称或登录手机号
-       "keyword":string
-   }
-
-   *Response:
-   {
-       //账户状态
-       "status":string
-       //账户余额
-       "amount":decimal
-       //企业名称
-       "companyName":string
-   }
-
-   */
-  orderCompanyQuery(params, callback){
-    return this.modelExecute('/Order/CompanyQuery', params, callback)
-  }
-  /**
-   *名称：Order.Do.指派 路由：/Order/Do/Apply
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //订单编号
-       "orderSubId":int
-       //工人编号
-       "workerUserId":int
-   }
-
-   *Response:
-   int
-   */
-  orderDoApply(params, callback){
-    return this.modelExecute('/Order/Do/Apply', params, callback)
-  }
-  /**
-   *名称：Order.Do.取消连续 路由：/Order/Do/CancelContinuity
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //订单编号
-       "orderId":int
-   }
-
-   *Response:
-   bool
-   */
-  orderDoCancelContinuity(params, callback){
-    return this.modelExecute('/Order/Do/CancelContinuity', params, callback)
-  }
-  /**
-   *名称：Order.Do.取消主订单 路由：/Order/Do/CancelMain
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //订单编号
-       "orderId":int
-       //取消原因
-       "cancelReason":string
-       //取消类型(P平台,C企业)
-       "cancelType":string
-       //是否该日(0不是,1是)
-       "isToday":int
-   }
-
-   *Response:
-   bool
-   */
-  orderDoCancelMain(params, callback){
-    return this.modelExecute('/Order/Do/CancelMain', params, callback)
-  }
-  /**
-   *名称：Order.Do.取消子订单 路由：/Order/Do/CancelSub
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //子订单编号
-       "orderSubId":int
-       //取消原因
-       "cancelReason":string
-       //取消类型(S5平台,S6企业,S7工人)
-       "overType":string
-   }
-
-   *Response:
-   bool
-   */
-  orderDoCancelSub(params, callback){
-    return this.modelExecute('/Order/Do/CancelSub', params, callback)
-  }
-  /**
-   *名称：Order.Do.薪资调整审批 路由：/Order/Do/ChangeAudit
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //调整编号
-       "changeId":int
-       //状态(P通过,R驳回)
-       "changeStatus":string
-       //驳回原因
-       "auditReason":string
-   }
-
-   *Response:
-   bool
-   */
-  orderDoChangeAudit(params, callback){
-    return this.modelExecute('/Order/Do/ChangeAudit', params, callback)
-  }
-  /**
-   *名称：Order.Do.新增工资调整 路由：/Order/Do/ChangeCreate
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //子订单编号
-       "orderSubId":int
-       //调整金额
-       "changeAmount":decimal
-       //调整原因
-       "changeReason":string
-   }
-
-   *Response:
-   int
-   */
-  orderDoChangeCreate(params, callback){
-    return this.modelExecute('/Order/Do/ChangeCreate', params, callback)
-  }
-  /**
-   *名称：Order.Do.换人 路由：/Order/Do/ChangeWorker
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //子订单编号
-       "orderSubId":int
-       //求职者编号
-       "workerUserId":int
-   }
-
-   *Response:
-   int
-   */
-  orderDoChangeWorker(params, callback){
-    return this.modelExecute('/Order/Do/ChangeWorker', params, callback)
-  }
-  /**
-   *名称：Order.Do.发工作 路由：/Order/Do/Create
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //标题
-       "orderTitle":string
-       //标签
-       "jobTagId":int
-       //标签
-       "jobTagName":string
-       //地址
-       "address":string
-       //经度
-       "addressLat":decimal
-       //纬度
-       "addressLng":decimal
-       //上班时间
-       "beginTime":DateTime
-       //下班时间
-       "endTime":DateTime
-       //工作日期
-       "workDays":DateTime[]
-       //是否连续(1连续)
-       "isContinuity":int
-       //需求人数
-       "workerNum":int
-       //详情
-       "description":string
-       //联系人
-       "orderContact":string
-       //联系电话
-       "orderPhone":string
-       //薪资
-       "salary":decimal
-       //包水饭(Y/N)
-       "hasEating":string
-       //企业编号
-       "companyUserId":int
-       //性别条件(N不限,M男,F女,Z指定)
-       "sex":string
-       //开始年龄
-       "beginAge":int
-       //结束年龄
-       "endAge":int
-       //有无训练(Y/N)
-       "isTrain":string
-       //训练开始时间
-       "trainBeginTime":DateTime
-       //训练结束时间
-       "trainEndTime":DateTime
-       //培训地址
-       "trainAddress":string
-       //训练奖励
-       "trainAmount":decimal
-       //训练经度
-       "trainLat":decimal
-       //训练纬度
-       "trainLng":decimal
-       //培训联系人
-       "trainContact":string
-       //培训电话
-       "trainPhone":string
-       //培训详情
-       "trainDescription":string
-       //男性工作人数
-       "maleWorkerNum":int
-       //女性工作人数
-       "femaleWorkerNum":int
-       //完工结(Y/N)
-       "overPay":string
-       //开始身高
-       "beginHeight":int
-       //结束身高
-       "endHeight":int
-       //开始体重
-       "beginWeight":int
-       //结束体重
-       "endWeight":int
-       //开始身高
-       "maleBeginHeight":int
-       //结束身高
-       "maleEndHeight":int
-       //开始体重
-       "maleBeginWeight":int
-       //结束体重
-       "maleEndWeight":int
-       //开始身高
-       "femaleBeginHeight":int
-       //结束身高
-       "femaleEndHeight":int
-       //开始体重
-       "femaleBeginWeight":int
-       //结束体重
-       "femaleEndWeight":int
-   }
-
-   *Response:
-   {
-       //订单编号
-       "orderIds":int[]
-       //需求人数
-       "workerNum":int
-       //每日薪资
-       "singleSalary":decimal
-       //发单天数
-       "createDays":int
-       //总计
-       "sumSalary":decimal
-   }
-
-   */
-  orderDoCreate(params, callback){
-    return this.modelExecute('/Order/Do/Create', params, callback)
-  }
-  /**
-   *名称：Order.Do.事件新增 路由：/Order/Do/EventCreate
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //子订单编号
-       "orderSubId":int
-       //内容
-       "eventContent":string
-       //调整金额
-       "changeAmount":decimal
-   }
-
-   *Response:
-   int
-   */
-  orderDoEventCreate(params, callback){
-    return this.modelExecute('/Order/Do/EventCreate', params, callback)
-  }
-  /**
-   *名称：Order.Do.批量新增事件 路由：/Order/Do/EventCreateMain
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //订单编号
-       "orderId":int
-       //事件内容
-       "eventContent":string
-   }
-
-   *Response:
-   bool
-   */
-  orderDoEventCreateMain(params, callback){
-    return this.modelExecute('/Order/Do/EventCreateMain', params, callback)
-  }
-  /**
-   *名称：Order.Do.事件处理 路由：/Order/Do/EventHandel
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //时间编号
-       "eventId":int
-       //内容
-       "remark":string
-       //1完成,2不处理,3调整
-       "confirmType":int
-       //调整金额
-       "changeAmount":decimal
-   }
-
-   *Response:
-   bool
-   */
-  orderDoEventHandel(params, callback){
-    return this.modelExecute('/Order/Do/EventHandel', params, callback)
-  }
-  /**
-   *名称：Order.Do.减少名额 路由：/Order/Do/Minus
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //订单号
-       "orderId":int
-       //增加人数
-       "minusNum":int
-   }
-
-   *Response:
-   bool
-   */
-  orderDoMinus(params, callback){
-    return this.modelExecute('/Order/Do/Minus', params, callback)
-  }
-  /**
-   *名称：Order.Do.编辑 路由：/Order/Do/Modify
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //订单编号
-       "orderId":int
-       //新详情
-       "newDescription":string
-   }
-
-   *Response:
-   bool
-   */
-  orderDoModify(params, callback){
-    return this.modelExecute('/Order/Do/Modify', params, callback)
-  }
-  /**
-   *名称：Order.Do.退工 路由：/Order/Do/NoNeed
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //子订单号
-       "orderSubId":int
-       //原因
-       "reason":string
-   }
-
-   *Response:
-   bool
-   */
-  orderDoNoNeed(params, callback){
-    return this.modelExecute('/Order/Do/NoNeed', params, callback)
-  }
-  /**
-   *名称：Order.Do.旷工 路由：/Order/Do/NoWork
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //子订单号
-       "orderSubId":int
-       //原因
-       "reason":string
-   }
-
-   *Response:
-   bool
-   */
-  orderDoNoWork(params, callback){
-    return this.modelExecute('/Order/Do/NoWork', params, callback)
-  }
-  /**
-   *名称：Order.Do.发工资 路由：/Order/Do/Pay
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //子订单编号
-       "orderSubId":int
-       //金额
-       "confirmAmount":decimal
-   }
-
-   *Response:
-   bool
-   */
-  orderDoPay(params, callback){
-    return this.modelExecute('/Order/Do/Pay', params, callback)
-  }
-  /**
-   *名称：Order.Do.增加名额 路由：/Order/Do/Plus
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //订单号
-       "orderId":int
-       //增加人数
-       "plusNum":int
-   }
-
-   *Response:
-   bool
-   */
-  orderDoPlus(params, callback){
-    return this.modelExecute('/Order/Do/Plus', params, callback)
-  }
-  /**
-   *名称：Order.Do.备注 路由：/Order/Do/Remark
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //订单编号
-       "orderId":int
-       //备注
-       "remark":string
-   }
-
-   *Response:
-   bool
-   */
-  orderDoRemark(params, callback){
-    return this.modelExecute('/Order/Do/Remark', params, callback)
-  }
-  /**
-   *名称：Order.Do.导出子订单PDF 路由：/Order/Do/SubPdf
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //订单号
-       "orderId":int
-       //有无身份证
-       "hasId":string
-       //有无照片
-       "hasPhoto":string
-       //有无手机号
-       "hasMobile":string
-   }
-
-   *Response:
-   {
-       //下载地址
-       "dLUrl":string
-   }
-
-   */
-  orderDoSubPdf(params, callback){
-    return this.modelExecute('/Order/Do/SubPdf', params, callback)
-  }
-  /**
-   *名称：Order.Query.主订单详情 路由：/Order/Query/DetailMain
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //主订单编号
-       "orderId":int
-   }
-
-   *Response:
-   {
-       //包水饭(Y/N)
-       "hasEating":string
-       //订单编号
-       "orderId":int
-       //订单号
-       "orderNo":string
-       //企业编号
-       "companyUserId":int
-       //企业名称
-       "companyName":string
-       //发布时间
-       "showCreateTime":string
-       //标题
-       "orderTitle":string
-       //连续编号
-       "continuityOrderId":int
-       //连续日期
-       "continuityDates":string[]
-       //开始时间
-       "showBeginTime":string
-       //结束时间
-       "showEndTime":string
-       //地址
-       "address":string
-       //地址
-       "addressLng":decimal
-       //地址
-       "addressLat":decimal
-       //标签
-       "jobTagId":int
-       //标签
-       "jobTagName":string
-       //每日薪资
-       "singleSalary":decimal
-       //城市编号
-       "cityId":int
-       //原人数
-       "originalWorkerNum":int
-       //现人数
-       "workerNum":int
-       //预约人数
-       "applyWorkerNum":int
-       //联系人
-       "orderContact":string
-       //联系电话
-       "orderPhone":string
-       //C企业P平台
-       "createType":string
-       //预付金额
-       "prepayAmount":int
-       //详情
-       "description":string
-       //备注
-       "orderRemark":string
-       //1待上班,2上班中,3已下班,4已取消
-       "orderStatus":int
-       //服务费
-       "singleServiceCharge":decimal
-       //城市名称
-       "cityName":string
-       //发布人
-       "createUserName":string
-       //性别
-       "sex":string
-       //年龄
-       "beginAge":int
-       //年龄
-       "endAge":int
-       //完工结
-       "overPay":string
-       //身高
-       "beginHeight":int
-       //身高
-       "endHeight":int
-       //体重
-       "beginWeight":int
-       //体重
-       "endWeight":int
-       //培训金额
-       "trainAmount":decimal
-       //连续订单订单号
-       "continuityOrderIds":int[]
-   }
-
-   */
-  orderQueryDetailMain(params, callback){
-    return this.modelExecute('/Order/Query/DetailMain', params, callback)
-  }
-  /**
-   *名称：Order.Query.主订单详情.子订单列表 路由：/Order/Query/DetailMainListSub
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //订单编号
-       "orderId":int
-       //显示全部(0不,1是)
-       "showAll":int
-   }
-
-   *Response:
-   {
-       //子订单编号
-       "orderSubId":int
-       //子订单号
-       "orderSubNo":string
-       //工人编号
-       "workerUserId":int
-       //工人姓名
-       "workerName":string
-       //工人电话
-       "workerMobile":string
-       //抢单时间
-       "showApplyTime":string
-       //签到时间
-       "showClockOnTime":string
-       //签到地址
-       "clockOnAddress":string
-       //签退时间
-       "showClockOffTime":string
-       //签退地址
-       "clockOffAddress":string
-       //完结类型
-       "overType":string
-       //时间类型(1未到可签到时间,2未到上班时间,3已到上班时间,4已过下班时间)
-       "timeStatus":int
-       //完结时间
-       "overTime":string
-       //完结操作人
-       "overUserName":string
-       //完结原因
-       "overReason":string
-       //抢单方式
-       "applyType":string
-       //性别
-       "workerSex":string
-   }
-
-   */
-  orderQueryDetailMainListSub(params, callback){
-    return this.modelExecute('/Order/Query/DetailMainListSub', params, callback)
-  }
-  /**
-   *名称：Order.Query.子订单详情 路由：/Order/Query/DetailSub
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //子订单编号
-       "orderSubId":int
-   }
-
-   *Response:
-   {
-       //完结时间
-       "showOverTime":string
-       //工时
-       "workingHours":decimal
-       //自动支付时间
-       "showAutoPayTime":string
-       //自动支付倒计时
-       "autoPayMinutes":int
-       //调整薪资
-       "adjustSalary":decimal
-       //完结原因
-       "overReason":string
-       //订单编号
-       "orderId":int
-       //订单号
-       "orderNo":string
-       //企业编号
-       "companyUserId":int
-       //企业名称
-       "companyName":string
-       //发布时间
-       "showCreateTime":string
-       //标题
-       "orderTitle":string
-       //连续编号
-       "continuityOrderId":int
-       //连续日期
-       "continuityDates":string[]
-       //开始时间
-       "showBeginTime":string
-       //结束时间
-       "showEndTime":string
-       //地址
-       "address":string
-       //地址
-       "addressLng":decimal
-       //地址
-       "addressLat":decimal
-       //标签
-       "jobTagId":int
-       //标签
-       "jobTagName":string
-       //每日薪资
-       "singleSalary":decimal
-       //城市编号
-       "cityId":int
-       //原人数
-       "originalWorkerNum":int
-       //现人数
-       "workerNum":int
-       //预约人数
-       "applyWorkerNum":int
-       //联系人
-       "orderContact":string
-       //联系电话
-       "orderPhone":string
-       //C企业P平台
-       "createType":string
-       //预付金额
-       "prepayAmount":decimal
-       //详情
-       "description":string
-       //备注
-       "orderRemark":string
-       //子订单编号
-       "orderSubId":int
-       //子订单号
-       "orderSubNo":string
-       //工人编号
-       "workerUserId":int
-       //工人姓名
-       "workerName":string
-       //工人电话
-       "workerMobile":string
-       //抢单时间
-       "showApplyTime":string
-       //签到时间
-       "showClockOnTime":string
-       //签到地址
-       "clockOnAddress":string
-       //签退时间
-       "showClockOffTime":string
-       //签退地址
-       "clockOffAddress":string
-       //状态(1,2,3,4,5,6)
-       "subStatus":int
-       //完结类型
-       "overType":string
-       //时间类型(1未到可签到时间,2未到上班时间,3已到上班时间,4已过下班时间)
-       "timeStatus":int
-       //城市
-       "cityName":string
-       //性别
-       "sex":string
-       //年龄
-       "beginAge":int
-       //年龄
-       "endAge":int
-       //服务费
-       "singleServiceCharge":decimal
-       //包水饭(Y/N)
-       "hasEating":string
-       //完工结
-       "overPay":string
-       //身高
-       "beginHeight":int
-       //身高
-       "endHeight":int
-       //体重
-       "beginWeight":int
-       //体重
-       "endWeight":int
-       //完结时间
-       "overTime":string
-       //完结操作人
-       "overUserName":string
-       //抢单方式
-       "applyType":string
-       //性别
-       "workerSex":string
-       //累计调整金额
-       "totalChangeAmount":decimal
-       //有未审核调整
-       "hasWaitChange":bool
-       //状态
-       "subStatusText":string
-       //服务费
-       "serviceAmount":decimal
-       //渠道费
-       "divideAmount":decimal
-       //是否支付
-       "isPay":string
-   }
-
-   */
-  orderQueryDetailSub(params, callback){
-    return this.modelExecute('/Order/Query/DetailSub', params, callback)
-  }
-  /**
-   *名称：Order.Query.子订单详情.子订单列表 路由：/Order/Query/DetailSubListSub
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //子订单编号
-       "orderSubId":int
-   }
-
-   *Response:
-   {
-       //子订单编号
-       "orderSubId":int
-       //子订单号
-       "orderSubNo":string
-       //开始时间
-       "beginTime":string
-       //结束时间
-       "endTime":string
-       //抢单时间
-       "showApplyTime":string
-       //签到时间
-       "showClockOnTime":string
-       //签到地址
-       "clockOnAddress":string
-       //签退时间
-       "showClockOffTime":string
-       //签退地址
-       "clockOffAddress":string
-       //包水饭(Y/N)
-       "hasEating":string
-       //抢单方式
-       "applyType":string
-       //完工结
-       "overPay":string
-       //有无事件(0没有,1已处理,2未处理)
-       "hasEvent":int
-       //状态(1预约中,2待上班,3上班中,4待支付,5已支付,6取消)
-       "subStatus":int
-       //状态
-       "subStatusText":string
-       //有无调整
-       "hasChange":int
-       //是否培训(0不是,其他是)
-       "isTrain":int
-   }
-
-   */
-  orderQueryDetailSubListSub(params, callback){
-    return this.modelExecute('/Order/Query/DetailSubListSub', params, callback)
-  }
-  /**
-   *名称：Order.Query.事件详情 路由：/Order/Query/EventDetail
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //子订单编号
-       "orderSubId":int
-   }
-
-   *Response:
-   {
-       //事件编号
-       "eventId":int
-       //内容
-       "eventContent":string
-       //时间
-       "lastTime":string
-       //处理人
-       "lastUserName":string
-       //状态
-       "status":string
-       //子订单编号
-       "orderSubId":int
-       //子订单号
-       "orderSubNo":string
-       //记录
-       "logs":LogInfo[]
-       //薪资
-       "salaryAmount":decimal
-       //服务费
-       "serviceAmount":decimal
-   }
-
-   */
-  orderQueryEventDetail(params, callback){
-    return this.modelExecute('/Order/Query/EventDetail', params, callback)
-  }
-  /**
-   *名称：Order.Query.事件列表 路由：/Order/Query/ListEvent
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //子订单编号
-       "orderSubId":int
-       //订单号条件
-       "orderSubNoCondition":string
-       //P处理中C已完成N不处理
-       "statusCondition":string
-   }
-
-   *Response:
-   {
-       //事件编号
-       "eventId":int
-       //内容
-       "eventContent":string
-       //时间
-       "lastTime":string
-       //处理人
-       "lastUserName":string
-       //状态
-       "status":string
-       //子订单编号
-       "orderSubId":int
-       //子订单号
-       "orderSubNo":string
-       //标题
-       "orderTitle":string
-       //记录时间
-       "createTime":string
-   }
-
-   */
-  orderQueryListEvent(params, callback){
-    return this.modelExecute('/Order/Query/ListEvent', params, callback)
-  }
-  /**
-   *名称：Order.Query.主订单列表 路由：/Order/Query/ListMain
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //联系人
-       "orderContactCondition":string
-       //联系电话
-       "orderPhoneCondition":string
-       //企业名称
-       "companyNameCondition":string
-       //标签
-       "jobTagNameCondition":string
-       //发布时间
-       "createTimeBeginCondition":DateTime
-       //发布时间
-       "createTimeEndCondition":DateTime
-       //工作时间
-       "workTimeBeginCondition":DateTime
-       //工作时间
-       "workTimeEndCondition":DateTime
-       //订单状态(1待上班,2上班中,3已下班,4取消)
-       "orderStatusCondition":int
-       //预约状态(1无人,2部分,3全部预约)
-       "applyStatusCondition":int
-       //连续(0,1)
-       "continuityCondition":int
-       //城市
-       "cityNameCondition":string
-       //订单号
-       "orderNoCondition":string
-       //订单编号
-       "orderIdCondition":int
-       //标题
-       "orderTitle":string
-       //标签
-       "jobTagId":int
-   }
-
-   *Response:
-   {
-       //包水饭(Y/N)
-       "hasEating":string
-       //订单编号
-       "orderId":int
-       //订单号
-       "orderNo":string
-       //连续订单编号
-       "continuityOrderId":int
-       //企业编号
-       "companyUserId":int
-       //企业名
-       "companyName":string
-       //联系人
-       "orderContact":string
-       //联系电话
-       "orderPhone":string
-       //标签
-       "jobTagId":int
-       //标签
-       "jobTagName":string
-       //开始时间
-       "showBeginTime":string
-       //结束时间
-       "showEndTime":string
-       //原人数
-       "originalWorkerNum":int
-       //现人数
-       "workerNum":int
-       //预约人数
-       "applyWorkerNum":int
-       //每日薪资
-       "singleSalary":decimal
-       //总薪资
-       "sumSalary":decimal
-       //城市编号
-       "cityId":int
-       //地址
-       "address":string
-       //1待上班,2上班中,3已下班,4已取消
-       "orderStatus":int
-       //订单标题
-       "orderTitle":string
-       //服务费
-       "singleServiceCharge":decimal
-       //城市名称
-       "cityName":string
-       //C企业P平台
-       "createType":string
-       //性别
-       "sex":string
-       //年龄
-       "beginAge":int
-       //年龄
-       "endAge":int
-       //是否培训
-       "isTrain":string
-       //完工结
-       "overPay":string
-       //身高
-       "beginHeight":int
-       //身高
-       "endHeight":int
-       //体重
-       "beginWeight":int
-       //体重
-       "endWeight":int
-   }
-
-   */
-  orderQueryListMain(params, callback){
-    return this.modelExecute('/Order/Query/ListMain', params, callback)
-  }
-  /**
-   *名称：Order.Query.调整工资记录 路由：/Order/Query/ListSalaryChange
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //子订单编号
-       "orderSubId":int
-       //订单号
-       "orderSubNo":string
-       //工人名
-       "workerName":string
-       //起
-       "beginChangeTime":DateTime
-       //止
-       "endChangeTime":DateTime
-       //状态(W待审核,P通过,R驳回)
-       "changeStatus":string
-   }
-
-   *Response:
-   {
-       //调整编号
-       "changeId":int
-       //订单编号
-       "orderSubId":int
-       //订单号
-       "orderSubNo":string
-       //订单标题
-       "orderTitle":string
-       //上班时间
-       "beginTime":string
-       //下班时间
-       "endTime":string
-       //累计调整金额
-       "totalChangeAmount":decimal
-       //调整金额
-       "changeAmount":decimal
-       //调整原因
-       "changeReason":string
-       //工人编号
-       "workerUserId":int
-       //工人名
-       "workerName":string
-       //工人电话
-       "workerMobile":string
-       //状态(W待审核,P通过,R驳回)
-       "changeStatus":string
-       //驳回原因
-       "auditReason":string
-       //调整人
-       "changeUserName":string
-       //调整时间
-       "changeTime":string
-       //审核人
-       "auditUserName":string
-       //审核时间
-       "auditTime":string
-       //工资
-       "singleSalary ":decimal
-       //服务费
-       "singleServiceCharge":decimal
-   }
-
-   */
-  orderQueryListSalaryChange(params, callback){
-    return this.modelExecute('/Order/Query/ListSalaryChange', params, callback)
-  }
-  /**
-   *名称：Order.Query.子订单列表 路由：/Order/Query/ListSub
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //订单号或标题
-       "orderNoOrTitleCondition":string
-       //企业名称或电话
-       "companyNameOrMobileCondition":string
-       //订单联系人或电话
-       "orderContactOrPhoneCondition":string
-       //工作时间
-       "workTimeBeginCondition":DateTime
-       //工作时间
-       "workTimeEndCondition":DateTime
-       //工人名或电话
-       "workerNameOrMobileCondition":string
-       //1预约中,2待上班,3上班中,4待支付,5已支付,6取消,7超时无人抢,8已确认未支付,9退工,10旷工
-       "subStatusCondition":int
-       //城市
-       "cityNameCondition":string
-       //事件(0,1)
-       "eventCondition":int
-       //训练订单(Y/N)
-       "trainCondition":string
-       //标题
-       "orderTitle":string
-       //完结类型
-       "overType":string
-       //抢单类型
-       "applyType":string
-       //标签
-       "jobTagId":int
-       //是否调整工资(1有2无)
-       "isSalaryChange":int
-   }
-
-   *Response:
-   {
-       //子订单编号
-       "orderSubId":int
-       //性别
-       "workerSex":string
-       //自动支付时间
-       "showAutoPayTime":string
-       //自动支付倒计时
-       "autoPayMinutes":int
-       //调整薪资
-       "adjustSalary":int
-       //子订单号
-       "orderSubNo":string
-       //标题
-       "orderTitle":string
-       //订单编号
-       "orderId":int
-       //企业编号
-       "companyUserId":int
-       //企业名
-       "companyName":string
-       //企业电话
-       "companyMobile":string
-       //工人编号
-       "workerUserId":int
-       //工人姓名
-       "workerName":string
-       //工人电话
-       "workerMobile":string
-       //开始时间
-       "showBeginTime":string
-       //结束时间
-       "showEndTime":string
-       //地址
-       "address":string
-       //每日薪资
-       "singleSalary":decimal
-       //联系人
-       "orderContact":string
-       //联系电话
-       "orderPhone":string
-       //抢单时间
-       "showApplyTime":string
-       //签到时间
-       "showClockOnTime":string
-       //签到地址
-       "clockOnAddress":string
-       //签退时间
-       "showClockOffTime":string
-       //签退地址
-       "clockOffAddress":string
-       //状态(1预约中,2待上班,3上班中,4待支付,5已支付,6取消)
-       "subStatus":int
-       //时间类型(1未到可签到时间,2未到上班时间,3已到上班时间,4已过下班时间)
-       "timeStatus":int
-       //完结类型
-       "overType":string
-       //C企业P平台
-       "createType":string
-       //服务费
-       "singleServiceCharge":decimal
-       //包水饭(Y/N)
-       "hasEating":string
-       //完结时间
-       "overTime":string
-       //完结操作人
-       "overUserName":string
-       //完结原因
-       "overReason":string
-       //抢单方式
-       "applyType":string
-       //标签
-       "jobTagId":int
-       //标签
-       "jobTagName":string
-       //完工结
-       "overPay":string
-       //有无调整
-       "hasChange":int
-       //有无事件(0没有,1已处理,2未处理)
-       "hasEvent":int
-       //性别
-       "sex":string
-       //年龄
-       "beginAge":int
-       //年龄
-       "endAge":int
-       //身高
-       "beginHeight":int
-       //身高
-       "endHeight":int
-       //体重
-       "beginWeight":int
-       //体重
-       "endWeight":int
-       //状态
-       "subStatusText":string
-   }
-
-   */
-  orderQueryListSub(params, callback){
-    return this.modelExecute('/Order/Query/ListSub', params, callback)
-  }
-  /**
-   *名称：Order.Query.预约中 路由：/Order/Query/ListWaitApply
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //订单号或标题
-       "orderNoOrTitleCondition":string
-       //企业名称或电话
-       "companyNameOrMobileCondition":string
-       //订单联系人或电话
-       "orderContactOrPhoneCondition":string
-       //工作时间
-       "workTimeBeginCondition":DateTime
-       //工作时间
-       "workTimeEndCondition":DateTime
-       //城市
-       "cityNameCondition":string
-       //事件(0,1)
-       "eventCondition":int
-       //训练订单(Y/N)
-       "trainCondition":string
-       //标题
-       "orderTitle":string
-       //标签
-       "jobTagId":int
-   }
-
-   *Response:
-   {
-       //子订单编号
-       "orderSubId":int
-       //子订单号
-       "orderSubNo":string
-       //标题
-       "orderTitle":string
-       //订单编号
-       "orderId":int
-       //企业编号
-       "companyUserId":int
-       //企业名
-       "companyName":string
-       //企业电话
-       "companyMobile":string
-       //开始时间
-       "showBeginTime":string
-       //结束时间
-       "showEndTime":string
-       //地址
-       "address":string
-       //每日薪资
-       "singleSalary":decimal
-       //联系人
-       "orderContact":string
-       //联系电话
-       "orderPhone":string
-       //时间类型(1未到可签到时间,2未到上班时间,3已到上班时间,4已过下班时间)
-       "timeStatus":int
-       //C企业P平台
-       "createType":string
-       //包水饭(Y/N)
-       "hasEating":string
-       //标签
-       "jobTagId":int
-       //标签
-       "jobTagName":string
-       //完工结
-       "overPay":string
-       //性别
-       "sex":string
-       //年龄
-       "beginAge":int
-       //年龄
-       "endAge":int
-       //身高
-       "beginHeight":int
-       //身高
-       "endHeight":int
-       //体重
-       "beginWeight":int
-       //体重
-       "endWeight":int
-       //有无调整
-       "hasChange":int
-       //有无事件(0没有,1已处理,2未处理)
-       "hasEvent":int
-   }
-
-   */
-  orderQueryListWaitApply(params, callback){
-    return this.modelExecute('/Order/Query/ListWaitApply', params, callback)
-  }
-  /**
-   *名称：Order.Query.待上班 路由：/Order/Query/ListWaitClock
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //订单号或标题
-       "orderNoOrTitleCondition":string
-       //企业名称或电话
-       "companyNameOrMobileCondition":string
-       //订单联系人或电话
-       "orderContactOrPhoneCondition":string
-       //工作时间
-       "workTimeBeginCondition":DateTime
-       //工作时间
-       "workTimeEndCondition":DateTime
-       //工人名或电话
-       "workerNameOrMobileCondition":string
-       //城市
-       "cityNameCondition":string
-       //事件(0,1)
-       "eventCondition":int
-       //训练订单(Y/N)
-       "trainCondition":string
-       //标题
-       "orderTitle":string
-       //抢单类型
-       "applyType":string
-       //标签
-       "jobTagId":int
-   }
-
-   *Response:
-   {
-       //性别
-       "workerSex":string
-       //子订单编号
-       "orderSubId":int
-       //子订单号
-       "orderSubNo":string
-       //标题
-       "orderTitle":string
-       //订单编号
-       "orderId":int
-       //企业编号
-       "companyUserId":int
-       //企业名
-       "companyName":string
-       //企业电话
-       "companyMobile":string
-       //工人编号
-       "workerUserId":int
-       //工人姓名
-       "workerName":string
-       //工人电话
-       "workerMobile":string
-       //开始时间
-       "showBeginTime":string
-       //结束时间
-       "showEndTime":string
-       //地址
-       "address":string
-       //每日薪资
-       "singleSalary":decimal
-       //联系人
-       "orderContact":string
-       //联系电话
-       "orderPhone":string
-       //抢单时间
-       "showApplyTime":string
-       //C企业P平台
-       "createType":string
-       //包水饭(Y/N)
-       "hasEating":string
-       //抢单方式
-       "applyType":string
-       //标签
-       "jobTagId":int
-       //标签
-       "jobTagName":string
-       //完工结
-       "overPay":string
-       //有无事件(1有,2没有)
-       "hasEvent":int
-       //有无调整
-       "hasChange":int
-       //性别
-       "sex":string
-       //年龄
-       "beginAge":int
-       //年龄
-       "endAge":int
-       //身高
-       "beginHeight":int
-       //身高
-       "endHeight":int
-       //体重
-       "beginWeight":int
-       //体重
-       "endWeight":int
-   }
-
-   */
-  orderQueryListWaitClock(params, callback){
-    return this.modelExecute('/Order/Query/ListWaitClock', params, callback)
-  }
-  /**
-   *名称：Order.Query.候选人 路由：/Order/Query/ListWorker
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //子订单编号
-       "orderSubId":int
-       //名字条件
-       "userNameCondition":string
-       //电话条件
-       "mobilePhoneCondition":string
-       //是否换人
-       "isChange":int
-   }
-
-   *Response:
-   {
-       //工人编号
-       "workerUserId":int
-       //工人名
-       "userName":string
-       //性别
-       "sex":string
-       //电话
-       "mobilePhone":string
-       //头像
-       "headImage":string
-   }
-
-   */
-  orderQueryListWorker(params, callback){
-    return this.modelExecute('/Order/Query/ListWorker', params, callback)
-  }
-  /**
-   *名称：Order.Query.新增名额薪资 路由：/Order/Query/PlusSalary
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //订单号
-       "orderId":int
-       //增加名额
-       "plusNum":int
-   }
-
-   *Response:
-   {
-       //所需金额
-       "needAmount":decimal
-   }
-
-   */
-  orderQueryPlusSalary(params, callback){
-    return this.modelExecute('/Order/Query/PlusSalary', params, callback)
-  }
-  /**
-   *名称：Order.Query.报告 路由：/Order/Query/Report
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //订单编号
-       "orderId":int
-   }
-
-   *Response:
-   {
-       //子订单号
-       "orderSubId":int
+       "adminUserId":int
        //名字
-       "workerName":string
-       //电话
-       "workerMobile":string
-       //状态(0无,1正常,2路上,3鸽子,4平台取消,5企业取消,6工人取消)
-       "showStatus":int
-       //完结时间
-       "overTime":string
-   }
-
-   */
-  orderQueryReport(params, callback){
-    return this.modelExecute('/Order/Query/Report', params, callback)
-  }
-  /**
-   *名称：Order.Query.薪资 路由：/Order/Query/Salary
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //经度
-       "addressLat":decimal
-       //纬度
-       "addressLng":decimal
-       //标签
-       "jobTagId":int
-       //上班时间
-       "beginTime":DateTime
-       //下班时间
-       "endTime":DateTime
-       //工作日期
-       "workDays":DateTime[]
-       //性别条件(N不限,M男,F女,Z指定)
-       "sex":string
-       //需求人数
-       "workerNum":int
-       //包水饭(Y/N)
-       "hasEating":string
-       //男性工作人数
-       "maleWorkerNum":int
-       //女性工作人数
-       "femaleWorkerNum":int
-       //企业编号
-       "companyUserId":int
-   }
-
-   *Response:
-   {
-       //需求人数
-       "workerNum":int
-       //每日薪资
-       "singleSalary":decimal
-       //发单天数
-       "createDays":int
-       //总计
-       "sumSalary":decimal
-   }
-
-   */
-  orderQuerySalary(params, callback){
-    return this.modelExecute('/Order/Query/Salary', params, callback)
-  }
-  /**
-   *名称：Promoter.修改状态 路由：/Promoter/Do/ChangeStatus
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //编号
-       "promoterUserId":int
-       //状态
-       "status":string
-   }
-
-   *Response:
-   bool
-   */
-  promoterDoChangeStatus(params, callback){
-    return this.modelExecute('/Promoter/Do/ChangeStatus', params, callback)
-  }
-  /**
-   *名称：Promoter.更新等级 路由：/Promoter/Do/CreateLevel
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //等级
-       "levels":PromoterLevelInfo[]
-   }
-
-   *Response:
-   bool
-   */
-  promoterDoCreateLevel(params, callback){
-    return this.modelExecute('/Promoter/Do/CreateLevel', params, callback)
-  }
-  /**
-   *名称：Promoter.保存 路由：/Promoter/Do/Save
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //姓名
-       "promoterName":string
-       //登录名
-       "loginName":string
-       //密码
-       "loginPwd":string
-       //电话
-       "phone":string
-       //编号
-       "promoterUserId":int
-   }
-
-   *Response:
-   int
-   */
-  promoterDoSave(params, callback){
-    return this.modelExecute('/Promoter/Do/Save', params, callback)
-  }
-  /**
-   *名称：Promoter.列表 路由：/Promoter/Query/List
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //推广商编号
-       "promoterUserId":int
-       //推广商名称
-       "promoterName":string
-       //状态(N/D)
-       "status":string
-   }
-
-   *Response:
-   {
-       //编号
-       "promoterUserId":int
-       //名称
-       "promoterName":string
-       //等级
-       "promoterLevelId":int
-       //等级
-       "promoterLevelName":string
-       //经验
-       "exp":int
-       //累计获利
-       "sumDivideAmount":decimal
-       //累计推广
-       "sumWorkerCount":int
-       //累计推广有效
-       "sumAbleWorkerCount":int
-       //累计推广接单
-       "sumOrderWorkerCount":int
-       //创建时间
-       "registerTime":string
-       //状态
-       "status":string
-       //登录名
-       "loginName":string
-       //密码
-       "loginPwd":string
-       //电话
-       "phone":string
-   }
-
-   */
-  promoterQueryList(params, callback){
-    return this.modelExecute('/Promoter/Query/List', params, callback)
-  }
-  /**
-   *名称：Promoter.等级列表 路由：/Promoter/Query/ListLevel
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //
-       "":
-   }
-
-   *Response:
-   {
-       //编号
-       "promoterLevelId":int
-       //名称
-       "promoterLevelName":string
-       //分成
-       "promoterDivideRatio":decimal
-       //所需经验
-       "promoterLevelExp":int
-   }
-
-   */
-  promoterQueryListLevel(params, callback){
-    return this.modelExecute('/Promoter/Query/ListLevel', params, callback)
-  }
-  /**
-   *名称：Salary.C端提现列表 路由：/Salary/CWithdrawalsList
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //用户名
        "userName":string
-       //开始申请提现时间
-       "beginTime":DateTime
-       //结束申请提现时间
-       "endTime":DateTime
-       //状态(S:已标记,A:审核中,R:驳回)
-       "status":string
-       //提现银行
-       "bankType":string
-   }
-
-   *Response:
-   {
-       //提现编号
-       "cashApplyId":int
-       //提现用户
-       "userName":string
-       //提现金额
-       "amount":int
-       //提现银行名称
-       "bankName":string
-       //账号
-       "bankNo":string
-       //户主
-       "bankUserName":string
-       //提现账户
-       "withdrawalsAccount":string
-       //申请时间
-       "applyTime":DateTime
-       //申请时间(string)
-       "formatApplyTime":string
-       //状态(A:审核中,S:已标记,P:已通过,R:已驳回)
-       "status":string
-       //驳回原因
-       "rejectReason":string
-       //联系电话
-       "mobilePhone":string
-       //工人编号
-       "workerUserId":int
-       //银行类型
-       "bankType":string
    }
 
    */
-  salaryCWithdrawalsList(params, callback){
-    return this.modelExecute('/Salary/CWithdrawalsList', params, callback)
+  commonListBelongAdminUser(params, callback){
+    return this.modelExecute('/Common/ListBelongAdminUser', params, callback)
   }
   /**
-   *名称：Salary.Do.B转C 路由：/Salary/Do/BTransToC
+   *名称：通用.所属站点 路由：/Common/List/BelongCompany
    *@param {*} params 向服务器传送的参数,对应Request
    *@param {Function} [callback]  回调函数
    *Request:
    {
-       //金额
-       "amount":decimal
-       //备注
-       "remark":string
-       //企业编号
-       "companyUserId":int
-       //兼职编号
-       "workerUserId":int
-   }
-
-   *Response:
-   int
-   */
-  salaryDoBTransToC(params, callback){
-    return this.modelExecute('/Salary/Do/BTransToC', params, callback)
-  }
-  /**
-   *名称：Salary.Do.C转B 路由：/Salary/Do/CTransToB
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //金额
-       "amount":decimal
-       //备注
-       "remark":string
-       //企业编号
-       "companyUserId":int
-       //兼职编号
-       "workerUserId":int
-   }
-
-   *Response:
-   int
-   */
-  salaryDoCTransToB(params, callback){
-    return this.modelExecute('/Salary/Do/CTransToB', params, callback)
-  }
-  /**
-   *名称：Salary.推广商提现处理 路由：/Salary/Do/HandlePWithdraw
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //驳回原因
-       "rejectReason":string
-       //提现申请编号
-       "withdrawId":int
-       //状态(S:标记,P:支付,R:驳回)
-       "status":string
-   }
-
-   *Response:
-   bool
-   */
-  salaryDoHandlePWithdraw(params, callback){
-    return this.modelExecute('/Salary/Do/HandlePWithdraw', params, callback)
-  }
-  /**
-   *名称：Salary.Do.处理企业退款 路由：/Salary/Do/RefundAction
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //退款编号
-       "refundId":int
-       //状态(S2成功,S3失败)
-       "refundStatus":string
-       //原因
-       "actionReason":string
-   }
-
-   *Response:
-   bool
-   */
-  salaryDoRefundAction(params, callback){
-    return this.modelExecute('/Salary/Do/RefundAction', params, callback)
-  }
-  /**
-   *名称：Salary.Do.处理微信提现 路由：/Salary/Do/WxWithdrawals
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //提现编号
-       "cashApplyId":int
-   }
-
-   *Response:
-   bool
-   */
-  salaryDoWxWithdrawals(params, callback){
-    return this.modelExecute('/Salary/Do/WxWithdrawals', params, callback)
-  }
-  /**
-   *名称：Salary.推广商提现 路由：/Salary/Query/ListPWithdraw
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //用户名
-       "promoterName":string
-       //开始申请提现时间
-       "beginTime":DateTime
-       //结束申请提现时间
-       "endTime":DateTime
-       //状态(S:已标记,A:审核中,R:驳回)
-       "status":string
-   }
-
-   *Response:
-   {
-       //提现编号
-       "withdrawId":int
-       //提现用户
-       "promoterName":string
-       //提现金额
-       "amount":int
-       //提现银行名称
-       "bankName":string
-       //账号
-       "bankNo":string
-       //户主
-       "bankUserName":string
-       //申请时间
-       "withdrawTime":string
-       //状态(A:审核中,S:已标记,P:已通过,R:已驳回)
-       "status":string
-       //驳回原因
-       "rejectReason":string
-       //联系电话
-       "phone":string
-       //推广商编号
-       "promoterUserId":int
-       //银行类型
-       "bankType":string
-   }
-
-   */
-  salaryQueryListPWithdraw(params, callback){
-    return this.modelExecute('/Salary/Query/ListPWithdraw', params, callback)
-  }
-  /**
-   *名称：Salary.Query.退款列表 路由：/Salary/Query/ListRefund
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //状态
-       "refundStatusCondition":string
-       //企业名称
-       "companyNameCondition":string
-       //时间
-       "refundTimeBeginCondition":DateTime
-       //时间
-       "refundTimeEndCondition":DateTime
-   }
-
-   *Response:
-   {
-       //编号
-       "refundId":int
-       //金额
-       "refundAmount":decimal
-       //原因
-       "refundReason":string
-       //时间
-       "showRefundTime":string
-       //状态(S1申请中,S2成功,S3失败)
-       "refundStatus":string
-       //处理时间
-       "showActionTime":string
-       //处理原因
-       "actionReason":string
-       //企业
-       "companyUserId":int
-       //企业
+       //站点名称
        "companyName":string
-       //处理人
-       "actionUserId":int
-       //处理人
-       "actionUserName":string
-   }
-
-   */
-  salaryQueryListRefund(params, callback){
-    return this.modelExecute('/Salary/Query/ListRefund', params, callback)
-  }
-  /**
-   *名称：充值扣款 路由：/Salary/RechargeDebit
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //账户
-       "loginName":string
-       //用户类型(C:企业,W:求职者)
-       "userType":string
-       //金额
-       "amount":decimal
-       //备注
-       "remark":string
-   }
-
-   *Response:
-   bool
-   */
-  salaryRechargeDebit(params, callback){
-    return this.modelExecute('/Salary/RechargeDebit', params, callback)
-  }
-  /**
-   *名称：流水列表 路由：/Salary/TradeList
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //用户
-       "userName":string
-       //开始交易时间
-       "beginTime":DateTime
-       //结束交易时间
-       "endTime":DateTime
-       //支付方式(W:微信,C:钱包,O:线下,A:全部)
-       "payType":string
-       //交易类型(RC:充值,PP:预付工资,PS:工资,AC:提现,AB:提现退回,PB:预付退回,DA:扣款,TA:转账)
-       "transType":string
    }
 
    *Response:
    {
-       //流水编号
-       "transId":int
-       //账号
-       "inAccountCashId":int
-       //交易金额
-       "amount":int
-       //交易时间
-       "transTime":DateTime
-       //交易时间(string)
-       "formatTransTime":string
-       //交易类型
-       "transType":string
-       //交易对象
-       "outAccountCashId":int
-       //支付方式(W:微信,C:钱包,O:线下)
-       "payType":string
-       //业务单号
-       "bizNo":string
+       //站点编号
+       "companyId":int
+       //站点名称
+       "companyName":string
    }
 
    */
-  salaryTradeList(params, callback){
-    return this.modelExecute('/Salary/TradeList', params, callback)
+  commonListBelongCompany(params, callback){
+    return this.modelExecute('/Common/List/BelongCompany', params, callback)
   }
   /**
-   *名称：修改提现状态 路由：/Salary/UpdateWithdrawalsStatus
+   *名称：通用.渠道列表 路由：/Common/List/Channel
    *@param {*} params 向服务器传送的参数,对应Request
    *@param {Function} [callback]  回调函数
    *Request:
    {
-       //驳回原因
-       "rejectReason":string
-       //提现申请编号
-       "cashApplyId":int
-       //状态(S:标记,P:支付,R:驳回)
-       "status":string
-   }
-
-   *Response:
-   bool
-   */
-  salaryUpdateWithdrawalsStatus(params, callback){
-    return this.modelExecute('/Salary/UpdateWithdrawalsStatus', params, callback)
-  }
-  /**
-   *名称：城市标签列表 路由：/Tag/CityTagList
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //城市编号
-       "distictId":int
+       //渠道名称
+       "channelName":string
    }
 
    *Response:
    {
-       //标签编号
-       "jobTagId":int
-       //标签名称
-       "jobTagName":string
-       //最低时薪
-       "lowHourSalary":decimal
-       //最低工时
-       "lowWorkHours":decimal
-       //是否选中
-       "isCheck":string
-       //图标类
-       "iconClass":string
-       //薪资计算类
-       "salaryClass":string
-   }
-
-   */
-  tagCityTagList(params, callback){
-    return this.modelExecute('/Tag/CityTagList', params, callback)
-  }
-  tagQueryOpened(params, callback){
-    return this.modelExecute('/Tag/Query/Opened', params, callback)
-  }
-  /**
-   *名称：标签列表 路由：/Tag/List
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //标签名称
-       "tagName":string
-       //状态(N/D)
-       "status":string
-   }
-
-   *Response:
-   {
-       //状态(N/D)
-       "status":string
-       //标签编号
-       "jobTagId":int
-       //标签名称
-       "jobTagName":string
-       //职能定义
-       "jobDescription":string
-       //图标类
-       "iconClass":string
-       //薪资计算类
-       "salaryClass":string
-   }
-
-   */
-  tagList(params, callback){
-    return this.modelExecute('/Tag/List', params, callback)
-  }
-  /**
-   *名称：新增(编辑)标签 路由：/Tag/Operation
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //薪资计算类
-       "salaryClass":string
-       //标签编号
-       "jobTagId":int
-       //标签名称
-       "jobTagName":string
-       //职能定义
-       "jobDescription":string
-       //标签类
-       "iconClass":string
-   }
-
-   *Response:
-   bool
-   */
-  tagOperation(params, callback){
-    return this.modelExecute('/Tag/Operation', params, callback)
-  }
-  /**
-   *名称：获取城市可用岗位标签列表 路由：/Tag/OrderUse
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //城市编号
-       "districtId":int
-   }
-
-   *Response:
-   {
-       //标签名称
-       "jobTagId":int
-       //标签名称
-       "jobTagName":string
-       //最低薪水
-       "lowHourSalary":decimal
-       //最低工时
-       "lowWorkHours":decimal
-       //图标类
-       "iconClass":string
-       //薪资计算类
-       "salaryClass":string
-   }
-
-   */
-  tagOrderUse(params, callback){
-    return this.modelExecute('/Tag/OrderUse', params, callback)
-  }
-  /**
-   *名称：保存城市列表信息 路由：/Tag/SaveCityTag
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //城市编号
-       "distictId":int
-       //标签数据
-       "jobTagData":CityJobTag[]
-   }
-
-   *Response:
-   bool
-   */
-  tagSaveCityTag(params, callback){
-    return this.modelExecute('/Tag/SaveCityTag', params, callback)
-  }
-  tagDoSaveSalarySetting(params, callback){
-    return this.modelExecute('/Tag/Do/SaveSalarySetting', params, callback)
-  }
-  tagQuerySalarySetting(params, callback){
-    return this.modelExecute('/Tag/Query/SalarySetting', params, callback)
-  }
-  /**
-   *名称：修改标签状态 路由：/Tag/UpdateStatus
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //标签编号
-       "jobTagId":int
-       //状态(N/D)
-       "status":string
-   }
-
-   *Response:
-   bool
-   */
-  tagUpdateStatus(params, callback){
-    return this.modelExecute('/Tag/UpdateStatus', params, callback)
-  }
-  /**
-   *名称：管理员详情 路由：/User/AdminInfo
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //管理员编号
-       "adminUserId":int
-   }
-
-   *Response:
-   {
-       //登录账号
-       "loginName":string
-       //姓名
-       "userName":string
-       //联系电话
-       "mobile":string
-       //邮箱
-       "userMail":string
-       //角色编号
-       "adminRoleId":int[]
-   }
-
-   */
-  userAdminInfo(params, callback){
-    return this.modelExecute('/User/AdminInfo', params, callback)
-  }
-  /**
-   *名称：管理员列表 路由：/User/AdminList
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //用户名
-       "userName":string
-   }
-
-   *Response:
-   {
-       //登录账号
-       "loginName":string
-       //姓名
-       "userName":string
-       //联系电话
-       "mobile":string
-       //邮箱
-       "userMail":string
-       //状态
-       "status":string
-       //角色编号数组
-       "adminRoleIds":int[]
-       //角色名称数组
-       "adminRoleNames":string[]
-       //管理员编号
-       "adminUserId":int
-       //创建时间
-       "createTime":DateTime
-       //创建时间(string)
-       "formatCreateTime":string
-       //角色编号
-       "adminRoleId":int
-       //角色名称
-       "adminRoleName":string
-   }
-
-   */
-  userAdminList(params, callback){
-    return this.modelExecute('/User/AdminList', params, callback)
-  }
-  /**
-   *名称：B端用户详情 路由：/User/BInfo
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //用户编号
-       "companyUserId":int
-       //登录名
-       "loginName":string
-   }
-
-   *Response:
-   {
-       //手机号码
-       "contactPhone":string
-       //姓名/公司名称
-       "companyUserName":string
-       //用户类型(P:个人,C:企业用户)
-       "userType":string
-       //联系人
-       "contact":string
-       //公司简称
-       "shortName":string
-       //注册时间
-       "formatRegisterTime":string
-       //发单状态(N/D)
-       "orderStatus":string
-       //用户状态(N/D)
-       "status":string
-       //订单自动支付时间
-       "autoPayHour":int
-       //余额
-       "amount":decimal
-       //用户照片
-       "photoUrl":string
-       //服务费
-       "serviceChargeRate":decimal
-       //授信额度
-       "creditLine":decimal
-       //剩余授信额度
-       "residualCreditLine":decimal
-       //备注
-       "remark":string
-       //推广人
-       "promoterUserId":int
-       //绑定手机
-       "loginName":string
-   }
-
-   */
-  userBInfo(params, callback){
-    return this.modelExecute('/User/BInfo', params, callback)
-  }
-  /**
-   *名称：B端用户列表 路由：/User/BList
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //名称
-       "companyUserName":string
-       //手机号码
-       "contactPhone":string
-       //开始注册时间
-       "beginTime":DateTime
-       //结束注册时间
-       "endTime":DateTime
-       //用户类型(C:企业,P:个人)
-       "userType":string
-       //账号状态(N/D)
-       "status":string
-   }
-
-   *Response:
-   {
-       //用户编号
-       "companyUserId":int
-       //名称
-       "companyUserName":string
-       //用户类型(C:企业,P:个人)
-       "userType":string
-       //手机号码
-       "contactPhone":string
-       //联系人
-       "contact":string
-       //自动确认支付时间
-       "autoPayHour":int
-       //注册时间
-       "registerTime":DateTime
-       //注册时间(string)
-       "formatRegisterTime":string
-       //发单状态(N/D)
-       "orderStatus":string
-       //账号状态
-       "status":string
-       //余额
-       "amount":int
-       //服务费
-       "serviceChargeRate":decimal
-       //授信额度
-       "creditLine":decimal
-       //剩余授信额度
-       "residualCreditLine":decimal
-   }
-
-   */
-  userBList(params, callback){
-    return this.modelExecute('/User/BList', params, callback)
-  }
-  /**
-   *名称：保存B端用户信息 路由：/User/BSaveUserInfo
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //发单状态(N/D)
-       "orderStatus":string
-       //用户编号
-       "companyUserId":int
-       //手机号
-       "contactPhone":string
-       //姓名(联系人)
-       "contact":string
-       //公司全称
-       "companyUserName":string
-       //公司简称
-       "shortName":string
-       //账号状态(N/D)
-       "status":string
-       //订单自动确认时间
-       "autoPayHour":int
-       //用户类型(P:个人,C:企业)
-       "userType":string
-       //用户营业执照或身份证图片URL
-       "photoUrl":string
-       //服务费
-       "serviceChargeRate":decimal
-       //授信额度
-       "creditLine ":decimal
-       //备注
-       "remark":string
-   }
-
-   *Response:
-   bool
-   */
-  userBSaveUserInfo(params, callback){
-    return this.modelExecute('/User/BSaveUserInfo', params, callback)
-  }
-  /**
-   *名称：C端用户详情 路由：/User/CInfoDetails
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //登录名
-       "loginName":string
-       //用户编号
-       "workerUserId":int
-       //手机号
-       "mobilePhone":string
-   }
-
-   *Response:
-   {
-       //手机号码
-       "mobilePhone":string
-       //姓名
-       "userName":string
-       //头像
-       "headImage":string
-       //性别(F/M/U)
-       "sex":string
-       //身高
-       "height":int
-       //体重
-       "weight":int
-       //是否在校(Y/N)
-       "isStudent":string
-       //注册时间
-       "registerTime":DateTime
-       //注册时间(string)
-       "formatRegisterTime":string
-       //抢单资格(N/D)
-       "orderStatus":string
-       //账号状态(N/D)
-       "userStatus":string
-       //生活照
-       "lifePhoto":string[]
-       //真实姓名
-       "realName":string
-       //身份证号
-       "idCardNo":string
-       //民族
-       "nation":string
-       //生日
-       "birthday":string
-       //证件照
-       "photoUrl":string
-       //状态(PA:通过,UP:未通过,CT:审核中)
-       "realNameStatus":string
-       //余额
-       "amount":decimal
-       //实名认证编号
-       "realNameId":int
-       //推广商编号
-       "promoterId":int
-       //备注
-       "remark":string
-       //后台图片
-       "backgroundPics":string[]
-       //英语级别(0,2,3,4,6,8)
-       "englishLevel":int
-       //英语图片
-       "englishImg":string
-       //学历级别(0无,1小学,2初中,3高中,4大专,5本科,6硕士,7博士)
-       "educationLevel":int
        //渠道编号
-       "promoterUserId":int
-       //学历图片
-       "educationImg":string
-       //健康证过期时间
-       "healthExpireTime":string
-       //健康证图片
-       "healthImg":string
-       //契约分
-       "contractPoint":decimal
-       //普通话级别(0无,1标准,2不标准)
-       "putonghuaLevel":int
-       //普通话图片
-       "putonghuaImg":string
-       //电脑级别(0,1,2,3,4)
-       "computerLevel":int
-       //电脑图片
-       "computerImg":string
-       //线下认证
-       "offlineQuality":string
-       //省
-       "liveProvinceId":int
-       //市
-       "liveCityId":int
-       //区
-       "liveDistrictId":int
-       //地址
-       "liveAddress":string
-       //省
-       "liveProvinceName":string
-       //市
-       "liveCityName":string
-       //区
-       "liveDistrictName":string
-       //用户编号
-       "workerUserId":int
+       "channelId":int
+       //渠道名称
+       "channelName":string
    }
 
    */
-  userCInfoDetails(params, callback){
-    return this.modelExecute('/User/CInfoDetails', params, callback)
+  commonListChannel(params, callback){
+    return this.modelExecute('/Common/List/Channel', params, callback)
   }
   /**
-   *名称：C端用户列表 路由：/User/CList
+   *名称：通用.公司列表 路由：/Common/ListCompany
    *@param {*} params 向服务器传送的参数,对应Request
    *@param {Function} [callback]  回调函数
    *Request:
    {
-       //姓名
-       "userName":string
-       //手机号码
-       "mobile":string
-       //注册开始时间
-       "beginTime":DateTime
-       //注册结束时间
-       "endTime":DateTime
-       //实名状态(R:已实名,N:未实名,A:全部)
-       "realNameStatus":string
-       //账号状态(N:正常,D:封号,A:全部)
-       "status":string
-       //抢单状态(N:正常,D:异常,A:全部)
-       "orderStatus":string
+       //客户编号
+       "customerId":int
    }
 
    *Response:
    {
-       //用户编号
-       "workerUserId":int
-       //姓名
-       "userName":string
-       //性别(F/M/U)
-       "sex":string
-       //手机号码
-       "mobilePhone":string
-       //城市
-       "cityName":string
-       //注册时间
-       "registerTime":DateTime
-       //注册时间(string)
-       "formatRegisterTime":string
-       //实名状态(PA:通过)
-       "realNameStatus":string
-       //抢单资格(N:正常,D:取消)
-       "orderStatus":string
-       //账号状态(N:正常,D:封号)
-       "status":string
-       //推广商编号
-       "promoterUserId":int
-       //推广商名称
-       "promoterName":string
-       //实名认证时间
-       "realNameTime":string
-   }
-
-   */
-  userCList(params, callback){
-    return this.modelExecute('/User/CList', params, callback)
-  }
-  /**
-   *名称：生成验证码 路由：/User/CreateCode
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //
-       "":
-   }
-
-   *Response:
-   {
-       //验证码序列号
-       "codeSn":string
-       //BASEB4编码
-       "base64Image":string
-   }
-
-   */
-  userCreateCode(params, callback){
-    return this.modelExecute('/User/CreateCode', params, callback)
-  }
-  /**
-   *名称：保存C端用户信息 路由：/User/CSaveInfo
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //用户编号
-       "workerUserId":int
-       //普通话级别(0无,1标准,2不标准)
-       "putonghuaLevel":int
-       //姓名
-       "userName":string
-       //性别(F/M/U)
-       "sex":string
-       //身高
-       "height":int
-       //体重
-       "weight":int
-       //是否在校(N/D)
-       "isStudent":string
-       //头像
-       "headImage":string
-       //生活照
-       "lifePhoto":string[]
-       //后台照片
-       "backgroundPics":string[]
-       //英语级别(0,2,3,4,6,8)
-       "englishLevel":int
-       //英语图片
-       "englishImg":string
-       //学历级别(0无,1小学,2初中,3高中,4大专,5本科,6硕士,7博士)
-       "educationLevel":int
-       //学历图片
-       "educationImg":string
-       //健康证过期时间
-       "healthExpireTime":DateTime
-       //健康证图片
-       "healthImg":string
-       //电脑图片
-       "computerImg":string
-       //线下认证
-       "offlineQuality":string
-       //省
-       "liveProvinceId":int
-       //市
-       "liveCityId":int
-       //区
-       "liveDistrictId":int
-       //地址
-       "liveAddress":string
-       //普通话图片
-       "putonghuaImg":string
-       //电脑级别(0,1,2,3,4)
-       "computerLevel":int
-   }
-
-   *Response:
-   bool
-   */
-  userCSaveInfo(params, callback){
-    return this.modelExecute('/User/CSaveInfo', params, callback)
-  }
-  /**
-   *名称：User.C注销 路由：/User/Do/CCancellation
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //用户编号
-       "workerUserId":int
-       //原因
-       "cancellationReason":string
-   }
-
-   *Response:
-   bool
-   */
-  userDoCCancellation(params, callback){
-    return this.modelExecute('/User/Do/CCancellation', params, callback)
-  }
-  /**
-   *名称：User.C修改手机号 路由：/User/Do/CChangeMobile
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //用户编号
-       "workerUserId":int
-       //新手机号
-       "newMobile":string
-   }
-
-   *Response:
-   bool
-   */
-  userDoCChangeMobile(params, callback){
-    return this.modelExecute('/User/Do/CChangeMobile', params, callback)
-  }
-  /**
-   *名称：User.取消抢单资格 路由：/User/Do/CChangeOrderStatus
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //编号
-       "userId":int
-       //状态(N,D)
-       "orderStatus":string
-       //备注
-       "remark":string
-   }
-
-   *Response:
-   bool
-   */
-  userDoCChangeOrderStatus(params, callback){
-    return this.modelExecute('/User/Do/CChangeOrderStatus', params, callback)
-  }
-  /**
-   *名称：User.C端封号 路由：/User/Do/CChangeStatus
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //编号
-       "userId":int
-       //状态(N,D)
-       "status":string
-       //备注
-       "remark":string
-   }
-
-   *Response:
-   bool
-   */
-  userDoCChangeStatus(params, callback){
-    return this.modelExecute('/User/Do/CChangeStatus', params, callback)
-  }
-  /**
-   *名称：User.调整契约分 路由：/User/Do/ChangeContract
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //工人编号
-       "workerUserId":int
-       //调整分
-       "changePoint":decimal
-       //原因
-       "changeReason":string
-   }
-
-   *Response:
-   int
-   */
-  userDoChangeContract(params, callback){
-    return this.modelExecute('/User/Do/ChangeContract', params, callback)
-  }
-  /**
-   *名称：User.企业备注 路由：/User/Do/RemarkC
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //企业编号
-       "userId":int
-       //备注
-       "remark":string
-   }
-
-   *Response:
-   bool
-   */
-  userDoRemarkC(params, callback){
-    return this.modelExecute('/User/Do/RemarkC', params, callback)
-  }
-  /**
-   *名称：User.求职者备注 路由：/User/Do/RemarkW
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //编号
-       "userId":int
-       //备注
-       "remark":string
-   }
-
-   *Response:
-   bool
-   */
-  userDoRemarkW(params, callback){
-    return this.modelExecute('/User/Do/RemarkW', params, callback)
-  }
-  /**
-   *名称：反馈详情 路由：/User/FeedBackDetails
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //反馈编号
-       "feedbackId":int
-   }
-
-   *Response:
-   {
-       //用户手机
-       "mobile":string
-       //用户名
-       "userName":string
-       //用户类型(W/C)
-       "userType":string
-       //反馈内容
-       "content":string
-       //备注
-       "actionResult":string
-       //反馈编号
-       "feedbackId":int
-       //状态
-       "status":string
-   }
-
-   */
-  userFeedBackDetails(params, callback){
-    return this.modelExecute('/User/FeedBackDetails', params, callback)
-  }
-  /**
-   *名称：反馈列表 路由：/User/FeedBackList
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //手机号
-       "mobilePhone":string
-       //状态(W:待处理,O:已处理,A:全部)
-       "status":string
-   }
-
-   *Response:
-   {
-       //反馈编号
-       "feedbackId":int
-       //反馈账号
-       "loginName":string
-       //反馈角色(B:B端,C:C端)
-       "userType":string
-       //反馈内容
-       "content":string
-       //反馈时间
-       "feedbackTime":DateTime
-       //反馈时间(string)
-       "formatFeedbackTime":string
-       //状态(W:未处理,O:已处理)
-       "status":string
-   }
-
-   */
-  userFeedBackList(params, callback){
-    return this.modelExecute('/User/FeedBackList', params, callback)
-  }
-  /**
-   *名称：上传身份证 路由：/User/IdCardImageUpload
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //
-       "":
-   }
-
-   *Response:
-   {
-       //图片路劲
-       "url":string
-       //姓名
-       "realName":string
-       //身份证号
-       "idCardNo":string
-       //民族
-       "nation":string
-   }
-
-   */
-  userIdCardImageUpload(params, callback){
-    return this.modelExecute('/User/IdCardImageUpload', params, callback)
-  }
-  /**
-   *名称：User.收藏.新增 路由：/User/Like/Create
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //企业编号
-       "companyUserId":int
-       //工人编号
-       "workerUserId":int
-       //保质期
-       "days":int
-   }
-
-   *Response:
-   int
-   */
-  userLikeCreate(params, callback){
-    return this.modelExecute('/User/Like/Create', params, callback)
-  }
-  /**
-   *名称：User.收藏.延期 路由：/User/Like/Delay
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //收藏编号
-       "likeId":int
-       //延期时间
-       "days":int
-   }
-
-   *Response:
-   bool
-   */
-  userLikeDelay(params, callback){
-    return this.modelExecute('/User/Like/Delay', params, callback)
-  }
-  /**
-   *名称：User.收藏.删除 路由：/User/Like/Delete
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //收藏编号
-       "likeId":int
-   }
-
-   *Response:
-   bool
-   */
-  userLikeDelete(params, callback){
-    return this.modelExecute('/User/Like/Delete', params, callback)
-  }
-  /**
-   *名称：User.收藏.列表 路由：/User/Like/ListC
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //姓名或手机号
-       "userNameOrMobile":string
-       //企业编号
-       "companyUserId":int
-       //显示过期(0不,1显示)
-       "showExpire":int
-   }
-
-   *Response:
-   {
-       //收藏编号
-       "likeId":int
-       //工人编号
-       "workerUserId":int
-       //工人姓名
-       "userName":string
-       //性别
-       "sex":string
-       //抢单资格
-       "orderStatus":string
-       //抢单资格
-       "orderStatusText":string
-       //状态
-       "status":string
-       //状态
-       "statusText":string
-       //完成单数
-       "completeOrderCount":int
-       //最后接单时间
-       "lastOrderTime":string
-       //收藏时间
-       "likeTime":string
-       //收藏过期时间
-       "likeExpireTime":string
-       //收藏类型
-       "likeType":string
-       //收藏人
-       "likeUserId":int
-       //收藏人
-       "likeUserName":string
-       //电话
-       "mobilePhone":string
-   }
-
-   */
-  userLikeListC(params, callback){
-    return this.modelExecute('/User/Like/ListC', params, callback)
-  }
-  /**
-   *名称：User.收藏.被列表 路由：/User/Like/ListW
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //工人编号
-       "workerUserId":int
-       //企业名称
-       "companyUserName":string
-   }
-
-   *Response:
-   {
-       //收藏编号
-       "likeId":int
-       //企业编号
-       "companyUserId":int
-       //企业名称
-       "companyUserName":string
-       //工人编号
-       "workerUserId":int
-       //企业简称
-       "shortName":string
-       //企业类型
-       "userType":string
-       //企业类型
-       "userTypeText":string
-       //状态
-       "status":string
-       //状态
-       "statusText":string
-       //收藏时间
-       "likeTime":string
-       //收藏过期时间
-       "likeExpireTime":string
-       //收藏类型
-       "likeType":string
-       //收藏人
-       "likeUserId":int
-       //收藏人
-       "likeUserName":string
-   }
-
-   */
-  userLikeListW(params, callback){
-    return this.modelExecute('/User/Like/ListW', params, callback)
-  }
-  /**
-   *名称：User.收藏.配置 路由：/User/Like/SettingDetail
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //企业编号
-       "companyUserId":int
-   }
-
-   *Response:
-   {
-       //企业编号
-       "companyUserId":int
-       //是否开启
-       "isOpen":string
-       //个数限制
-       "likeCountLimit":int
-       //服务有效期
-       "likeServicesLimit":string
-   }
-
-   */
-  userLikeSettingDetail(params, callback){
-    return this.modelExecute('/User/Like/SettingDetail', params, callback)
-  }
-  /**
-   *名称：User.收藏.保存配置 路由：/User/Like/SettingSave
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //企业编号
-       "companyUserId":int
-       //是否开启
-       "isOpen":string
-       //个数限制
-       "likeCountLimit":int
-       //服务有效期
-       "likeServicesLimit":DateTime
-   }
-
-   *Response:
-   int
-   */
-  userLikeSettingSave(params, callback){
-    return this.modelExecute('/User/Like/SettingSave', params, callback)
-  }
-  /**
-   *名称：User.黑名单.新增 路由：/User/Loathe/Create
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //企业编号
-       "companyUserId":int
-       //工人编号
-       "workerUserId":int
-       //拉黑原因
-       "loatheReason":string
-   }
-
-   *Response:
-   int
-   */
-  userLoatheCreate(params, callback){
-    return this.modelExecute('/User/Loathe/Create', params, callback)
-  }
-  /**
-   *名称：User.黑名单.删除 路由：/User/Loathe/Delete
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //黑名单编号
-       "loatheId":int
-   }
-
-   *Response:
-   bool
-   */
-  userLoatheDelete(params, callback){
-    return this.modelExecute('/User/Loathe/Delete', params, callback)
-  }
-  /**
-   *名称：User.黑名单.列表 路由：/User/Loathe/ListC
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //姓名或手机号
-       "userNameOrMobile":string
-       //企业编号
-       "companyUserId":int
-   }
-
-   *Response:
-   {
-       //拉黑编号
-       "loatheId":int
-       //工人编号
-       "workerUserId":int
-       //工人名
-       "userName":string
-       //性别
-       "sex":string
-       //抢单资格
-       "orderStatus":string
-       //抢单资格
-       "orderStatusText":string
-       //状态
-       "status":string
-       //状态
-       "statusText":string
-       //拉黑原因
-       "loatheReason":string
-       //拉黑类型
-       "loatheType":string
-       //拉黑时间
-       "loatheTime":string
-       //拉黑人
-       "loatheUserId":int
-       //拉黑人
-       "loatheUserName":string
-       //电话
-       "mobilePhone":string
-   }
-
-   */
-  userLoatheListC(params, callback){
-    return this.modelExecute('/User/Loathe/ListC', params, callback)
-  }
-  /**
-   *名称：User.黑名单.被列表 路由：/User/Loathe/ListW
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //工人编号
-       "workerUserId":int
-       //企业名称
-       "companyUserName":string
-   }
-
-   *Response:
-   {
-       //拉黑编号
-       "loatheId":int
-       //企业编号
-       "companyUserId":int
-       //企业名称
+       //公司编号
+       "companyId":int
+       //公司名
        "companyName":string
-       //工人编号
-       "workerUserId":int
-       //企业简称
-       "shortName":string
-       //企业类型
-       "userType":string
-       //企业类型
-       "userTypeText":string
-       //状态
-       "status":string
-       //状态
-       "statusText":string
-       //拉黑原因
-       "loatheReason":string
-       //拉黑类型
-       "loatheType":string
-       //拉黑时间
-       "loatheTime":string
-       //拉黑人
-       "loatheUserId":int
-       //拉黑人
-       "loatheUserName":string
    }
 
    */
-  userLoatheListW(params, callback){
-    return this.modelExecute('/User/Loathe/ListW', params, callback)
+  commonListCompany(params, callback){
+    return this.modelExecute('/Common/ListCompany', params, callback)
   }
   /**
-   *名称：登录 路由：/User/Login
+   *名称：通用.查询全部站点 路由：/Common/List/CompanyAll
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //公司名
+       "companyName":string
+   }
+
+   *Response:
+   {
+       //公司编号
+       "companyId":int
+       //公司名
+       "companyName":string
+   }
+
+   */
+  commonListCompanyAll(params, callback){
+    return this.modelExecute('/Common/List/CompanyAll', params, callback)
+  }
+  /**
+   *名称：通用.公司类型列表 路由：/Common/ListCompanyType
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //
+       "":
+   }
+
+   *Response:
+   {
+       //公司类型编号
+       "companyTypeId":int
+       //名称
+       "companyTypeName":string
+       //经营范围
+       "businessScope":string
+       //项目
+       "invoiceContents":string[]
+   }
+
+   */
+  commonListCompanyType(params, callback){
+    return this.modelExecute('/Common/ListCompanyType', params, callback)
+  }
+  /**
+   *名称：通用.客户列表 路由：/Common/ListCustomer
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //客户名条件
+       "costomerName":string
+   }
+
+   *Response:
+   {
+       //客户编号
+       "customerId":int
+       //客户名称
+       "customerName":string
+   }
+
+   */
+  commonListCustomer(params, callback){
+    return this.modelExecute('/Common/ListCustomer', params, callback)
+  }
+  /**
+   *名称：通用.部门列表 路由：/Common/ListDept
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //
+       "":
+   }
+
+   *Response:
+   {
+       //部门编号(人工填入)
+       "deptId":int
+       //部门名称
+       "deptName":string
+       //上级部分编号
+       "parentDeptId":int
+       //部门负责人
+       "deptUserId":int
+       //部门级别
+       "deptLevel":int
+   }
+
+   */
+  commonListDept(params, callback){
+    return this.modelExecute('/Common/ListDept', params, callback)
+  }
+  /**
+   *名称：通用.区域列表 路由：/Common/ListDistict
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //
+       "":
+   }
+
+   *Response:
+   {
+       //编号
+       "distictId":int
+       //名称
+       "districtName":string
+       //父级
+       "parentId":int
+       //级别
+       "level":string
+   }
+
+   */
+  commonListDistict(params, callback){
+    return this.modelExecute('/Common/ListDistict', params, callback)
+  }
+  /**
+   *名称：通用.商品列表 路由：/Common/ListGoods
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //
+       "":
+   }
+
+   *Response:
+   {
+       //商品编号
+       "goodsId":int
+       //商品名
+       "goodsName":string
+       //纳税性质(N一般,S小规模)
+       "taxType":string
+       //发票类型
+       "invoiceTypeId":int
+       //发票类型名称
+       "invoiceTypeName":string
+       //开票服务费费率
+       "invoiceServiceRatio":decimal
+       //开户服务费
+       "serviceCharge":decimal
+       //开户押金
+       "deposit":decimal
+   }
+
+   */
+  commonListGoods(params, callback){
+    return this.modelExecute('/Common/ListGoods', params, callback)
+  }
+  /**
+   *名称：通用.项目列表 路由：/Common/ListInvoiceContent
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //站点类型编号
+       "companyTypeId":int
+   }
+
+   *Response:
+   {
+       //项目
+       "content":string
+   }
+
+   */
+  commonListInvoiceContent(params, callback){
+    return this.modelExecute('/Common/ListInvoiceContent', params, callback)
+  }
+  /**
+   *名称：通用.发票类型列表 路由：/Common/ListInvoiceType
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //
+       "":
+   }
+
+   *Response:
+   {
+       //类型编号
+       "invoiceTypeId":int
+       //发票名称
+       "invoiceTypeName":string
+       //发票税率
+       "invoiceTypeTax":decimal
+   }
+
+   */
+  commonListInvoiceType(params, callback){
+    return this.modelExecute('/Common/ListInvoiceType', params, callback)
+  }
+  /**
+   *名称：通用.税源地列表 路由：/Common/ListSourceTax
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //
+       "":
+   }
+
+   *Response:
+   {
+       //税源地编号
+       "sourceTaxId":int
+       //税源地名称
+       "sourceTaxName":string
+       //增值税返税比率
+       "zZSRatio":decimal
+       //个税返税比率
+       "gRSDSRatio":decimal
+       //附加税返税比率
+       "fJSRatio":decimal
+       //印花税返税比率
+       "yHSRatio":decimal
+       //是否需要财务身份证复印件(Y/N)
+       "isNeedFinanceID":string
+   }
+
+   */
+  commonListSourceTax(params, callback){
+    return this.modelExecute('/Common/ListSourceTax', params, callback)
+  }
+  /**
+   *名称：通用.登录 路由：/Common/Login
    *@param {*} params 向服务器传送的参数,对应Request
    *@param {Function} [callback]  回调函数
    *Request:
@@ -3561,34 +836,352 @@ export default class MSModel extends Model {
        "mobile":string
        //Email
        "userMail":string
-       //角色编号
-       "adminRoleIds":int[]
+       //系统角色编号
+       "adminRoleId":int
+       //系统角色
+       "adminRoleName":string
+       //流程角色编号
+       "flowRoleId":int
+       //流程角色
+       "flowRoleName":string
+       //数据隔离(Y/N)
+       "dataControl":string
+       //职位
+       "position":string
    }
 
    */
-  userLogin(params, callback){
-    return this.modelExecute('/User/Login', params, callback)
+  commonLogin(params, callback){
+    return this.modelExecute('/Common/Login', params, callback)
   }
   /**
-   *名称：新增(编辑)管理员 路由：/User/OperationAdmin
+   *名称：通用.退出 路由：/Common/Logout
    *@param {*} params 向服务器传送的参数,对应Request
    *@param {Function} [callback]  回调函数
    *Request:
    {
-       //登录名
-       "loginName":string
-       //密码
-       "loginPwd":string
+       //
+       "":
+   }
+
+   *Response:
+   bool
+   */
+  commonLogout(params, callback){
+    return this.modelExecute('/Common/Logout', params, callback)
+  }
+  /**
+   *名称：公司.详情 路由：/Company/Detail
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //公司编号
+       "companyId":int
+   }
+
+   *Response:
+   {
+       //备注
+       "remark":string
+       //站点地址
+       "companyAddress":string
+       //税号
+       "taxNo":string
+       //公司电话
+       "companyPhone":string
+       //开户银行
+       "accountBank":string
+       //开户银行账号
+       "accountBankAccount":string
+       //服务费折扣
+       "serviceFeeDiscount":decimal
+       //供应商编号
+       "supplierId":int
+       //供应商名称
+       "supplierName":string
+       //公司编号
+       "companyId":int
+       //公司名
+       "companyName":string
+       //客户编号
+       "customerId":int
        //姓名
-       "userName":string
-       //联系电话
-       "mobile":string
-       //邮箱
-       "userMaile":string
-       //角色编号
-       "adminRoleIds":int[]
-       //管理员编号
-       "adminUserId":int
+       "customerName":string
+       //税源地编号
+       "sourceTaxId":int
+       //税源地名称
+       "sourceTaxName":string
+       //商品编号
+       "goodsId":int
+       //商品名
+       "goodsName":string
+       //执照地址
+       "licenseUrl":string
+       //状态(N/D)
+       "status":string
+       //创建人
+       "createAdminUserId":int
+       //创建时间
+       "showCreateTime":string
+       //类型
+       "companyTypeName":string
+       //发票类型
+       "invoiceTypeNames":string[]
+       //项目
+       "invoiceContents":string[]
+       //开票服务费费率
+       "invoiceServiceRatio":decimal
+       //企业类型
+       "companyTypeId":int
+       //经营范围
+       "businessScope":string
+       //费率可变(Y/N)
+       "isInvoiceServiceRatioChangeable":string
+       //法人
+       "investorName":string
+       //商务
+       "bussinessName":string
+   }
+
+   */
+  companyDetail(params, callback){
+    return this.modelExecute('/Company/Detail', params, callback)
+  }
+  /**
+   *名称：公司.列表 路由：/Company/List
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //客户名
+       "customerName":string
+       //公司名
+       "companyName":string
+       //税源地
+       "sourceTaxId":int
+       //商品
+       "goodsId":int
+       //状态(N/D)
+       "status":string
+   }
+
+   *Response:
+   {
+       //公司编号
+       "companyId":int
+       //公司名
+       "companyName":string
+       //客户编号
+       "customerId":int
+       //姓名
+       "customerName":string
+       //税源地编号
+       "sourceTaxId":int
+       //税源地名称
+       "sourceTaxName":string
+       //商品编号
+       "goodsId":int
+       //商品名
+       "goodsName":string
+       //执照地址
+       "licenseUrl":string
+       //状态(N/D)
+       "status":string
+       //创建人
+       "createAdminUserId":int
+       //创建时间
+       "showCreateTime":string
+       //类型
+       "companyTypeName":string
+       //服务费折扣
+       "serviceFeeDiscount":decimal
+       //企业类型
+       "companyTypeId":int
+       //经营范围
+       "businessScope":string
+   }
+
+   */
+  companyList(params, callback){
+    return this.modelExecute('/Company/List', params, callback)
+  }
+  /**
+   *名称：公司.新增/编辑 路由：/Company/Modify
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //公司名
+       "companyName":string
+       //税源地编号
+       "sourceTaxId":int
+       //商品编号
+       "goodsId":int
+       //客户编号
+       "customerId":int
+       //执照地址
+       "licenseUrl":string
+       //状态(N/D)
+       "status":string
+       //企业类型编号
+       "companyTypeId":int
+       //备注
+       "remark":string
+       //公司编号(0新增,其他编辑)
+       "companyId":int
+       //站点地址
+       "companyAddress":string
+       //税号
+       "taxNo":string
+       //公司电话
+       "companyPhone":string
+       //开户银行
+       "accountBank":string
+       //开户银行账号
+       "accountBankAccount":string
+       //服务费折扣
+       "serviceFeeDiscount":decimal
+   }
+
+   *Response:
+   int
+   */
+  companyModify(params, callback){
+    return this.modelExecute('/Company/Modify', params, callback)
+  }
+  /**
+   *名称：站点.开票统计 路由：/Company/Statistics/Invoice
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //开始时间
+       "beginTime":DateTime
+       //结束时间
+       "endTime":DateTime
+       //站点编号
+       "companyId":int
+   }
+
+   *Response:
+   {
+       //订单号
+       "orderId":int
+       //站点吗
+       "companyName":string
+       //开票金额
+       "invoiceAmount":decimal
+       //发票类型
+       "invoiceTypeName":string
+       //提交时间
+       "submitTime":string
+       //完成时间
+       "orderCompletedTime":string
+       //流程编号
+       "workflowId":int
+       //流程名称
+       "workflowName":string
+   }
+
+   */
+  companyStatisticsInvoice(params, callback){
+    return this.modelExecute('/Company/Statistics/Invoice', params, callback)
+  }
+  /**
+   *名称：站点.流水统计 路由：/Company/Statistics/Water
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //开始时间
+       "beginTime":DateTime
+       //结束时间
+       "endTime":DateTime
+       //站点编号
+       "companyId":int
+   }
+
+   *Response:
+   {
+       //交易方
+       "traderName":string
+       //贷方发生额
+       "sumInAmount":decimal
+       //借方发生额
+       "sumOutAmount":decimal
+       //交易次数
+       "tradeCount":int
+   }
+
+   */
+  companyStatisticsWater(params, callback){
+    return this.modelExecute('/Company/Statistics/Water', params, callback)
+  }
+  /**
+   *名称：站点.开票合计 路由：/Company/Sum/Invoice
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //开始时间
+       "beginTime":DateTime
+       //结束时间
+       "endTime":DateTime
+       //站点编号
+       "companyId":int
+   }
+
+   *Response:
+   {
+       //累计金额
+       "sumInvoiceAmount":decimal
+       //开票次数
+       "invoiceCount":int
+       //最后开票日期
+       "lastInvoiceTime":string
+   }
+
+   */
+  companySumInvoice(params, callback){
+    return this.modelExecute('/Company/Sum/Invoice', params, callback)
+  }
+  /**
+   *名称：站点.流水合计 路由：/Company/Sum/Water
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //开始时间
+       "beginTime":DateTime
+       //结束时间
+       "endTime":DateTime
+       //站点编号
+       "companyId":int
+   }
+
+   *Response:
+   {
+       //交易次数
+       "tradeCount":int
+       //贷方发生额
+       "sumInAmount":decimal
+       //借方发生额
+       "sumOutAmount":decimal
+   }
+
+   */
+  companySumWater(params, callback){
+    return this.modelExecute('/Company/Sum/Water', params, callback)
+  }
+  /**
+   *名称：公司.修改状态 路由：/Company/Update
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //公司编号
+       "companyId":int
        //状态(N/D)
        "status":string
    }
@@ -3596,231 +1189,41 @@ export default class MSModel extends Model {
    *Response:
    bool
    */
-  userOperationAdmin(params, callback){
-    return this.modelExecute('/User/OperationAdmin', params, callback)
+  companyUpdate(params, callback){
+    return this.modelExecute('/Company/Update', params, callback)
   }
   /**
-   *名称：User.查询变更记录 路由：/User/Query/Change
+   *名称：公司类型.详情 路由：/CompanyType/Detail
    *@param {*} params 向服务器传送的参数,对应Request
    *@param {Function} [callback]  回调函数
    *Request:
    {
-       //W为求职者
-       "userType":string
-       //用户编号
-       "userId":int
-       //抢单资格OrderStatus，账号状态Status
-       "column":string
+       //类型编号
+       "companyTypeId":int
    }
 
    *Response:
    {
-       //备注
-       "remark":string
-       //编号
-       "id":int
-       //旧值
-       "oldVal":string
-       //新值
-       "newVal":string
-       //列
-       "column":string
-       //操作人
-       "actionUserId":int
-       //操作人
-       "actionUserName":string
-       //操作时间
-       "actionTime":string
+       //公司类型编号
+       "companyTypeId":int
+       //名称
+       "companyTypeName":string
+       //经营范围
+       "businessScope":string
+       //状态(N,D)
+       "status":string
+       //创建人
+       "createAdminUserId":int
+       //创建时间
+       "showCreateTime":string
    }
 
    */
-  userQueryChange(params, callback){
-    return this.modelExecute('/User/Query/Change', params, callback)
+  companyTypeDetail(params, callback){
+    return this.modelExecute('/CompanyType/Detail', params, callback)
   }
   /**
-   *名称：User.契约精神记录 路由：/User/Query/ListContract
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //工人编号
-       "workerUserId":int
-   }
-
-   *Response:
-   {
-       //历史编号
-       "historyId":int
-       //分
-       "changePoint":decimal
-       //变动后分
-       "point":decimal
-       //原因
-       "changeReason":string
-       //时间
-       "changeTime":string
-       //操作人
-       "changeAminUser":string
-       //类型
-       "changeType":string
-       //类型
-       "changeTypeText":string
-   }
-
-   */
-  userQueryListContract(params, callback){
-    return this.modelExecute('/User/Query/ListContract', params, callback)
-  }
-  /**
-   *名称：User.订单信息 路由：/User/Query/ListOrder
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //工人编号
-       "workerUserId":int
-       //标签
-       "jobTagId":int
-       //接单模式
-       "applyType":string
-       //取消类型
-       "cancelType":string
-       //状态
-       "subStatus":int
-       //事件订单
-       "hasEvent":int
-       //工作时间
-       "workBeginTime":DateTime
-       //工作时间
-       "workEndTime":DateTime
-   }
-
-   *Response:
-   {
-       //子订单编号
-       "orderSubId":int
-       //子订单号
-       "orderSubNo":string
-       //标题
-       "orderTitle":string
-       //企业编号
-       "companyUserId":int
-       //企业名
-       "companyName":string
-       //标签
-       "jobTagId":int
-       //标签
-       "jobTagName":string
-       //联系人
-       "orderContact":string
-       //联系电话
-       "orderPhone":string
-       //上班时间
-       "beginTime":string
-       //下班时间
-       "endTime":string
-       //每日薪资
-       "singleSalary":decimal
-       //服务费
-       "singleServiceCharge":decimal
-       //包水饭(Y/N)
-       "hasEating":string
-       //完工结
-       "overPay":string
-       //有无调整
-       "hasChange":int
-       //有无事件(0没有,1已处理,2未处理)
-       "hasEvent":int
-       //状态
-       "subStatusText":string
-       //抢单时间
-       "applyTime":string
-       //签到时间
-       "clockOnTime":string
-       //签到地址
-       "clockOnAddress":string
-       //签退时间
-       "clockOffTime":string
-       //签退地址
-       "clockOffAddress":string
-       //上班日期
-       "workDate":string
-       //状态(1预约中,2待上班,3上班中,4待支付,5已支付,6取消)
-       "subStatus":int
-       //抢单类型
-       "applyType":string
-       //完结类型
-       "overType":string
-       //自动支付时间
-       "showAutoPayTime":string
-       //自动支付倒计时
-       "autoPayMinutes":int
-   }
-
-   */
-  userQueryListOrder(params, callback){
-    return this.modelExecute('/User/Query/ListOrder', params, callback)
-  }
-  /**
-   *名称：User.Query.订单统计 路由：/User/Query/ListOrderStatistics
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //工人编号
-       "workerUserId":int
-   }
-
-   *Response:
-   {
-       //完工数
-       "overCount":int
-       //取消数
-       "cancelCount":int
-       //执行数
-       "doingCount":int
-   }
-
-   */
-  userQueryListOrderStatistics(params, callback){
-    return this.modelExecute('/User/Query/ListOrderStatistics', params, callback)
-  }
-  /**
-   *名称：User.Query.流水列表 路由：/User/Query/ListTrade
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //用户编号
-       "accountUserId":int
-       //用户类型(C企业,W工人)
-       "accountType":string
-   }
-
-   *Response:
-   {
-       //流水编号
-       "tradeId":int
-       //流水编号
-       "tradeNo":string
-       //交易金额
-       "amount":decimal
-       //交易内容
-       "tradeTitle":string
-       //交易时间
-       "showTradeTime":string
-       //交易对象
-       "tradeUserName":string
-       //余额
-       "lastAmount":decimal
-   }
-
-   */
-  userQueryListTrade(params, callback){
-    return this.modelExecute('/User/Query/ListTrade', params, callback)
-  }
-  /**
-   *名称：省市区列表 路由：/User/RegionList
+   *名称：公司类型.列表 路由：/CompanyType/List
    *@param {*} params 向服务器传送的参数,对应Request
    *@param {Function} [callback]  回调函数
    *Request:
@@ -3831,24 +1234,2240 @@ export default class MSModel extends Model {
 
    *Response:
    {
-       //编号
-       "distictId":int
+       //公司类型编号
+       "companyTypeId":int
        //名称
-       "districtName":string
-       //父级
-       "parentId":int
-       //CityCode
-       "cityCode":string
-       //CityCode
-       "districtCode":string
+       "companyTypeName":string
+       //经营范围
+       "businessScope":string
+       //状态(N,D)
+       "status":string
+       //创建人
+       "createAdminUserId":int
+       //创建时间
+       "showCreateTime":string
+       //开票项目
+       "invoiceContents":string[]
    }
 
    */
-  userRegionList(params, callback){
-    return this.modelExecute('/User/RegionList', params, callback)
+  companyTypeList(params, callback){
+    return this.modelExecute('/CompanyType/List', params, callback)
   }
   /**
-   *名称：角色详情 路由：/User/RoleDetails
+   *名称：公司类型.新增/编辑 路由：/CompanyType/Modify
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //名称
+       "companyTypeName":string
+       //经营范围
+       "businessScope":string
+       //状态(N,D)
+       "status":string
+       //公司类型编号(0新增,其他编辑)
+       "companyTypeId":int
+       //项目
+       "invoiceContent":string
+   }
+
+   *Response:
+   int
+   */
+  companyTypeModify(params, callback){
+    return this.modelExecute('/CompanyType/Modify', params, callback)
+  }
+  /**
+   *名称：公司类型.修改状态 路由：/CompanyType/Update
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //类型编号
+       "companyTypeId":int
+       //状态(N/D)
+       "status":string
+   }
+
+   *Response:
+   bool
+   */
+  companyTypeUpdate(params, callback){
+    return this.modelExecute('/CompanyType/Update', params, callback)
+  }
+  /**
+   *名称：客户.删除地址 路由：/Customer/DeleteAddress
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //地址编号
+       "addressId":int
+   }
+
+   *Response:
+   bool
+   */
+  customerDeleteAddress(params, callback){
+    return this.modelExecute('/Customer/DeleteAddress', params, callback)
+  }
+  /**
+   *名称：客户.删除发票信息 路由：/Customer/DeleteInvoiceInfo
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //发票信息编号
+       "invoiceInfoId":int
+   }
+
+   *Response:
+   bool
+   */
+  customerDeleteInvoiceInfo(params, callback){
+    return this.modelExecute('/Customer/DeleteInvoiceInfo', params, callback)
+  }
+  /**
+   *名称：客户.详情 路由：/Customer/Detail
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //客户编号
+       "customerId":int
+   }
+
+   *Response:
+   {
+       //所属商务
+       "belongAdminUserName":string
+       //客户编号
+       "customerId":int
+       //客户名称
+       "customerName":string
+       //电话
+       "phone":string
+       //邮箱
+       "email":string
+       //生日
+       "showBirthday":string
+       //居住地址
+       "liveAddress":string
+       //办公地址
+       "workAddress":string
+       //状态
+       "status":string
+       //来源
+       "source":int
+       //所属部门
+       "deptId":int
+       //所属部门
+       "deptName":string
+       //所属商务
+       "belongAdminUserId":int
+       //备注
+       "remark":string
+       //创建人
+       "createAdminUserId":int
+       //创建时间
+       "showCreateTime":string
+       //渠道名称
+       "channelName":string
+   }
+
+   */
+  customerDetail(params, callback){
+    return this.modelExecute('/Customer/Detail', params, callback)
+  }
+  /**
+   *名称：客户.列表 路由：/Customer/List
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //条件Key(CustomerName)
+       "conditionKey":string
+       //条件值
+       "conditionValue":string
+   }
+
+   *Response:
+   {
+       //所属商务
+       "belongAdminUserName":string
+       //客户编号
+       "customerId":int
+       //客户名称
+       "customerName":string
+       //电话
+       "phone":string
+       //邮箱
+       "email":string
+       //生日
+       "showBirthday":string
+       //居住地址
+       "liveAddress":string
+       //办公地址
+       "workAddress":string
+       //状态(N/D)
+       "status":string
+       //来源(直属:D;渠道:C)
+       "source":int
+       //所属部门
+       "deptId":int
+       //所属部门
+       "deptName":string
+       //所属商务
+       "belongAdminUserId":int
+       //备注
+       "remark":string
+       //创建人
+       "createAdminUserId":int
+       //创建时间
+       "showCreateTime":string
+       //渠道名称
+       "channelName":string
+   }
+
+   */
+  customerList(params, callback){
+    return this.modelExecute('/Customer/List', params, callback)
+  }
+  /**
+   *名称：客户.地址列表 路由：/Customer/ListAddress
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //客户编号
+       "customerId":int
+       //地址
+       "address":string
+       //收件人
+       "receiver":string
+       //电话
+       "phone":string
+   }
+
+   *Response:
+   {
+       //地址编号
+       "addressId":int
+       //地址
+       "address":string
+       //收件人
+       "receiver":string
+       //电话
+       "phone":string
+       //备注
+       "remark":string
+   }
+
+   */
+  customerListAddress(params, callback){
+    return this.modelExecute('/Customer/ListAddress', params, callback)
+  }
+  /**
+   *名称：客户.发票信息列表 路由：/Customer/ListInvoiceInfo
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //客户编号
+       "customerId":int
+       //公司名称
+       "invoiceCompanyName":string
+       //发票信息类型
+       "invoiceInfoType":string
+   }
+
+   *Response:
+   {
+       //发票信息编号
+       "invoiceInfoId":int
+       //发票类型
+       "invoiceInfoType":string
+       //开票公司名称
+       "invoiceCompanyName":string
+       //开票公司税号
+       "invoiceCompanyTaxNo":string
+       //开票公司地址
+       "invoiceCompanyAddress":string
+       //开票公司电话
+       "invoiceCompanyPhone":string
+       //开票公司银行名称
+       "invoiceCompanyBankName":string
+       //开票公司银行账号
+       "invoiceCompanyBankNo":string
+   }
+
+   */
+  customerListInvoiceInfo(params, callback){
+    return this.modelExecute('/Customer/ListInvoiceInfo', params, callback)
+  }
+  /**
+   *名称：客户.新增/编辑 路由：/Customer/Modify
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //姓名
+       "customerName":string
+       //电话
+       "phone":string
+       //邮箱
+       "email":string
+       //居住地址
+       "liveAddress":string
+       //工作地址
+       "workAddress":string
+       //生日
+       "birthday":DateTime
+       //来源(直属:D;渠道:C)
+       "source":int
+       //状态(N/D)
+       "status":string
+       //所属部门
+       "deptId":int
+       //所属商务编号
+       "belongAdminUserId":int
+       //备注
+       "remark":string
+       //客户编号(0新增,其他修改)
+       "customerId":int
+   }
+
+   *Response:
+   int
+   */
+  customerModify(params, callback){
+    return this.modelExecute('/Customer/Modify', params, callback)
+  }
+  /**
+   *名称：客户.编辑地址 路由：/Customer/ModifyAddress
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //客户编号
+       "customerId":int
+       //地址编号
+       "addressId":int
+       //地址
+       "address":string
+       //收件人
+       "receiver":string
+       //电话
+       "phone":string
+       //备注
+       "remark":string
+   }
+
+   *Response:
+   int
+   */
+  customerModifyAddress(params, callback){
+    return this.modelExecute('/Customer/ModifyAddress', params, callback)
+  }
+  /**
+   *名称：客户.编辑发票信息 路由：/Customer/ModifyInvoiceInfo
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //客户编号
+       "customerId":int
+       //发票信息编号
+       "invoiceInfoId":int
+       //发票类型
+       "invoiceInfoType":string
+       //开票公司名称
+       "invoiceCompanyName":string
+       //开票公司税号
+       "invoiceCompanyTaxNo":string
+       //开票公司地址
+       "invoiceCompanyAddress":string
+       //开票公司电话
+       "invoiceCompanyPhone":string
+       //开票公司银行名称
+       "invoiceCompanyBankName":string
+       //开票公司银行账号
+       "invoiceCompanyBankNo":string
+   }
+
+   *Response:
+   int
+   */
+  customerModifyInvoiceInfo(params, callback){
+    return this.modelExecute('/Customer/ModifyInvoiceInfo', params, callback)
+  }
+  /**
+   *名称：客户.修改状态 路由：/Customer/Update
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //客户编号
+       "customerId":int
+       //状态(N/D)
+       "status":string
+   }
+
+   *Response:
+   bool
+   */
+  customerUpdate(params, callback){
+    return this.modelExecute('/Customer/Update', params, callback)
+  }
+  /**
+   *名称：部门.删除 路由：/Dept/Delete
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //部门编号
+       "deptId":int
+   }
+
+   *Response:
+   bool
+   */
+  deptDelete(params, callback){
+    return this.modelExecute('/Dept/Delete', params, callback)
+  }
+  /**
+   *名称：部门.删除人员 路由：/Dept/Delete/User
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //部门编号
+       "deptId":int
+       //人员编号
+       "adminUserId":int
+   }
+
+   *Response:
+   bool
+   */
+  deptDeleteUser(params, callback){
+    return this.modelExecute('/Dept/Delete/User', params, callback)
+  }
+  /**
+   *名称：部门.列表 路由：/Dept/List
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //
+       "":
+   }
+
+   *Response:
+   {
+       //部门信息
+       "deptInfos":DeptInfo[]
+   }
+
+   */
+  deptList(params, callback){
+    return this.modelExecute('/Dept/List', params, callback)
+  }
+  /**
+   *名称：部门.非所属人员 路由：/Dept/List/NoBelong
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //部门编号
+       "deptId":int
+   }
+
+   *Response:
+   {
+       //人员编号
+       "adminUserId":int
+       //名称
+       "userName":string
+       //系统角色
+       "adminRoleId":int
+       //系统角色
+       "adminRoleName":string
+       //流程角色
+       "flowRoleId":int
+       //流程角色
+       "flowRoleName":string
+       //部门编号
+       "deptId":int
+   }
+
+   */
+  deptListNoBelong(params, callback){
+    return this.modelExecute('/Dept/List/NoBelong', params, callback)
+  }
+  /**
+   *名称：部门.所属人员 路由：/Dept/List/User
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //部门编号
+       "deptId":int
+   }
+
+   *Response:
+   {
+       //人员编号
+       "adminUserId":int
+       //名称
+       "userName":string
+       //系统角色
+       "adminRoleId":int
+       //系统角色
+       "adminRoleName":string
+       //流程角色
+       "flowRoleId":int
+       //流程角色
+       "flowRoleName":string
+       //是否负责人
+       "isLeader":string
+       //部门编号
+       "deptId":int
+   }
+
+   */
+  deptListUser(params, callback){
+    return this.modelExecute('/Dept/List/User', params, callback)
+  }
+  /**
+   *名称：部门.新增/编辑 路由：/Dept/Modify
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //上级部门编号
+       "parentDeptId":int
+       //部门名称
+       "deptName":string
+       //是否销售部门(Y/N)
+       "isSell":string
+       //部门编号
+       "deptId":int
+   }
+
+   *Response:
+   int
+   */
+  deptModify(params, callback){
+    return this.modelExecute('/Dept/Modify', params, callback)
+  }
+  /**
+   *名称：部门.添加人员 路由：/Dept/Modify/User
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //部门编号
+       "deptId":int
+       //人员编号
+       "adminUserId":int
+       //是否负责人
+       "isLeader":string
+   }
+
+   *Response:
+   bool
+   */
+  deptModifyUser(params, callback){
+    return this.modelExecute('/Dept/Modify/User', params, callback)
+  }
+  /**
+   *名称：商品.详情 路由：/Goods/Detail
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //商品编号
+       "goodsId":int
+   }
+
+   *Response:
+   {
+       //商品名
+       "goodsName":string
+       //纳税性质(N一般,S小规模)
+       "taxType":string
+       //发票类型名称
+       "invoiceTypeName":string
+       //开票服务费费率
+       "invoiceServiceRatio":decimal
+       //开户服务费
+       "serviceCharge":decimal
+       //开户押金
+       "deposit":decimal
+       //状态(N,D)
+       "status":string
+       //创建人
+       "createAdminUserId":int
+       //创建时间
+       "showCreateTime":string
+       //商品编号
+       "goodsId":int
+   }
+
+   */
+  goodsDetail(params, callback){
+    return this.modelExecute('/Goods/Detail', params, callback)
+  }
+  /**
+   *名称：商品.列表 路由：/Goods/List
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //
+       "":
+   }
+
+   *Response:
+   {
+       //商品名
+       "goodsName":string
+       //纳税性质(N一般,S小规模)
+       "taxType":string
+       //发票类型名称
+       "invoiceTypeName":string
+       //开票服务费费率
+       "invoiceServiceRatio":decimal
+       //开户服务费
+       "serviceCharge":decimal
+       //开户押金
+       "deposit":decimal
+       //状态(N,D)
+       "status":string
+       //创建人
+       "createAdminUserId":int
+       //创建时间
+       "showCreateTime":string
+       //商品编号
+       "goodsId":int
+   }
+
+   */
+  goodsList(params, callback){
+    return this.modelExecute('/Goods/List', params, callback)
+  }
+  /**
+   *名称：商品.新增/编辑 路由：/Goods/Modify
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //商品名
+       "goodsName":string
+       //发票类型
+       "invoiceTypeName":string
+       //纳税性质(N一般,S小规模)
+       "taxType":string
+       //开票服务费费率
+       "invoiceServiceRatio":decimal
+       //开户服务费
+       "serviceCharge":decimal
+       //开户押金
+       "deposit":decimal
+       //状态(N,D)
+       "status":string
+       //商品编号(0新增,其他编辑)
+       "goodsId":int
+   }
+
+   *Response:
+   int
+   */
+  goodsModify(params, callback){
+    return this.modelExecute('/Goods/Modify', params, callback)
+  }
+  /**
+   *名称：商品.修改状态 路由：/Goods/Update
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //商品编号
+       "goodsId":int
+       //状态(N/D)
+       "status":string
+   }
+
+   *Response:
+   bool
+   */
+  goodsUpdate(params, callback){
+    return this.modelExecute('/Goods/Update', params, callback)
+  }
+  /**
+   *名称：首页.待处理开户订单 路由：/Index/AOForHandle
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //
+       "":
+   }
+
+   *Response:
+   {
+       //订单Id
+       "orderId":int
+       //订单编号
+       "orderNo":string
+       //客户编号
+       "customerId":int
+       //客户姓名
+       "customerName":string
+       //税源地名称
+       "sourceTaxName":string
+       //商品名称
+       "goodsName":string
+       //交易费
+       "totalAmount":decimal
+       //押金
+       "realDepositFee":decimal
+       //是否加急(Y/N)
+       "isPriority":string
+       //流程名称
+       "workflowName":string
+       //下单时间
+       "createTime":string
+       //流程Id
+       "workflowId":int
+       //商务名称
+       "createAdminUserName":string
+   }
+
+   */
+  indexAOForHandle(params, callback){
+    return this.modelExecute('/Index/AOForHandle', params, callback)
+  }
+  /**
+   *名称：首页.数据统计 路由：/Index/Data
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //
+       "":
+   }
+
+   *Response:
+   {
+       //今日新增开户订单数量
+       "aOCount":int
+       //本月已完成开户订单数量
+       "aOCompletedCount":int
+       //今天新增开票订单数量
+       "iOCount":int
+       //本月已完成开票订单数量
+       "iOCompletedCount":int
+   }
+
+   */
+  indexData(params, callback){
+    return this.modelExecute('/Index/Data', params, callback)
+  }
+  /**
+   *名称：首页.待处理开票订单 路由：/Index/IOForHandle
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //
+       "":
+   }
+
+   *Response:
+   {
+       //订单Id
+       "orderId":int
+       //订单编号
+       "orderNo":string
+       //客户编号
+       "customerId":int
+       //客户姓名
+       "customerName":string
+       //税源地名称
+       "sourceTaxName":string
+       //商品名称
+       "goodsName":string
+       //开票金额
+       "invoiceAmount":decimal
+       //发票税率
+       "invoiceTypeName":string
+       //是否加急
+       "isPriority":string
+       //流程名称
+       "workflowName":string
+       //创建时间
+       "createTime":string
+       //流程ID
+       "workflowId":int
+       //站点名称
+       "companyName":string
+       //商务名称
+       "createAdminUserName":string
+   }
+
+   */
+  indexIOForHandle(params, callback){
+    return this.modelExecute('/Index/IOForHandle', params, callback)
+  }
+  /**
+   *名称：订单.开户订单列表.开户详情 路由：/Order/AccountOrderDetail
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //订单Id
+       "orderId":int
+   }
+
+   *Response:
+   {
+       //订单信息
+       "orderInfo":AccountOrderInfo
+       //收款信息
+       "bankReceipts":BankReceiptInfo[]
+       //公司注册信息
+       "companyRegInfo":CompanyRegInfo
+       //进度信息
+       "processInfo":ProcessInfo
+       //供应商交付物（货物）
+       "companyAttachment":CompanyAttachmentInfo
+       //交付物流信息
+       "accountOrderExpress":AccountOrderExpressInfo
+       //客服回访信息
+       "customerServiceRecord":CustomerServiceRecordInfo
+       //是否显示按钮
+       "isShowButton":bool
+       //订单状态
+       "status":string
+       //当前处理人
+       "handleAdminUserName":string
+       //当前处理人角色
+       "handleAdminRoleName":string
+   }
+
+   */
+  orderAccountOrderDetail(params, callback){
+    return this.modelExecute('/Order/AccountOrderDetail', params, callback)
+  }
+  /**
+   *名称：订单.开户订单列表.查询 路由：/Order/AccountOrderQuery
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //税源地编号
+       "sourceTaxId":int
+       //商品编号
+       "goodsId":int
+       //订单好
+       "orderNo":string
+       //客户姓名
+       "customerName":string
+       //提交订单开始时间
+       "submitBeginTime":DateTime
+       //提交订单结束时间
+       "submitEndTime":DateTime
+       //订单完成时间
+       "orderCompletedBeginTime":DateTime
+       //订单完成时间
+       "orderCompletedEndTime":DateTime
+       //流程编号
+       "workflowId":int
+       //创建人
+       "createAdminUserId":int
+   }
+
+   *Response:
+   {
+       //订单Id
+       "orderId":int
+       //订单编号
+       "orderNo":string
+       //客户编号
+       "customerId":int
+       //客户姓名
+       "customerName":string
+       //税源地名称
+       "sourceTaxName":string
+       //商品名称
+       "goodsName":string
+       //实际支付交易费
+       "totalAmount":decimal
+       //实际支付押金
+       "realDepositFee":decimal
+       //是否加急(Y/N)
+       "isPriority":string
+       //流程名称
+       "workflowName":string
+       //流程编号
+       "workflowId":int
+       //创建时间
+       "createTime":string
+       //0轮到我加急,1轮到我,3其他
+       "myHandle":int
+       //订单完成时间
+       "orderCompletedTime":string
+       //税源地编号
+       "sourceTaxId":int
+       //商品编号
+       "goodsId":int
+       //当前处理人
+       "handleAdminUserName":string
+       //商务提交时间
+       "submitTime":string
+       //商务编号
+       "createAdminUserId":int
+       //商务名
+       "bussinessName":string
+   }
+
+   */
+  orderAccountOrderQuery(params, callback){
+    return this.modelExecute('/Order/AccountOrderQuery', params, callback)
+  }
+  /**
+   *名称：订单.开户.删除 路由：/Order/AO/Delete
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //订单号
+       "orderId":int
+   }
+
+   *Response:
+   bool
+   */
+  orderAODelete(params, callback){
+    return this.modelExecute('/Order/AO/Delete', params, callback)
+  }
+  /**
+   *名称：订单.通用.删除财务收款 路由：/Order/AODeleteBankReceipt
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //银行收款Id
+       "bankReceiptId":int
+       //订单Id
+       "orderId":int
+       //订单类型(A/I)
+       "orderType":string
+   }
+
+   *Response:
+   bool
+   */
+  orderAODeleteBankReceipt(params, callback){
+    return this.modelExecute('/Order/AODeleteBankReceipt', params, callback)
+  }
+  /**
+   *名称：订单.通用.新增（编辑）财务收款 路由：/Order/AOEditBankReceipt
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //1删除
+       "isDelete":int
+       //收款类型
+       "bankType":string
+       //银行收款Id
+       "bankReceiptId":int
+       //订单Id
+       "orderId":int
+       //收款银行名称
+       "bankName":string
+       //收款银行账户
+       "bankNo":string
+       //银行回单号
+       "bankBillNo":string
+       //到账日期
+       "inDate":DateTime
+       //到账金额
+       "inAmount":decimal
+       //回单图片URL
+       "billImgUrl":string
+       //订单类型
+       "orderType":string
+   }
+
+   *Response:
+   int
+   */
+  orderAOEditBankReceipt(params, callback){
+    return this.modelExecute('/Order/AOEditBankReceipt', params, callback)
+  }
+  /**
+   *名称：订单.开户订单.新增（编辑）站点注册信息 路由：/Order/AOEditCompanyRegisterInfo
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //供应商编号
+       "supplierId":int
+       //订单Id
+       "orderId":int
+       //站点名称
+       "companyName":string
+       //站点类型
+       "companyTypeId":int
+       //注册资本
+       "registeredCapital":decimal
+       //纳税性质
+       "taxTypeName":string
+       //投资人姓名
+       "investorName":string
+       //投资人手机
+       "investorMobile":string
+       //投资人身份证号码
+       "investorIdCardNo":string
+       //投资人身份证正面URL
+       "investorIdCardFrontUrl":string
+       //投资人身份证背面URL
+       "investorIdCardBackUrl":string
+       //投资人邮箱
+       "investorEmail":string
+       //财务人员姓名
+       "financePersonName":string
+       //财务人员手机
+       "financePersonMobile":string
+       //财务人员身份证正面URL
+       "financePersonIdCardFrontUrl":string
+       //财务人员身份证背面URL
+       "financePersonIdCardBackUrl":string
+       //财务人员身份证号
+       "financePersonIdCardNo":string
+       //备注
+       "remark":string
+   }
+
+   *Response:
+   bool
+   */
+  orderAOEditCompanyRegisterInfo(params, callback){
+    return this.modelExecute('/Order/AOEditCompanyRegisterInfo', params, callback)
+  }
+  /**
+   *名称：订单.开户订单.新增（编辑）交付物流信息 路由：/Order/AOEditExpress
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //订单Id
+       "orderId":int
+       //快递单号
+       "expressNo":string
+       //快递单回单截图URL
+       "expressImgUrl":string
+       //快递公司
+       "expressName":string
+   }
+
+   *Response:
+   bool
+   */
+  orderAOEditExpress(params, callback){
+    return this.modelExecute('/Order/AOEditExpress', params, callback)
+  }
+  /**
+   *名称：订单.开户订单.更新进度信息 路由：/Order/AORegistrationProcess
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //订单Id
+       "orderId":int
+       //核名完成时间
+       "checkNameCompletedTime":DateTime
+       //营业执照发放时间
+       "licenseTime":DateTime
+       //银行开户时间
+       "bankOpenAccountTime":DateTime
+       //银行开户完成时间
+       "bankOpenAccountCompletedTime":DateTime
+       //核税完成时间
+       "checkTaxCompletedTime":DateTime
+       //核名书Url
+       "checkNameCompletedUrl":string
+       //营业执照Url
+       "licenseUrl":string
+       //银行开户申请书Url
+       "bankOpenAccountUrl":string
+       //银行开户完成通知书Url
+       "bankOpenAccountCompletedUrl":string
+       //核税完成单Url
+       "checkTaxCompletedUrl":string
+   }
+
+   *Response:
+   bool
+   */
+  orderAORegistrationProcess(params, callback){
+    return this.modelExecute('/Order/AORegistrationProcess', params, callback)
+  }
+  /**
+   *名称：订单.通用.PDF单据生成 路由：/Order/Bill/Create
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //单据类型（P:付款单，S：供应商下单）
+       "billType":string
+       //订单号
+       "orderId":int
+       //订单类型（A/I）
+       "orderType":string
+   }
+
+   *Response:
+   {
+       //PDF路径
+       "pdfPath":string
+       //excel路径
+       "excelPath":string
+   }
+
+   */
+  orderBillCreate(params, callback){
+    return this.modelExecute('/Order/Bill/Create', params, callback)
+  }
+  /**
+   *名称：订单.开票.差额列表 路由：/Order/Diff/List
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //订单号
+       "orderNo":string
+       //客户名
+       "customerName":string
+       //站点名
+       "companyName":string
+       //商品编号
+       "goodsId":int
+       //开始时间
+       "beginSubmitTime":DateTime
+       //结束时间
+       "endSubmitTime":DateTime
+   }
+
+   *Response:
+   {
+       //订单编号
+       "orderId":int
+       //订单号
+       "orderNo":string
+       //客户编号
+       "customerId":int
+       //客户名
+       "customerName":string
+       //站点编号
+       "companyId":int
+       //站点名
+       "companyName":string
+       //开票金额
+       "invoiceAmount":decimal
+       //已开金额
+       "actualAmount":decimal
+       //差额
+       "differeceAmount":decimal
+       //发票类型
+       "invoiceTypeName":string
+       //商务编号
+       "createAdminUserId":int
+       //商务名
+       "bussinessName":string
+       //提交时间
+       "submitTime":string
+       //完成时间
+       "orderCompletedTime":string
+       //商品编号
+       "goodsId":int
+       //商品名
+       "goodsName":string
+   }
+
+   */
+  orderDiffList(params, callback){
+    return this.modelExecute('/Order/Diff/List', params, callback)
+  }
+  /**
+   *名称：订单.新增开户订单.新增（编辑）订单 路由：/Order/EditAccountOrder
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //客户编号
+       "customerId":int
+       //税源地编号
+       "sourceTaxId":int
+       //商品编号
+       "goodsId":int
+       //公司类型编号
+       "companyTypeId":int
+       //站点名称
+       "companyName":string
+       //注册资本
+       "registeredCapital":decimal
+       //投资人姓名
+       "investorName":string
+       //投资人手机
+       "investorMobile":string
+       //投资人身份证正面URL
+       "investorIdCardFrontUrl":string
+       //投资人身份证背面URL
+       "investorIdCardBackUrl":string
+       //投资人身份证号码
+       "investorIdCardNo":string
+       //投资人邮箱
+       "investorEmail":string
+       //财务人员姓名
+       "financePersonName":string
+       //财务人员手机
+       "financePersonMobile":string
+       //财务人员身份证正面URL
+       "financePersonIdCardFrontUrl":string
+       //财务人员身份证背面URL
+       "financePersonIdCardBackUrl":string
+       //财务人员身份证号
+       "financePersonIdCardNo":string
+       //身份证寄回地址
+       "idCardReturnAddress":string
+       //发票快递地址
+       "invoiceExpressAddress":string
+       //材料交付地址
+       "fileExpressAddress":string
+       //是否需要审批
+       "isNeedApproval":string
+       //是否加急
+       "isPriority":string
+       //押金减免
+       "depositRemissionAmount":decimal
+       //交易费折扣
+       "tradeFeeDiscount":decimal
+       //订单Id
+       "orderId":int
+       //是否接受调剂
+       "isAdjustment":string
+       //交易费折扣
+       "serviceFeeDiscount":decimal
+       //加急原因
+       "priorityReason":string
+       //服务协议url
+       "serviceAgreementUrl":string
+       //产品订单url
+       "productOrderUrl":string
+       //授权委托url
+       "authorisedUrl":string
+       //承诺书url
+       "promiseUrl":string
+   }
+
+   *Response:
+   int
+   */
+  orderEditAccountOrder(params, callback){
+    return this.modelExecute('/Order/EditAccountOrder', params, callback)
+  }
+  /**
+   *名称：订单.开户订单.新增（编辑）货物信息 路由：/Order/EditCompanyAttachment
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //订单Id
+       "orderId":int
+       //U盾图片路径
+       "ukeyImgUrl":string
+       //公章图片路径
+       "stampImgUrl":string
+       //营业执照图片路径
+       "licenseImgUrl":string
+       //国地税协议三方PDF
+       "taxAgreementPDFUrl":string
+       //站点地址
+       "companyAddress":string
+       //税号
+       "taxNo":string
+       //公司电话
+       "companyPhone":string
+       //开户银行
+       "accountBank":string
+       //开户银行账号
+       "accountBankAccount":string
+       //站点名称
+       "companyName":string
+   }
+
+   *Response:
+   bool
+   */
+  orderEditCompanyAttachment(params, callback){
+    return this.modelExecute('/Order/EditCompanyAttachment', params, callback)
+  }
+  /**
+   *名称：订单.通用.客服回访信息录入 路由：/Order/EditCustomerServiceRecord
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //订单Id
+       "orderId":int
+       //订单类型(I/A)
+       "orderType":string
+       //评价等级（1-10）
+       "evalValue":int
+       //客户反馈
+       "feedback":string
+   }
+
+   *Response:
+   bool
+   */
+  orderEditCustomerServiceRecord(params, callback){
+    return this.modelExecute('/Order/EditCustomerServiceRecord', params, callback)
+  }
+  /**
+   *名称：订单.新增开票订单.新增（编辑）订单 路由：/Order/EditInvoiceOrder
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //客户Id
+       "customerId":int
+       //站点Id
+       "companyId":int
+       //税源地Id
+       "sourceTaxId":int
+       //商品Id
+       "goodsId":int
+       //开票项目
+       "invoiceContent":string
+       //开票金额
+       "invoiceAmount":decimal
+       //开票公司名称
+       "invoiceCompanyName":string
+       //开票公司税号
+       "invoiceCompanyTaxNo":string
+       //开票公司地址
+       "invoiceCompanyAddress":string
+       //开票公司电话
+       "invoiceCompanyPhone":string
+       //开票公司银行名称
+       "invoiceCompanyBankName":string
+       //开票公司银行账号
+       "invoiceCompanyBankNo":string
+       //发票快递地址
+       "invoiceExpressAddress":string
+       //是否需要审批
+       "isNeedApproval":string
+       //是否加急
+       "isPriority":string
+       //服务费折扣
+       "serviceFeeDiscount":decimal
+       //订单Id
+       "orderId":int
+       //发票类型
+       "invoiceTypeName":string
+       //开票合同
+       "invoiceContractUrl":string
+       //加急原因
+       "priorityReason":string
+       //开票服务费费率
+       "invoiceServiceRatio":decimal
+       //期望开票时间
+       "hopeInvoiceDate":DateTime
+       //备注
+       "invoiceRemark":string
+   }
+
+   *Response:
+   {
+       //订单Id
+       "orderId":int
+       //订单编号
+       "orderNo":string
+   }
+
+   */
+  orderEditInvoiceOrder(params, callback){
+    return this.modelExecute('/Order/EditInvoiceOrder', params, callback)
+  }
+  /**
+   *名称：订单.开票订单列表.开票详情 路由：/Order/InvoiceOrderDetail
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //订单Id
+       "orderId":int
+   }
+
+   *Response:
+   {
+       //订单信息
+       "orderInfo":InvoiceOrderInfo
+       //收款信息
+       "bankReceipts":BankReceiptInfo[]
+       //发票信息
+       "invoiceInfos":InvoiceInfo[]
+       //客服回访信息
+       "customerServiceRecord":CustomerServiceRecordInfo
+       //是否显示审批按钮
+       "isShowButton":bool
+       //处理人
+       "handleAdminUserName":string
+       //处理人角色
+       "handleAdminRoleName":string
+       //状态
+       "status":string
+       //差额订单信息
+       "differenceInfo":DifferenceInfo
+   }
+
+   */
+  orderInvoiceOrderDetail(params, callback){
+    return this.modelExecute('/Order/InvoiceOrderDetail', params, callback)
+  }
+  /**
+   *名称：订单.开票订单列表.查询 路由：/Order/InvoiceOrderQuery
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //税源地编号
+       "sourceTaxId":int
+       //商品编号
+       "goodsId":int
+       //订单好
+       "orderNo":string
+       //客户姓名
+       "customerName":string
+       //提交订单开始时间
+       "submitBeginTime":DateTime
+       //提交订单结束时间
+       "submitEndTime":DateTime
+       //订单完成时间
+       "orderCompletedBeginTime":DateTime
+       //订单完成时间
+       "orderCompletedEndTime":DateTime
+       //流程编号
+       "workflowIds":int[]
+       //创建人
+       "createAdminUserId":int
+       //站点名
+       "companyName":string
+   }
+
+   *Response:
+   {
+       //订单Id
+       "orderId":int
+       //订单编号
+       "orderNo":string
+       //客户编号
+       "customerId":int
+       //客户姓名
+       "customerName":string
+       //税源地名称
+       "sourceTaxName":string
+       //商品名称
+       "goodsName":string
+       //开票金额
+       "invoiceAmount":decimal
+       //发票类型
+       "invoiceTypeName":string
+       //是否加急
+       "isPriority":string
+       //流程名称
+       "workflowName":string
+       //流程Id
+       "workflowId":int
+       //创建时间
+       "createTime":string
+       //0轮到我加急,1轮到我,3其他
+       "myHandle":int
+       //订单完成时间
+       "orderCompletedTime":string
+       //税源地编号
+       "sourceTaxId":int
+       //当前处理人
+       "handleAdminUserName":string
+       //商务提交时间
+       "submitTime":string
+       //站点名称
+       "companyName":string
+       //站点Id
+       "companyId":int
+       //商品编号
+       "goodsId":int
+       //是否差额订单
+       "isDiff":string
+       //商务编号
+       "createAdminUserId":int
+       //商务名
+       "bussinessName":string
+   }
+
+   */
+  orderInvoiceOrderQuery(params, callback){
+    return this.modelExecute('/Order/InvoiceOrderQuery', params, callback)
+  }
+  /**
+   *名称：订单.开票.删除 路由：/Order/IO/Delete
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //订单号
+       "orderId":int
+   }
+
+   *Response:
+   bool
+   */
+  orderIODelete(params, callback){
+    return this.modelExecute('/Order/IO/Delete', params, callback)
+  }
+  /**
+   *名称：订单.开票.删除发票信息 路由：/Order/IO/DeleteInvoice
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //快递号
+       "expressId":int
+   }
+
+   *Response:
+   bool
+   */
+  orderIODeleteInvoice(params, callback){
+    return this.modelExecute('/Order/IO/DeleteInvoice', params, callback)
+  }
+  /**
+   *名称：订单.开票订单.新增（编辑）发票信息 路由：/Order/IOEditInvoice
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //订单Id
+       "orderId":int
+       //发票数量
+       "invoiceCount":int
+       //发票图片URL
+       "invoiceImgUrl":string
+       //快递单号
+       "expressNo":string
+       //快递单回单截图URL
+       "expressImgUrl":string
+       //快递公司
+       "expressName":string
+       //快递信息编号
+       "expressId":int
+       //开票总额
+       "invoiceAmount":decimal
+       //税额
+       "taxAmount":decimal
+   }
+
+   *Response:
+   int
+   */
+  orderIOEditInvoice(params, callback){
+    return this.modelExecute('/Order/IOEditInvoice', params, callback)
+  }
+  /**
+   *名称：订单.开票.后付费订单 路由：/Order/IO/PostPayList
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //订单号
+       "orderNo":string
+       //状态(已支付A,支付中H,未支付W)
+       "postPayStatus":string
+   }
+
+   *Response:
+   {
+       //后付费编号
+       "postPayOrderId":int
+       //订单号
+       "orderId":int
+       //订单号
+       "orderNo":string
+       //客户编号
+       "customerId":int
+       //客户
+       "customerName":string
+       //站点编号
+       "companyId":int
+       //站点
+       "companyName":string
+       //税源地编号
+       "sourceTaxId":int
+       //税源地
+       "sourceTaxName":string
+       //商品
+       "goodsId":int
+       //商品
+       "goodsName":string
+       //开票金额
+       "invoiceAmount":decimal
+       //发票类型
+       "invoiceTypeName":string
+       //商务编号
+       "bussinessId":int
+       //商务
+       "bussinessName":string
+       //财务编号
+       "financeId":int
+       //财务
+       "financeName":string
+       //应付金额
+       "totalAmount":decimal
+       //已付金额
+       "actualAmount":decimal
+       //提交时间
+       "submitTime":string
+       //截止时间
+       "cutOffTime":string
+       //状态
+       "postStatus":string
+       //状态
+       "postStatusText":string
+   }
+
+   */
+  orderIOPostPayList(params, callback){
+    return this.modelExecute('/Order/IO/PostPayList', params, callback)
+  }
+  /**
+   *名称：订单.查询收款信息 路由：/Order/QueryBankReceiptList
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //订单编号
+       "orderId":int
+       //订单类型
+       "orderType":string
+   }
+
+   *Response:
+   {
+       //收款信息
+       "bankReceipts":BankReceiptInfo[]
+   }
+
+   */
+  orderQueryBankReceiptList(params, callback){
+    return this.modelExecute('/Order/QueryBankReceiptList', params, callback)
+  }
+  /**
+   *名称：订单.通用.日志详情 路由：/Order/LogList
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //订单Id
+       "orderId":int
+       //订单类型（A/I）
+       "orderType":string
+   }
+
+   *Response:
+   {
+       //日志Id
+       "logId":int
+       //操作人姓名
+       "actionUserName":string
+       //操作人角色名称
+       "actionUserRoleName":string
+       //操作内容
+       "actionContent":string
+       //时间
+       "actionTime":string
+   }
+
+   */
+  orderLogList(params, callback){
+    return this.modelExecute('/Order/LogList', params, callback)
+  }
+  /**
+   *名称：订单.通用.订单流程提交 路由：/Order/WorkflowNext
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //订单Id
+       "orderId":int
+       //订单类型(A/I)
+       "orderType":string
+   }
+
+   *Response:
+   bool
+   */
+  orderWorkflowNext(params, callback){
+    return this.modelExecute('/Order/WorkflowNext', params, callback)
+  }
+  /**
+   *名称：订单.通用.订单流程驳回 路由：/Order/WorkflowReject
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //订单Id
+       "orderId":int
+       //订单类型(A/I)
+       "orderType":string
+       //驳回原因
+       "rejectReason":string
+   }
+
+   *Response:
+   bool
+   */
+  orderWorkflowReject(params, callback){
+    return this.modelExecute('/Order/WorkflowReject', params, callback)
+  }
+  /**
+   *名称：订单.通用.订单流程驳回至创建人 路由：/Order/WorkflowRejectRestart
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //订单Id
+       "orderId":int
+       //订单类型(A/I)
+       "orderType":string
+       //驳回原因
+       "rejectReason":string
+   }
+
+   *Response:
+   bool
+   */
+  orderWorkflowRejectRestart(params, callback){
+    return this.modelExecute('/Order/WorkflowRejectRestart', params, callback)
+  }
+  /**
+   *名称：订单.通用.订单流程等待 路由：/Order/WorkflowWait
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //订单Id
+       "orderId":int
+       //订单类型(A/I)
+       "orderType":string
+       //等待原因
+       "waitReason":string
+   }
+
+   *Response:
+   bool
+   */
+  orderWorkflowWait(params, callback){
+    return this.modelExecute('/Order/WorkflowWait', params, callback)
+  }
+  /**
+   *名称：风控.删除站点流水 路由：/Risk/Delete/CompanyWater
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //流水编号
+       "waterId":int
+   }
+
+   *Response:
+   bool
+   */
+  riskDeleteCompanyWater(params, callback){
+    return this.modelExecute('/Risk/Delete/CompanyWater', params, callback)
+  }
+  /**
+   *名称：风控.处理站点流水预警 路由：/Risk/Handle/CompanyWaterWarning
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //预警编号
+       "warningId":int
+       //处理内容
+       "handleContent":string
+   }
+
+   *Response:
+   bool
+   */
+  riskHandleCompanyWaterWarning(params, callback){
+    return this.modelExecute('/Risk/Handle/CompanyWaterWarning', params, callback)
+  }
+  /**
+   *名称：风控.导入站点流水 路由：/Risk/Import/CompanyWater
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //站点编号
+       "companyId":int
+       //银行
+       "bankName":string
+   }
+
+   *Response:
+   bool
+   */
+  riskImportCompanyWater(params, callback){
+    return this.modelExecute('/Risk/Import/CompanyWater', params, callback)
+  }
+  /**
+   *名称：风控.查询站点流水 路由：/Risk/Query/CompanyWater
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //客户名称
+       "customerName":string
+       //站点名称
+       "companyName":string
+       //开始时间
+       "tradeBeginTime":DateTime
+       //结束时间
+       "tradeEndTime":DateTime
+   }
+
+   *Response:
+   {
+       //流水编号
+       "waterId":int
+       //站点编号
+       "companyId":int
+       //站点名称
+       "companyName":string
+       //客户编号
+       "customerId":int
+       //客户名称
+       "customerName":string
+       //银行
+       "bankName":string
+       //交易时间
+       "tradeTime":string
+       //交易方
+       "traderName":string
+       //贷方发生额
+       "inAmount":decimal
+       //借方发生额
+       "outAmount":decimal
+       //余额
+       "lastAmount":decimal
+       //摘要
+       "remark":string
+       //导入时间
+       "createTime":string
+   }
+
+   */
+  riskQueryCompanyWater(params, callback){
+    return this.modelExecute('/Risk/Query/CompanyWater', params, callback)
+  }
+  /**
+   *名称：风控.查询站点流水预警 路由：/Risk/Query/CompanyWaterWarning
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //
+       "":
+   }
+
+   *Response:
+   {
+       //预警编号
+       "warningId":int
+       //站点编号
+       "companyId":int
+       //站点名称
+       "companyName":string
+       //客户编号
+       "customerId":int
+       //客户名称
+       "customerName":string
+       //交易时间
+       "tradeTime":string
+       //预警类型
+       "warningType":string
+       //预警项目
+       "warningContent":string
+       //处置结果
+       "handleContent":string
+       //处置时间
+       "handleTime":string
+       //状态
+       "handleStatus":string
+   }
+
+   */
+  riskQueryCompanyWaterWarning(params, callback){
+    return this.modelExecute('/Risk/Query/CompanyWaterWarning', params, callback)
+  }
+  /**
+   *名称：风控.查询站点流水预警设置 路由：/Risk/Query/CompanyWaterWarningSetting
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //
+       "":
+   }
+
+   *Response:
+   {
+       //非法人账户转出
+       "investorOutSetting":string
+       //当日入账当日出账
+       "todaySetting":string
+       //转入公司开票订单
+       "noInvestorSetting":string
+       //账户余额阈值
+       "amountSetting":decimal
+   }
+
+   */
+  riskQueryCompanyWaterWarningSetting(params, callback){
+    return this.modelExecute('/Risk/Query/CompanyWaterWarningSetting', params, callback)
+  }
+  /**
+   *名称：风控.查询开票站点预警 路由：/Risk/Query/GoodsIovoiceWarning
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //
+       "":
+   }
+
+   *Response:
+   {
+       //预警编号
+       "warningId":int
+       //站点编号
+       "companyId":int
+       //站点名称
+       "companyName":string
+       //客户编号
+       "customerId":int
+       //客户名称
+       "customerName":string
+       //商务编号
+       "bussinessId":int
+       //商务名称
+       "bussinessName":string
+       //预警内容
+       "warningContent":string
+       //预警时间
+       "warningTime":string
+   }
+
+   */
+  riskQueryGoodsIovoiceWarning(params, callback){
+    return this.modelExecute('/Risk/Query/GoodsIovoiceWarning', params, callback)
+  }
+  /**
+   *名称：风控.查询开票预警配置 路由：/Risk/Query/GoodsIovoiceWarningSetting
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //商品编号
+       "goodsId":int
+   }
+
+   *Response:
+   {
+       //商品编号
+       "goodsId":int
+       //新站点定义
+       "newCompanyMonth":int
+       //单月限制
+       "newMonthLimit":decimal
+       //季度限制
+       "newQuarterLimit":decimal
+       //月数1
+       "newTotalMonth1":int
+       //限制1
+       "newTotalMonthLimit1":decimal
+       //月数2
+       "newTotalMonth2":int
+       //限制2
+       "newTotalMonthLimit2":decimal
+       //月数3
+       "newTotalMonth3":int
+       //限制3
+       "newTotalMonthLimit3":decimal
+       //阈值
+       "newThreshold":decimal
+       //代开是否受限
+       "newIsRestrict":string
+       //单月限制
+       "oldMonthLimit":decimal
+       //季度限制
+       "oldQuarterLimit":decimal
+       //年度限制
+       "oldYearLimit":decimal
+       //月数1
+       "oldTotalMonth1":int
+       //限制1
+       "oldTotalMonthLimit1":decimal
+       //月数2
+       "oldTotalMonth2":int
+       //限制2
+       "oldTotalMonthLimit2":decimal
+       //月数3
+       "oldTotalMonth3":int
+       //限制3
+       "oldTotalMonthLimit3":decimal
+       //阈值
+       "oldThreshold":decimal
+       //代开是否受限
+       "oldIsRestrict":string
+   }
+
+   */
+  riskQueryGoodsIovoiceWarningSetting(params, callback){
+    return this.modelExecute('/Risk/Query/GoodsIovoiceWarningSetting', params, callback)
+  }
+  /**
+   *名称：风控.保存站点流水 路由：/Risk/Save/CompanyWater
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //流水编号
+       "waterId":int
+       //站点编号
+       "companyId":int
+       //银行
+       "bankName":string
+       //交易日期
+       "tradeTime":DateTime
+       //交易方
+       "traderName":string
+       //贷方发生额
+       "inAmount":decimal
+       //借方发生额
+       "outAmount":decimal
+       //余额
+       "lastAmount":decimal
+       //摘要
+       "remark":string
+   }
+
+   *Response:
+   int
+   */
+  riskSaveCompanyWater(params, callback){
+    return this.modelExecute('/Risk/Save/CompanyWater', params, callback)
+  }
+  /**
+   *名称：风控.保存站点流水预警设置 路由：/Risk/Save/CompanyWaterWarningSetting
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //非法人账户转出
+       "investorOutSetting":string
+       //当日入账当日出账
+       "todaySetting":string
+       //转入公司开票订单
+       "noInvestorSetting":string
+       //账户余额阈值
+       "amountSetting":decimal
+   }
+
+   *Response:
+   bool
+   */
+  riskSaveCompanyWaterWarningSetting(params, callback){
+    return this.modelExecute('/Risk/Save/CompanyWaterWarningSetting', params, callback)
+  }
+  /**
+   *名称：风控.保存开票预警配置 路由：/Risk/Save/GoodsIovoiceWarningSetting
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //商品编号
+       "goodsId":int
+       //新站点定义
+       "newCompanyMonth":int
+       //单月限制
+       "newMonthLimit":decimal
+       //季度限制
+       "newQuarterLimit":decimal
+       //月数1
+       "newTotalMonth1":int
+       //限制1
+       "newTotalMonthLimit1":decimal
+       //月数2
+       "newTotalMonth2":int
+       //限制2
+       "newTotalMonthLimit2":decimal
+       //月数3
+       "newTotalMonth3":int
+       //限制3
+       "newTotalMonthLimit3":decimal
+       //阈值
+       "newThreshold":decimal
+       //代开是否受限
+       "newIsRestrict":string
+       //单月限制
+       "oldMonthLimit":decimal
+       //季度限制
+       "oldQuarterLimit":decimal
+       //年度限制
+       "oldYearLimit":decimal
+       //月数1
+       "oldTotalMonth1":int
+       //限制1
+       "oldTotalMonthLimit1":decimal
+       //月数2
+       "oldTotalMonth2":int
+       //限制2
+       "oldTotalMonthLimit2":decimal
+       //月数3
+       "oldTotalMonth3":int
+       //限制3
+       "oldTotalMonthLimit3":decimal
+       //阈值
+       "oldThreshold":decimal
+       //代开是否受限
+       "oldIsRestrict":string
+   }
+
+   *Response:
+   bool
+   */
+  riskSaveGoodsIovoiceWarningSetting(params, callback){
+    return this.modelExecute('/Risk/Save/GoodsIovoiceWarningSetting', params, callback)
+  }
+  /**
+   *名称：风控.站点流水统计 路由：/Risk/Statistics/ComapnyWater
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //开始时间
+       "tradeBeginTime":DateTime
+       //结束时间
+       "tradeEndTime":DateTime
+   }
+
+   *Response:
+   {
+       //交易次数
+       "tradeCount":int
+       //站点编号
+       "companyId":int
+       //站点名称
+       "companyName":string
+       //客户编号
+       "customerId":int
+       //客户名称
+       "customerName":string
+       //贷方发生额
+       "sumInAmount":decimal
+       //借方发生额
+       "sumOutAmount":decimal
+   }
+
+   */
+  riskStatisticsComapnyWater(params, callback){
+    return this.modelExecute('/Risk/Statistics/ComapnyWater', params, callback)
+  }
+  /**
+   *名称：角色.列表 路由：/Role/List
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //
+       "":
+   }
+
+   *Response:
+   {
+       //角色编号
+       "adminRoleId":int
+       //角色名称
+       "adminRoleName":string
+   }
+
+   */
+  roleList(params, callback){
+    return this.modelExecute('/Role/List', params, callback)
+  }
+  /**
+   *名称：角色.流程角色列表 路由：/Role/List/Flow
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //
+       "":
+   }
+
+   *Response:
+   {
+       //流程角色编号
+       "flowRoleId":int
+       //流程角色
+       "flowRoleName":string
+   }
+
+   */
+  roleListFlow(params, callback){
+    return this.modelExecute('/Role/List/Flow', params, callback)
+  }
+  /**
+   *名称：角色.新增/修改 路由：/Role/Modify
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //角色编号
+       "adminRoleId":int
+       //角色名称
+       "adminRoleName":string
+       //状态(N/D)
+       "status":string
+   }
+
+   *Response:
+   int
+   */
+  roleModify(params, callback){
+    return this.modelExecute('/Role/Modify', params, callback)
+  }
+  /**
+   *名称：角色.权限列表 路由：/Role/PermissionList
    *@param {*} params 向服务器传送的参数,对应Request
    *@param {Function} [callback]  回调函数
    *Request:
@@ -3864,53 +3483,11 @@ export default class MSModel extends Model {
    }
 
    */
-  userRoleDetails(params, callback){
-    return this.modelExecute('/User/RoleDetails', params, callback)
+  rolePermissionList(params, callback){
+    return this.modelExecute('/Role/PermissionList', params, callback)
   }
   /**
-   *名称：角色列表 路由：/User/RoleList
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //
-       "":
-   }
-
-   *Response:
-   {
-       //角色编号
-       "adminRoleId":int
-       //角色名称
-       "adminRoleName":string
-   }
-
-   */
-  userRoleList(params, callback){
-    return this.modelExecute('/User/RoleList', params, callback)
-  }
-  /**
-   *名称：角色删除(重命名) 路由：/User/RoleOperation
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //角色编号
-       "adminRoleId":int
-       //角色名称
-       "adminRoleName":string
-       //是否删除(Y/N)
-       "isDelete":string
-   }
-
-   *Response:
-   bool
-   */
-  userRoleOperation(params, callback){
-    return this.modelExecute('/User/RoleOperation', params, callback)
-  }
-  /**
-   *名称：角色权限修改 路由：/User/RolePut
+   *名称：角色.权限修改 路由：/Role/PermissionModify
    *@param {*} params 向服务器传送的参数,对应Request
    *@param {Function} [callback]  回调函数
    *Request:
@@ -3924,95 +3501,601 @@ export default class MSModel extends Model {
    *Response:
    bool
    */
-  userRolePut(params, callback){
-    return this.modelExecute('/User/RolePut', params, callback)
+  rolePermissionModify(params, callback){
+    return this.modelExecute('/Role/PermissionModify', params, callback)
   }
   /**
-   *名称：保存反馈备注 路由：/User/SaveFeedBackRemark
+   *名称：角色.修改状态 路由：/Role/Update
    *@param {*} params 向服务器传送的参数,对应Request
    *@param {Function} [callback]  回调函数
    *Request:
    {
-       //反馈编号
-       "feedbackId":int
-       //备注
-       "remark":string
-   }
-
-   *Response:
-   bool
-   */
-  userSaveFeedBackRemark(params, callback){
-    return this.modelExecute('/User/SaveFeedBackRemark', params, callback)
-  }
-  /**
-   *名称：保存C端实名认证信息 路由：/User/SaveRealNameInfo
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //姓名
-       "realName":string
-       //身份证号
-       "idCardNo":string
-       //民族
-       "nation":string
-       //生日
-       "birthday":DateTime
-       //状态(PA:通过,UP:未通过)
-       "status":string
-       //图片地址
-       "idCardUrl":string
-       //用户编号
-       "workerUserId":int
-       //实名类型(I身份证,P护照,G港澳,T台)
-       "realNameType":string
-       //性别(F女,M男)
-       "sex":string
-       //实名编号
-       "realNameId":int
-   }
-
-   *Response:
-   bool
-   */
-  userSaveRealNameInfo(params, callback){
-    return this.modelExecute('/User/SaveRealNameInfo', params, callback)
-  }
-  /**
-   *名称：修改反馈状态 路由：/User/UpdateFeedBackStatus
-   *@param {*} params 向服务器传送的参数,对应Request
-   *@param {Function} [callback]  回调函数
-   *Request:
-   {
-       //反馈编号
-       "feedbackId":int
-       //状态(O:已处理)
+       //角色编号
+       "adminRoleId":int
+       //状态(N/D)
        "status":string
    }
 
    *Response:
    bool
    */
-  userUpdateFeedBackStatus(params, callback){
-    return this.modelExecute('/User/UpdateFeedBackStatus', params, callback)
+  roleUpdate(params, callback){
+    return this.modelExecute('/Role/Update', params, callback)
   }
   /**
-   *名称：管理员修改密码 路由：/User/UpdatePwd
+   *名称：税源地.详情 路由：/SourceTax/Detail
    *@param {*} params 向服务器传送的参数,对应Request
    *@param {Function} [callback]  回调函数
    *Request:
    {
-       //原密码
-       "oldPwd":string
-       //新密码
-       "newPwd":string
+       //税源地编号
+       "sourceTaxId":int
+   }
+
+   *Response:
+   {
+       //税源地编号
+       "sourceTaxId":int
+       //税源地名称
+       "sourceTaxName":string
+       //省编号
+       "provinceId":int
+       //省名
+       "provinceName":string
+       //城市编号
+       "cityId":int
+       //城市名
+       "cityName":string
+       //地址
+       "taxAddress":string
+       //法人年龄上限
+       "legalAge":int
+       //是否需要财务身份证复印件(Y/N)
+       "isNeedFinanceID":string
+       //增值税返税比率
+       "zZSRatio":decimal
+       //个税返税比率
+       "gRSDSRatio":decimal
+       //附加税返税比率
+       "fJSRatio":decimal
+       //印花税返税比率
+       "yHSRatio":decimal
+       //联系人
+       "contact":string
+       //联系电话
+       "phone":string
+       //状态(N/D)
+       "status":string
+       //创建人
+       "createAdminUserId":int
+       //创建时间
+       "showCreateTime":string
+       //供应商
+       "suppliers":SupplierInfo[]
+   }
+
+   */
+  sourceTaxDetail(params, callback){
+    return this.modelExecute('/SourceTax/Detail', params, callback)
+  }
+  /**
+   *名称：税源地.列表 路由：/SourceTax/List
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //
+       "":
+   }
+
+   *Response:
+   {
+       //税源地名称
+       "sourceTaxName":string
+       //省编号
+       "provinceId":int
+       //省名
+       "provinceName":string
+       //城市编号
+       "cityId":int
+       //城市名
+       "cityName":string
+       //税源地编号
+       "sourceTaxId":int
+       //地址
+       "taxAddress":string
+       //法人年龄上限
+       "legalAge":int
+       //是否需要财务身份证复印件(Y/N)
+       "isNeedFinanceID":string
+       //增值税返税比率
+       "zZSRatio":decimal
+       //个税返税比率
+       "gRSDSRatio":decimal
+       //附加税返税比率
+       "fJSRatio":decimal
+       //印花税返税比率
+       "yHSRatio":decimal
+       //联系人
+       "contact":string
+       //联系电话
+       "phone":string
+       //状态(N/D)
+       "status":string
+       //创建人
+       "createAdminUserId":int
+       //创建时间
+       "showCreateTime":string
+   }
+
+   */
+  sourceTaxList(params, callback){
+    return this.modelExecute('/SourceTax/List', params, callback)
+  }
+  /**
+   *名称：税源地.供应商列表 路由：/SourceTax/ListSupplier
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //税源地编号
+       "sourceTaxId":int
+   }
+
+   *Response:
+   {
+       //供应商编号
+       "supplierId":int
+       //供应商名称
+       "supplierName":string
+   }
+
+   */
+  sourceTaxListSupplier(params, callback){
+    return this.modelExecute('/SourceTax/ListSupplier', params, callback)
+  }
+  /**
+   *名称：税源地.新建/编辑 路由：/SourceTax/Modify
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //税源地名称
+       "sourceTaxName":string
+       //省编号
+       "provinceId":int
+       //城市编号
+       "cityId":int
+       //增值税返税比率
+       "zZSRatio":decimal
+       //个税返税比率
+       "gRSDSRatio":decimal
+       //附加税返税比率
+       "fJSRatio":decimal
+       //印花税返税比率
+       "yHSRatio":decimal
+       //法人年龄上限
+       "legalAge":int
+       //是否需要财务身份证复印件(Y/N)
+       "isNeedFinanceID":string
+       //联系人
+       "contact":string
+       //联系电话
+       "phone":string
+       //状态(N/D)
+       "status":string
+       //编号(0新增,其他编辑)
+       "sourceTaxId":int
+       //供应商编号
+       "supplierIds":int[]
+   }
+
+   *Response:
+   int
+   */
+  sourceTaxModify(params, callback){
+    return this.modelExecute('/SourceTax/Modify', params, callback)
+  }
+  /**
+   *名称：税源地.修改状态 路由：/SourceTax/Update
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //税源地编号
+       "sourceTaxId":int
+       //状态(N/D)
+       "status":string
    }
 
    *Response:
    bool
    */
-  userUpdatePwd(params, callback){
-    return this.modelExecute('/User/UpdatePwd', params, callback)
+  sourceTaxUpdate(params, callback){
+    return this.modelExecute('/SourceTax/Update', params, callback)
+  }
+  /**
+   *名称：统计.开户.分析 路由：/Statistics/AO/Analysis
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //年度
+       "year":int
+       //纬度(1周,2月,3季)
+       "type":int
+   }
+
+   *Response:
+   {
+       //数据(周7,月30,季3)
+       "aOAnalysisDatas":AOAnalysisData[]
+   }
+
+   */
+  statisticsAOAnalysis(params, callback){
+    return this.modelExecute('/Statistics/AO/Analysis', params, callback)
+  }
+  /**
+   *名称：统计.开户.周期 路由：/Statistics/AO/Cycle
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //结束时间
+       "endTime":DateTime
+       //开始时间
+       "beginTime":DateTime
+   }
+
+   *Response:
+   {
+       //站点总数
+       "orderCount":int
+       //押金总额
+       "depositAmount":decimal
+       //待收押金总额
+       "depositWaitingAmount":decimal
+       //开户中数量
+       "orderWaitingCount":int
+   }
+
+   */
+  statisticsAOCycle(params, callback){
+    return this.modelExecute('/Statistics/AO/Cycle', params, callback)
+  }
+  /**
+   *名称：统计.开户.首页 路由：/Statistics/AO/Index
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //
+       "":
+   }
+
+   *Response:
+   {
+       //站点总数
+       "companyCount":int
+       //正常站点数
+       "companyNormalCount":int
+       //禁用站点数
+       "companyDisableCount":int
+       //开户中数量
+       "companyWaitingCount":int
+       //产品占比
+       "goodsDatas":PSOA.Model.KeyValue[]
+       //税源地占比
+       "sourceTaxDatas":PSOA.Model.KeyValue[]
+   }
+
+   */
+  statisticsAOIndex(params, callback){
+    return this.modelExecute('/Statistics/AO/Index', params, callback)
+  }
+  /**
+   *名称：统计.站点.已开票 路由：/Statistics/Company/HasData
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //结束时间
+       "endTime":DateTime
+       //站点名称
+       "companyName":string
+       //开始时间
+       "beginTime":DateTime
+   }
+
+   *Response:
+   {
+       //站点编号
+       "companyId":int
+       //站点名称
+       "companyName":string
+       //开票次数
+       "iOCount":int
+       //开票金额
+       "sumInvoiceAmount":decimal
+       //服务费金额
+       "sumServiceAmount":decimal
+       //开通时间
+       "createTime":string
+       //最后开票时间
+       "lastIOTime":string
+       //部门名称
+       "deptName":string
+       //所属商务
+       "belongAdminUserId":int
+       //所属商务名
+       "belongAdminUserName":string
+   }
+
+   */
+  statisticsCompanyHasData(params, callback){
+    return this.modelExecute('/Statistics/Company/HasData', params, callback)
+  }
+  /**
+   *名称：统计.站点.未开票 路由：/Statistics/Company/NoData
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //开始时间
+       "beginTime":DateTime
+       //结束时间
+       "endTime":DateTime
+       //站点名称
+       "companyName":string
+   }
+
+   *Response:
+   {
+       //站点编号
+       "companyId":int
+       //站点名称
+       "companyName":string
+       //开通时间
+       "createTime":string
+       //部门名称
+       "deptName":string
+       //所属商务
+       "belongAdminUserId":int
+       //所属商务名
+       "belongAdminUserName":string
+   }
+
+   */
+  statisticsCompanyNoData(params, callback){
+    return this.modelExecute('/Statistics/Company/NoData', params, callback)
+  }
+  /**
+   *名称：统计.部门.开户 路由：/Statistics/Dept/AO
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //开始时间
+       "beginTime":DateTime
+       //结束时间
+       "endTime":DateTime
+   }
+
+   *Response:
+   {
+       //部门
+       "deptName":string
+       //负责人
+       "deptUserId":int
+       //负责人
+       "deptUserName":string
+       //客户数
+       "customerCount":int
+       //站点数
+       "companyCount":int
+       //新站点数
+       "newCompanyCount":int
+       //活跃站点数
+       "activeCompanyCount":int
+   }
+
+   */
+  statisticsDeptAO(params, callback){
+    return this.modelExecute('/Statistics/Dept/AO', params, callback)
+  }
+  /**
+   *名称：统计.部门.开票 路由：/Statistics/Dept/IO
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //开始时间
+       "beginTime":DateTime
+       //结束时间
+       "endTime":DateTime
+   }
+
+   *Response:
+   {
+       //部门
+       "deptName":string
+       //负责人
+       "deptUserId":int
+       //负责人
+       "deptUserName":string
+       //开票金额
+       "sumInvoiceAmount":decimal
+       //服务费金额
+       "sumServiceAmount":decimal
+       //站点数
+       "companyCount":int
+   }
+
+   */
+  statisticsDeptIO(params, callback){
+    return this.modelExecute('/Statistics/Dept/IO', params, callback)
+  }
+  /**
+   *名称：统计.开票.分析 路由：/Statistics/IO/Analysis
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //年度
+       "year":int
+       //纬度(1周,2月,3季)
+       "type":int
+   }
+
+   *Response:
+   {
+       //数据(周7,月30,季3)
+       "iOAnalysisDatas":IOAnalysisData[]
+   }
+
+   */
+  statisticsIOAnalysis(params, callback){
+    return this.modelExecute('/Statistics/IO/Analysis', params, callback)
+  }
+  /**
+   *名称：统计.开票.周期 路由：/Statistics/IO/Cycle
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //结束时间
+       "endTime":DateTime
+       //开始时间
+       "beginTime":DateTime
+   }
+
+   *Response:
+   {
+       //订单总数
+       "orderCount":int
+       //已完成数
+       "orderOverCount":int
+       //站点数
+       "companyCount":int
+       //新客数
+       "newCustomerCount":int
+       //开票总额
+       "sumInvoiceAmount":decimal
+       //服务费总额
+       "sumServiceAmoune":decimal
+       //待收服务费
+       "sumWaitingServiceAmount":decimal
+       //总税额
+       "sumTaxAmount":decimal
+   }
+
+   */
+  statisticsIOCycle(params, callback){
+    return this.modelExecute('/Statistics/IO/Cycle', params, callback)
+  }
+  /**
+   *名称：统计.开票.首页 路由：/Statistics/IO/Index
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //
+       "":
+   }
+
+   *Response:
+   {
+       //订单总数
+       "orderCount":int
+       //开票总额
+       "sumInvoiceAmount":decimal
+       //服务费总额
+       "sumServiceAmount":decimal
+       //总税额
+       "sumTaxAmount":decimal
+       //产品占比
+       "goodsDatas":PSOA.Model.KeyValue[]
+       //税源地占比
+       "sourceTaxDatas":PSOA.Model.KeyValue[]
+   }
+
+   */
+  statisticsIOIndex(params, callback){
+    return this.modelExecute('/Statistics/IO/Index', params, callback)
+  }
+  /**
+   *名称：统计.人员.开户 路由：/Statistics/User/AO
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //开始时间
+       "beginTime":DateTime
+       //结束时间
+       "endTime":DateTime
+   }
+
+   *Response:
+   {
+       //人员编号
+       "adminUserId":int
+       //人员名称
+       "adminUserName":string
+       //部门名称
+       "deptName":string
+       //部门负责人
+       "deptUserId":int
+       //负责人
+       "deptUserName":string
+       //客户数
+       "customerCount":int
+       //站点数
+       "companyCount":int
+       //新站点数
+       "newCompanyCount":int
+       //活跃站点数
+       "activeCompanyCount":int
+   }
+
+   */
+  statisticsUserAO(params, callback){
+    return this.modelExecute('/Statistics/User/AO', params, callback)
+  }
+  /**
+   *名称：统计.人员.开票 路由：/Statistics/User/IO
+   *@param {*} params 向服务器传送的参数,对应Request
+   *@param {Function} [callback]  回调函数
+   *Request:
+   {
+       //开始时间
+       "beginTime":DateTime
+       //结束时间
+       "endTime":DateTime
+   }
+
+   *Response:
+   {
+       //人员编号
+       "adminUserId":int
+       //人员名称
+       "adminUserName":string
+       //部门名称
+       "deptName":string
+       //部门负责人
+       "deptUserId":int
+       //负责人
+       "deptUserName":string
+       //开票金额
+       "sumInvoiceAmount":decimal
+       //服务费金额
+       "sumServiceAmount":decimal
+       //站点数
+       "companyCount":int
+   }
+
+   */
+  statisticsUserIO(params, callback){
+    return this.modelExecute('/Statistics/User/IO', params, callback)
   }
 }

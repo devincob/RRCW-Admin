@@ -8,7 +8,12 @@
       <el-form ref="form" :model="form" :rules="formRules" label-width="170px" size="small">
         <el-form-item label="订单号" prop="orderNo">
           <el-input v-model="form.orderNo" placeholder="系统自动生成" readonly/>
-          <el-button type="text" size="mini" style="margin-left: 10px;" @click="orderLogListDialogDisplay = true" v-if="orderId && orderId !== ''">查看操作记录</el-button>
+          <order-log-dialog
+            v-if="orderId && orderId !== ''"
+            :order-id="orderId"
+            order-type="A"
+            style="margin-left: 10px;"
+          >查看操作记录</order-log-dialog>
         </el-form-item>
         <el-form-item prop="customerId">
           <label slot="label"><span class="red-text">* </span>客户</label>
@@ -242,31 +247,16 @@
         </el-form-item>
       </el-form>
     </el-card>
-    <el-dialog
-      title="订单日志"
-      :visible.sync="orderLogListDialogDisplay"
-      width="900px"
-      custom-class="order-log-list-dialog"
-      center>
-      <el-table
-        :data="orderLogList"
-        size="mini"
-        style="width: 100%;">
-        <el-table-column prop="actionUserName" label="姓名" min-width="70"/>
-        <el-table-column prop="actionUserRoleName" label="角色" min-width="70"/>
-        <el-table-column prop="actionContent" label="操作内容" min-width="200"/>
-        <el-table-column prop="actionTime" label="操作时间" min-width="100"/>
-      </el-table>
-    </el-dialog>
   </x-page>
 </template>
 
 <script>
 import ExpressInfoDialog from '../../components/ExpressInfoDialog'
 import PreviewButton from '../../components/PreviewButton'
+import OrderLogDialog from '../../components/OrderLogDialog'
 export default {
   name: 'account-order-create',
-  components: {ExpressInfoDialog, PreviewButton},
+  components: {ExpressInfoDialog, PreviewButton, OrderLogDialog},
   data() {
     const validateDepositRemissionAmount = (rule, value, callback) => {
       if (value < 0) {
@@ -309,8 +299,6 @@ export default {
     }
     return {
       orderId: '',
-      orderLogListDialogDisplay: false,
-      orderLogList: [],
       uploadLoading: null,
       form: {
         orderId: '',
@@ -385,9 +373,6 @@ export default {
     }
   },
   watch: {
-    orderLogListDialogDisplay(val){
-      val && this.queryOrderLogList()
-    },
     'form.isNeedApproval': {
       handler: function(val){
         if (val === 'N'){
@@ -430,16 +415,6 @@ export default {
       this.queryCompanyTypeList()
       this.queryCustomerList()
       this.orderId && this.orderId !== '' && this.queryOrderInfo()
-    },
-    async queryOrderLogList(){
-      try {
-        this.orderLogList = await this.$$main.orderLogList({
-          orderId: this.orderId,
-          orderType: 'A'
-        })
-      } catch (e) {
-        e.message && this.$message.error(e.message)
-      }
     },
     async queryOrderInfo(){
       const loading = this.$loading({
@@ -492,7 +467,9 @@ export default {
     },
     async queryCustomerList(){
       try {
-        this.customerList = await this.$$main.commonListCustomer()
+        this.customerList = await this.$$main.commonListCustomer({
+          isBelong: true
+        })
       } catch (e) {
         this.customerList = []
       }
