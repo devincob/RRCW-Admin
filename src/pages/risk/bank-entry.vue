@@ -26,8 +26,8 @@
             <el-button type="danger" @click="clearQueryParams">重置</el-button>
           </el-form-item>
           <el-form-item class="pull-right">
+            <el-button type="primary" @click="onClickImportFlowButton">导入流水</el-button>
             <el-button type="primary" @click="onClickRecordFlowButton">录入流水</el-button>
-            <!--<el-button type="primary" @click="onClickImportFlowButton">导入流水</el-button>-->
           </el-form-item>
         </el-form>
       </div>
@@ -52,8 +52,8 @@
         </el-table-column>
         <el-table-column label="交易方名称" prop="traderName" min-width="80"/>
         <el-table-column label="摘要" prop="remark" min-width="120"/>
-        <el-table-column label="贷方发生额" prop="inAmount" width="100" align="right"  :formatter="(row) => `${$options.filters['currency'](row.inAmount, '', 2)}`"/>
         <el-table-column label="借方发生额" prop="outAmount" width="100" align="right" :formatter="(row) => `${$options.filters['currency'](row.outAmount, '', 2)}`"/>
+        <el-table-column label="贷方发生额" prop="inAmount" width="100" align="right"  :formatter="(row) => `${$options.filters['currency'](row.inAmount, '', 2)}`"/>
         <el-table-column label="余额" prop="lastAmount" width="100" align="right"  :formatter="(row) => `${$options.filters['currency'](row.lastAmount, '', 2)}`"/>
         <el-table-column label="银行" prop="bankName" width="120"/>
         <el-table-column label="录入日期" prop="createTime" width="130"/>
@@ -120,14 +120,14 @@
             v-model="recordFlowForm.tradeTime" type="date" value-format="yyyy-MM-dd">
             </el-date-picker>
           </el-form-item>
-          <el-form-item label="交易方名称：" prop="traderName">
+          <el-form-item label="交易方名称：">
             <el-input  v-model="recordFlowForm.traderName" placeholder="请输入交易方名称" style="width: 250px"></el-input>
           </el-form-item>
-          <el-form-item label="贷方发生额：" prop="inAmount">
-            <el-input  type="number" v-model.number="recordFlowForm.inAmount" placeholder="请输入贷方发生额" style="width: 250px"></el-input>
-          </el-form-item>
-          <el-form-item label="借方发生额：" prop="outAmount">
+          <el-form-item label="借方发生额：">
             <el-input type="number" v-model.number="recordFlowForm.outAmount" placeholder="请输入借方发生额" style="width: 250px"></el-input>
+          </el-form-item>
+          <el-form-item label="贷方发生额：">
+            <el-input  type="number" v-model.number="recordFlowForm.inAmount" placeholder="请输入贷方发生额" style="width: 250px"></el-input>
           </el-form-item>
           <el-form-item label="余额：" prop="lastAmount">
             <el-input type="number" v-model.number="recordFlowForm.lastAmount" auto-complete="off" placeholder="请输入金额" style="width: 250px"></el-input>
@@ -143,7 +143,7 @@
       </el-dialog>
       <el-dialog title="导入银行流水" v-drag-dialog="{reset: true}" :visible.sync="dialogImportVisible"
                  :before-close="importBeforeClose"
-                 width="450px" center>
+                 width="450px">
         <el-form :model="importFlowForm" :rules="rulesImport" status-icon ref="importFlowForm" label-width="120px">
           <el-form-item prop="companyId" label="站点名称：">
             <el-select
@@ -175,21 +175,31 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="流水文件：" prop="importUrl">
+          <el-form-item label="流水文件：" prop="filePath">
             <el-upload
               class="avatar-uploader serviceAgreement"
               :action="$$main.getUrl('/Common/ImageUpload')"
               :show-file-list="false"
-              :before-upload="() => {openLoading('.serviceAgreement')}"
+              accept=".pdf,.xls,.PDF"
+              :before-upload="() => {openLoading('.excel')}"
               :on-error="closeLoading"
               :on-success="handleSuccess">
-              <div style="color: deepskyblue;">点击上传流水文件</div>
+              <div style="color: deepskyblue;" v-html="importFlowForm.filePath ? '点击更换已上传流水文件' : '点击选择需要上传的Excel文件'"></div>
             </el-upload>
           </el-form-item>
-          <el-form-item align="right">
-            <el-button size="small" type="primary" @click="onImportClick('importFlowForm')">导入</el-button>
+          <el-form-item align="right" style="margin-bottom: 10px;">
+            <el-button size="small" type="primary" @click="onImportClick('importFlowForm')" :disabled="loading">确认导入</el-button>
             <el-button size="small"  @click="importBeforeClose">取 消</el-button>
           </el-form-item>
+          <div align="left">
+            <!--产线-->
+            <!--http://statics.i-caiwu.com/file/bank_template.xls-->
+            <!--测试-->
+            <!--http://static.caiwu.com/file/bank_template.xls-->
+            <a href="http://statics.i-caiwu.com/file/bank_template.xls">
+              <el-button size="mini" type="text" style="padding-left: 10px;">点击下载Excel模板</el-button>
+            </a>
+          </div>
         </el-form>
       </el-dialog>
     </el-card>
@@ -240,7 +250,7 @@ export default {
       importFlowForm: {
         companyId: '',
         bankName: '',
-        importUrl: ''
+        filePath: ''
       },
       rulesRecord: {
         companyId: [
@@ -269,7 +279,7 @@ export default {
         bankName: [
           {required: true, message: '银行名称不能为空', trigger: ['blur', 'change']}
         ],
-        importUrl: [
+        filePath: [
           {required: true, message: '请上传流水文件', trigger: ['blur', 'change']}
         ]
       },
@@ -371,11 +381,11 @@ export default {
     },
     handleSuccess(res, file, fileList) { // 上传成功的回调
       this.uploadLoading.close()
-      res && res.isSuccess && (this.importFlowForm.importUrl = res.body.imageUrl)
+      res && res.isSuccess && (this.importFlowForm.filePath = res.body.imageUrl)
       this.$refs['importFlowForm'].validate((valid) => {
         if (valid) {
           this.$message({
-            message: '流水文件上传成功',
+            message: '银行流水文件上传成功',
             type: 'success'
           })
         } else {
@@ -396,13 +406,19 @@ export default {
     },
     async importFile(){ // 点击确认 进行导入
       try {
+        if (this.loading){
+          return
+        }
         this.loading = true
-        const data = await this.$$main.riskImportCompanyWater(this.importFlowForm)
+        const data = await this.$$main.riskCompanyWaterImport(this.importFlowForm)
         this.loading = false
+        console.log('导入的数据和字段', this.importFlowForm)
         if (data) {
+          this.dialogImportVisible = false
           this.$message.success('导入成功！')
         }
       } catch (e) {
+        this.dialogImportVisible = true
         this.loading = false
         e && e.message && this.$message.error(e.message)
       }
@@ -484,6 +500,8 @@ export default {
     },
     onPageShow(){ // 把站点列表和银行在页面加载的时候就请求过来，dialog复用的时候不用再次请求
       this.clearQueryParams()
+      this.form.companyName = (this.$route.query && this.$route.query.companyName) || ''
+      // console.log(this.form)
       this.loadCompanyList()
       this.getBankList()
     },

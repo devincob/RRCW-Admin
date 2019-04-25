@@ -6,6 +6,27 @@
     @click="onBtnClick"
   >
     <slot>{{text}}</slot>
+    <el-dialog
+      append-to-body
+      :close-on-click-modal="true"
+      :show-close="false"
+      :visible="dialogDisplay"
+      :before-close="handleClose"
+      custom-class="preview_button_dialog"
+      width="600px"
+      top="10vh">
+      <div class="preview-background">
+        <img :src="displayImg" alt="" :style="{maxWidth: '580px',maxHeight: '580px', transform: `rotate(${current}deg)`}">
+      </div>
+      <div slot="footer" style="text-align: center">
+        <el-button size="mini" type="text" @click="onPreviewClick">
+          <img :src="require('../assets/images/preview.png')" style="width: 28px"/>
+        </el-button>
+        <el-button size="mini" type="text" @click="onClickRotate">
+          <img :src="require('../assets/images/rotate.png')" style="width: 28px"/>
+        </el-button>
+      </div>
+    </el-dialog>
   </el-button>
 </template>
 <script>
@@ -13,6 +34,9 @@ export default {
   name: 'preview-button',
   data() {
     return {
+      dialogDisplay: false,
+      displayImg: '',
+      current: 0
     }
   },
   props: {
@@ -65,31 +89,15 @@ export default {
         this.onPreviewClick(true)
         return
       }
-      let displaySrc = this.getUploadImageUrl(this.src, 'middle')
-      const h = this.$createElement
-      this.$msgbox({
-        showConfirmButton: false,
-        message: h('div', null, [
-          h('el-button', {
-            attrs: {
-              type: 'text'
-            },
-            on: {
-              click: () => {
-                this.onPreviewClick()
-              }
-            }
-          }, '查看原文件'),
-          h('img', {
-            attrs: {
-              src: displaySrc
-            },
-            style: {
-              width: '100%'
-            }
-          })
-        ])
-      })
+      this.current = 0
+      this.displayImg = this.getUploadImageUrl(this.src, 'large')
+      this.dialogDisplay = true
+    },
+    handleClose(){
+      this.dialogDisplay = false
+    },
+    onClickRotate(){
+      this.current = (this.current + 90) % 360
     }
   },
   mounted() {
@@ -97,3 +105,25 @@ export default {
   }
 }
 </script>
+<style lang="scss">
+  .preview_button_dialog{
+    .el-dialog__header{
+      display: none;
+    }
+    .el-dialog__footer{
+      padding: 10px;
+    }
+    .preview-background{
+      width: 580px;
+      height: 580px;
+      display: -webkit-box;
+      -webkit-box-pack: center;
+      -webkit-box-align: center;
+      background-image: linear-gradient(45deg,rgba(0,0,0,.25) 25%,transparent 0,transparent 75%,rgba(0,0,0,.25) 0),
+      linear-gradient(45deg,rgba(0,0,0,.25) 25%,transparent 0,transparent 75%,rgba(0,0,0,.25) 0);
+      background-color: #eee;
+      background-size: 30px 30px;
+      background-position: 0 0,15px 15px;
+    }
+  }
+</style>

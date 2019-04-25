@@ -1,7 +1,20 @@
 <template>
   <x-page breadcrumb="auto" title="银行流水预警">
     <el-card body-style="padding: 10px" class="el-card-mini no-box-shadow" style="min-width:800px;min-height:1000px">
-    <!--<el-card class="box-card" style="min-width: 600px;max-width: 1024px">-->
+      <div>
+        <el-form :inline="true" size="mini" class="demo-form-inline">
+          <el-form-item label="客户名称：">
+            <el-input v-model="warningForm.customerName" placeholder="请输入客户名称" style="width: 200px"/>
+          </el-form-item>
+          <el-form-item label="站点名称：">
+            <el-input v-model="warningForm.companyName" placeholder="请输入站点名称" style="width: 200px"/>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="loadWaitHandleList">搜索</el-button>
+            <el-button type="danger" @click="clearQueryParams">重置</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
       <!-- 表格数据 -->
       <el-table
         :data="tableData"
@@ -31,14 +44,14 @@
         <el-table-column label="预警项目" prop="warningContent" min-width="250"/>
         <el-table-column label="处置结果" prop="handleContent" min-width="250"/>
         <el-table-column label="处置时间" prop="handleTime" min-width="150"/>
-        <el-table-column label="操作" min-width="100" align="center" header-align="center" fixed="right">
+        <el-table-column label="操作" min-width="150" align="center" header-align="center" fixed="right">
           <template slot-scope="scope">
             <el-button type="text" size="mini" class="no-padding" @click="onClickHandleWarning(scope.row)"
                        :disabled="scope.row.handleStatus === 'A'"
                        v-html="scope.row.handleStatus === 'W' ? '待处理' : '已处理'">
             </el-button>
-            <!--W待处理A已处理-->
-            <!--<router-link :to="`/company/create?companyId=${scope.row.companyId}`" target="_blank">处理</router-link>-->
+            <!--全部流水-->
+            <router-link :to="`/risk-control/bank-entry?companyName=${scope.row.companyName}`" target="_blank">全部流水</router-link>
           </template>
         </el-table-column>
       </el-table>
@@ -46,9 +59,9 @@
         <el-pagination
           class="mt-sm"
           :page-sizes="[5, 10, 15, 20]"
-          :page-size="pageSize"
-          :current-page.sync="pageIndex"
-          @size-change="(size) => this.pageSize = size"
+          :page-size="warningForm.pageSize"
+          :current-page.sync="warningForm.pageIndex"
+          @size-change="(size) => this.warningForm.pageSize = size"
           layout="total, sizes, prev, pager, next, jumper"
           :total="totalCount">
         </el-pagination>
@@ -86,8 +99,12 @@ export default {
     return {
       tableData: [],
       totalCount: 0,
-      pageIndex: 1,
-      pageSize: 15,
+      warningForm: {
+        pageIndex: 1,
+        pageSize: 15,
+        companyName: '', // 站点名称
+        customerName: '' // 客户姓名
+      },
       loading: false,
       handleForm: {
         warningId: '',
@@ -103,11 +120,17 @@ export default {
     }
   },
   watch: {
-    pageIndex() {
-      this.loadWaitHandleList()
+    'warningForm.pageIndex': {
+      handler: function () {
+        this.loadWaitHandleList()
+      },
+      deep: true
     },
-    pageSize() {
-      this.loadWaitHandleList()
+    'warningForm.pageSize': {
+      handler: function () {
+        this.loadWaitHandleList()
+      },
+      deep: true
     }
   },
   methods: {
@@ -148,12 +171,14 @@ export default {
       this.loadWaitHandleList()
     },
     async loadWaitHandleList() { // 银行流水预警列表
+      if (this.loading){
+        return
+      }
       this.loading = true
       try {
-        const result = await this.$$main.riskQueryCompanyWaterWarning({ // RiskHandleCompanyWaterWarning
-          pageIndex: this.pageIndex,
-          pageSize: this.pageSize
-        })
+        const result = await this.$$main.riskQueryCompanyWaterWarning(// RiskHandleCompanyWaterWarning
+          this.warningForm
+        )
         this.totalCount = result.totalCount
         this.tableData = result.datas
       } catch (e) {
@@ -162,8 +187,16 @@ export default {
         this.loading = false
       }
     },
+    clearQueryParams(){ // list 搜索参数清空
+      this.warningForm = {
+        pageIndex: 1,
+        pageSize: 15,
+        companyName: '',
+        customerName: ''
+      }
+    },
     onPageShow() {
-      this.loadWaitHandleList()
+      this.clearQueryParams()
     }
   },
   mounted() {

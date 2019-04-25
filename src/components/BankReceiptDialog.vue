@@ -42,16 +42,15 @@
             <el-col :span="11" :offset="1">
               <el-form-item label="上传回单截图" prop="billImgUrl" class="account-upload">
                 <div>
-                  <el-upload
-                    :class="['avatar-uploader', `billImgUrl${item.bankReceiptId}`]"
-                    :action="$$main.getUrl('/Common/ImageUpload')"
-                    :show-file-list="false"
-                    :before-upload="() => {openLoading(`.billImgUrl${item.bankReceiptId}`)}"
-                    :on-error="closeLoading"
-                    :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (item.billImgUrl = res.body.imageUrl) }">
-                    <x-image v-if="item.billImgUrl" :src="item.billImgUrl" class="avatar"/>
-                    <i v-else class="el-icon-plus avatar-uploader-icon" style="display: block"></i>
-                  </el-upload>
+                  <paste-upload-image
+                    @success="url => { item.billImgUrl = url }">
+                    <x-image v-if="item.billImgUrl" :src="item.billImgUrl" class="avatar radius6"/>
+                    <div v-else class="avatar-uploader">
+                      <div class="el-upload">
+                        <i class="el-icon-plus avatar-uploader-icon" style="display: block"></i>
+                      </div>
+                    </div>
+                  </paste-upload-image>
                   <preview-button type="text" size="mini" always-show new-window-open :src="item.billImgUrl" v-if="item.billImgUrl">查看原文件</preview-button>
                   <preview-button type="text" size="mini" :src="item.billImgUrl" v-if="item.billImgUrl">预览原文件</preview-button>
                 </div>
@@ -85,9 +84,10 @@
 
 <script>
 import PreviewButton from './PreviewButton'
+import PasteUploadImage from './PasteUploadImage'
 export default {
   name: 'bank-receipt-dialog',
-  components: {PreviewButton},
+  components: {PreviewButton, PasteUploadImage},
   props: {
     showBtn: {default: true},
     btnType: {default: 'text'},
@@ -269,6 +269,9 @@ export default {
       width: 178px;
       height: 178px;
       display: block;
+    }
+    .radius6{
+      border-radius: 6px;
     }
   }
 </style>

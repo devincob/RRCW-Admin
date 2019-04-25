@@ -117,16 +117,11 @@
           <el-form-item prop="invoiceContractUrl" class="account-upload">
             <label slot="label"><span class="red-text">* </span>上传开票合同</label>
             <div>
-              <el-upload
-                class="avatar-uploader invoiceContract"
-                :action="$$main.getUrl('/Common/ImageUpload')"
-                :show-file-list="false"
-                :before-upload="() => {openLoading('.invoiceContract')}"
-                :on-error="closeLoading"
-                :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (form.invoiceContractUrl = res.body.imageUrl) }">
+              <upload-files
+                @success="url => form.invoiceContractUrl = url">
                 <x-image v-if="form.invoiceContractUrl" :src="form.invoiceContractUrl" class="avatar"/>
                 <i v-else class="el-icon-plus avatar-uploader-icon" style="display: block"></i>
-              </el-upload>
+              </upload-files>
               <preview-button type="text" alwaysShow newWindowOpen :src="form.invoiceContractUrl" size="mini" v-if="form.invoiceContractUrl">查看原文件</preview-button>
               <preview-button type="text" :src="form.invoiceContractUrl" size="mini" v-if="form.invoiceContractUrl">预览原文件</preview-button>
             </div>
@@ -165,9 +160,10 @@ import ExpressInfoDialog from '../../components/ExpressInfoDialog'
 import InvoiceInfoDialog from '../../components/InvoiceInfoDialog'
 import PreviewButton from '../../components/PreviewButton'
 import OrderLogDialog from '../../components/OrderLogDialog'
+import UploadFiles from '../../components/UploadFiles'
 export default {
   name: 'invoice-order-create',
-  components: {ExpressInfoDialog, InvoiceInfoDialog, PreviewButton, OrderLogDialog},
+  components: {ExpressInfoDialog, InvoiceInfoDialog, PreviewButton, OrderLogDialog, UploadFiles},
   data() {
     const validateServiceFee = (rule, value, callback) => {
       if (value < 0 || value > 1) {
@@ -481,17 +477,6 @@ export default {
           this.invoices = res.invoiceContents || []
         })
       }
-    },
-    openLoading(target) {
-      this.uploadLoading = this.$loading({
-        lock: true,
-        text: '文件上传中',
-        spinner: 'el-icon-loading',
-        target: target
-      })
-    },
-    closeLoading(){
-      this.uploadLoading.close()
     }
   },
   mounted() {

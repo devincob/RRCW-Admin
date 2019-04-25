@@ -86,10 +86,6 @@
           <label slot="label"><span class="red-text">* </span>注册资本</label>
           <el-input v-model="form.registeredCapital" placeholder="注册资本" readonly/> 万元
         </el-form-item>
-        <el-form-item prop="serviceFeeDiscount">
-          <label slot="label"><span class="red-text">* </span>开票服务费费率折扣</label>
-          <el-input v-model="form.serviceFeeDiscount" placeholder="请输入0~1之间的折扣小数，例：75折为0.75"/>
-        </el-form-item>
         <el-form-item prop="investorName">
           <label slot="label"><span class="red-text">* </span>投资人姓名</label>
           <el-input v-model="form.investorName" placeholder="请输入投资人姓名，即法人姓名"/>
@@ -101,30 +97,20 @@
         <el-form-item prop="investorIdCardFrontUrl" class="account-upload">
           <label slot="label"><span class="red-text">* </span>上传投资人身份证</label>
           <div>
-            <el-upload
-              class="avatar-uploader investorIdCardFront"
-              :action="$$main.getUrl('/Common/ImageUpload')"
-              :show-file-list="false"
-              :before-upload="() => {openLoading('.investorIdCardFront')}"
-              :on-error="closeLoading"
-              :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (form.investorIdCardFrontUrl = res.body.imageUrl) }">
+            <upload-files
+              @success="url => form.investorIdCardFrontUrl = url">
               <x-image v-if="form.investorIdCardFrontUrl" :src="form.investorIdCardFrontUrl" class="avatar"/>
               <i v-else class="el-icon-plus avatar-uploader-icon" style="display: block">正面</i>
-            </el-upload>
+            </upload-files>
             <el-button type="text" @click="onPreviewClick(form.investorIdCardFrontUrl)" size="mini" v-if="form.investorIdCardFrontUrl">查看原文件</el-button>
             <preview-button type="text" size="mini" :src="form.investorIdCardFrontUrl" v-if="form.investorIdCardFrontUrl">预览原文件</preview-button>
           </div>
           <div class="ml-10">
-            <el-upload
-              class="avatar-uploader investorIdCardBack"
-              :action="$$main.getUrl('/Common/ImageUpload')"
-              :show-file-list="false"
-              :before-upload="() => {openLoading('.investorIdCardBack')}"
-              :on-error="closeLoading"
-              :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (form.investorIdCardBackUrl = res.body.imageUrl) }">
+            <upload-files
+              @success="url => form.investorIdCardBackUrl = url">
               <x-image v-if="form.investorIdCardBackUrl" :src="form.investorIdCardBackUrl" class="avatar"/>
               <i v-else class="el-icon-plus avatar-uploader-icon">反面</i>
-            </el-upload>
+            </upload-files>
             <el-button type="text" @click="onPreviewClick(form.investorIdCardBackUrl)" size="mini" v-if="form.investorIdCardBackUrl">查看原文件</el-button>
             <preview-button type="text" size="mini" :src="form.investorIdCardBackUrl" v-if="form.investorIdCardBackUrl">预览原文件</preview-button>
           </div>
@@ -148,30 +134,20 @@
         <el-form-item prop="financePersonIdCardFrontUrl" class="account-upload" v-show="form.isNeedFinanceID === 'Y'">
           <label slot="label"><span class="red-text">* </span>上传财务人员身份证</label>
           <div>
-            <el-upload
-              class="avatar-uploader financePersonIdCardFront"
-              :action="$$main.getUrl('/Common/ImageUpload')"
-              :show-file-list="false"
-              :before-upload="() => {openLoading('.financePersonIdCardFront')}"
-              :on-error="closeLoading"
-              :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (form.financePersonIdCardFrontUrl = res.body.imageUrl) }">
+            <upload-files
+              @success="url => form.financePersonIdCardFrontUrl = url">
               <x-image v-if="form.financePersonIdCardFrontUrl" :src="form.financePersonIdCardFrontUrl" class="avatar"/>
               <i v-else class="el-icon-plus avatar-uploader-icon" style="display: block">正面</i>
-            </el-upload>
+            </upload-files>
             <el-button type="text" @click="onPreviewClick(form.financePersonIdCardFrontUrl)" size="mini" v-if="form.financePersonIdCardFrontUrl">查看原文件</el-button>
             <preview-button type="text" size="mini" :src="form.financePersonIdCardFrontUrl" v-if="form.financePersonIdCardFrontUrl">预览原文件</preview-button>
           </div>
           <div class="ml-10">
-            <el-upload
-              class="avatar-uploader financePersonIdCardBack"
-              :action="$$main.getUrl('/Common/ImageUpload')"
-              :show-file-list="false"
-              :before-upload="() => {openLoading('.financePersonIdCardBack')}"
-              :on-error="closeLoading"
-              :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (form.financePersonIdCardBackUrl = res.body.imageUrl) }">
+            <upload-files
+              @success="url => form.financePersonIdCardBackUrl = url">
               <x-image v-if="form.financePersonIdCardBackUrl" :src="form.financePersonIdCardBackUrl" class="avatar"/>
               <i v-else class="el-icon-plus avatar-uploader-icon">反面</i>
-            </el-upload>
+            </upload-files>
             <el-button type="text" @click="onPreviewClick(form.financePersonIdCardBackUrl)" size="mini" v-if="form.financePersonIdCardBackUrl">查看原文件</el-button>
             <preview-button type="text" size="mini" :src="form.financePersonIdCardBackUrl" v-if="form.financePersonIdCardBackUrl">预览原文件</preview-button>
           </div>
@@ -198,47 +174,45 @@
         <el-form-item class="account-upload">
           <label slot="label"><span class="red-text">* </span>税管家相关服务协议</label>
           <div>
-            <el-upload
-              class="avatar-uploader serviceAgreement"
-              :action="$$main.getUrl('/Common/ImageUpload')"
-              :show-file-list="false"
-              :before-upload="() => {openLoading('.serviceAgreement')}"
-              :on-error="closeLoading"
-              :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (form.serviceAgreementUrl = res.body.imageUrl) }">
+            <upload-files
+              @success="url => form.serviceAgreementUrl = url">
               <x-image v-if="form.serviceAgreementUrl" :src="form.serviceAgreementUrl" class="avatar"/>
               <i v-else class="el-icon-plus avatar-uploader-icon" style="display: block;font-size: 18px;">相关服务协议</i>
-            </el-upload>
+            </upload-files>
             <a :href="$config.getImageUrlPath()+'/file/RRCW-File.docx'" target="_blank"><el-button type="text" size="mini">下载模板</el-button></a>
             <el-button type="text" @click="onPreviewClick(form.serviceAgreementUrl)" size="mini" v-if="form.serviceAgreementUrl">查看原文件</el-button>
             <preview-button type="text" size="mini" :src="form.serviceAgreementUrl" v-if="form.serviceAgreementUrl">预览原文件</preview-button>
           </div>
         </el-form-item>
-        <el-form-item label="是否需要特殊审批" prop="isNeedApproval">
-          <el-checkbox v-model="form.isNeedApproval" true-label="Y" false-label="N">是否需要特殊审批</el-checkbox>
+        <el-form-item label="开票费率折扣">
+          <el-checkbox v-model="isNeedServiceFeeDiscount">需要折扣</el-checkbox>
         </el-form-item>
         <transition name="slide-fade">
-          <div v-if="form.isNeedApproval === 'Y'">
-            <el-form-item label="是否加急" prop="isPriority">
-              <el-checkbox v-model="form.isPriority" true-label="Y" false-label="N">是否加急</el-checkbox>
-            </el-form-item>
-            <transition name="slide-fade">
-              <el-form-item label="加急原因" prop="priorityReason" v-if="form.isPriority === 'Y'">
-                <el-input v-model="form.priorityReason" placeholder="加急原因"/>
-              </el-form-item>
-            </transition>
-            <el-form-item label="押金减免" prop="depositRemissionAmount">
-              <el-input v-model="form.depositRemissionAmount" placeholder="押金减免"/> 元
-            </el-form-item>
-            <el-form-item label="交易费折扣" prop="tradeFeeDiscount">
-              <el-input v-model="form.tradeFeeDiscount" placeholder="请输入0~1之间的小数"/>
-            </el-form-item>
-          </div>
+          <el-form-item label="折扣" prop="serviceFeeDiscount" v-if="isNeedServiceFeeDiscount">
+            <el-input v-model="form.serviceFeeDiscount" placeholder="请输入0~1之间的折扣小数，例：75折为0.75"/>
+          </el-form-item>
+        </transition>
+        <el-form-item label="押金减免" prop="isPriority">
+          <el-checkbox v-model="isNeedDepositRemissionAmount">需要减免</el-checkbox>
+        </el-form-item>
+        <transition name="slide-fade">
+          <el-form-item label="减免金额" prop="depositRemissionAmount" v-if="isNeedDepositRemissionAmount">
+            <el-input v-model="form.depositRemissionAmount" placeholder="请输入减免金额，不可超过当前押金"/>
+          </el-form-item>
+        </transition>
+        <el-form-item label="订单加急" prop="isPriority">
+          <el-checkbox v-model="form.isPriority" true-label="Y" false-label="N">需要加急</el-checkbox>
+        </el-form-item>
+        <transition name="slide-fade">
+          <el-form-item label="加急原因" prop="priorityReason" v-if="form.isPriority === 'Y'">
+            <el-input v-model="form.priorityReason" placeholder="请输入订单加急原因，将有助于订单快速审批"/>
+          </el-form-item>
         </transition>
         <div class="mini-item">
           <p>交易费：<span>+{{form.serviceCharge || 0 | currency}}</span></p>
           <p>押金：<span>+{{form.deposit || 0 | currency}}</span></p>
           <p>押金减免：<span>-{{form.depositRemissionAmount || 0 | currency}}</span></p>
-          <p>交易费折扣：<span>-{{showTradeFee | currency}}</span></p>
+          <!--<p>交易费折扣：<span>-{{showTradeFee | currency}}</span></p>-->
           <p>合计：<span>{{showPayAmount | currency}}</span></p>
         </div>
         <el-form-item>
@@ -254,9 +228,10 @@
 import ExpressInfoDialog from '../../components/ExpressInfoDialog'
 import PreviewButton from '../../components/PreviewButton'
 import OrderLogDialog from '../../components/OrderLogDialog'
+import UploadFiles from '../../components/UploadFiles'
 export default {
   name: 'account-order-create',
-  components: {ExpressInfoDialog, PreviewButton, OrderLogDialog},
+  components: {ExpressInfoDialog, PreviewButton, OrderLogDialog, UploadFiles},
   data() {
     const validateDepositRemissionAmount = (rule, value, callback) => {
       if (value < 0) {
@@ -290,6 +265,20 @@ export default {
         callback()
       }
     }
+    const validateIsNeedServiceFeeDiscount = (rule, value, callback) => {
+      if (this.isNeedServiceFeeDiscount && (!this.form.serviceFeeDiscount || this.form.serviceFeeDiscount === '')) {
+        callback(new Error('请输入折扣'))
+      } else {
+        callback()
+      }
+    }
+    const validateIsNeedDepositRemissionAmount = (rule, value, callback) => {
+      if (this.isNeedDepositRemissionAmount && (!this.form.depositRemissionAmount || this.form.depositRemissionAmount === '')) {
+        callback(new Error('请输入减免金额'))
+      } else {
+        callback()
+      }
+    }
     const validateIsPriority = (rule, value, callback) => {
       if (this.form.isPriority === 'Y' && (!this.form.priorityReason || this.form.priorityReason === '')) {
         callback(new Error('请输入加急原因'))
@@ -299,7 +288,8 @@ export default {
     }
     return {
       orderId: '',
-      uploadLoading: null,
+      isNeedServiceFeeDiscount: false,
+      isNeedDepositRemissionAmount: false,
       form: {
         orderId: '',
         orderNo: '',
@@ -345,9 +335,6 @@ export default {
         promiseUrl: '' // 承诺书url
       },
       formRules: {
-        serviceFeeDiscount: [{
-          validator: validateTradeFee, trigger: 'change'
-        }],
         tradeFeeDiscount: [{
           validator: validateTradeFee, trigger: 'change'
         }],
@@ -360,7 +347,14 @@ export default {
         priorityReason: [{
           validator: validateIsPriority, trigger: 'change'
         }],
+        serviceFeeDiscount: [{
+          validator: validateIsNeedServiceFeeDiscount, trigger: 'change'
+        }, {
+          validator: validateTradeFee, trigger: 'change'
+        }],
         depositRemissionAmount: [{
+          validator: validateIsNeedDepositRemissionAmount, trigger: 'change'
+        }, {
           validator: validateDepositRemissionAmount, trigger: 'change'
         }]
       },
@@ -373,16 +367,6 @@ export default {
     }
   },
   watch: {
-    'form.isNeedApproval': {
-      handler: function(val){
-        if (val === 'N'){
-          this.form.isPriority = 'N'
-          this.form.depositRemissionAmount = ''
-          this.form.tradeFeeDiscount = ''
-        }
-      },
-      deep: true
-    },
     'form.isPriority': {
       handler: function(val){
         if (val === 'N'){
@@ -390,6 +374,16 @@ export default {
         }
       },
       deep: true
+    },
+    isNeedServiceFeeDiscount(val){
+      if (!val) {
+        this.form.serviceFeeDiscount = ''
+      }
+    },
+    isNeedDepositRemissionAmount(val){
+      if (!val) {
+        this.form.depositRemissionAmount = ''
+      }
     }
   },
   computed: {
@@ -451,7 +445,9 @@ export default {
         this.form.goodsId = this.form.goodsId || ''
         this.form.companyTypeId = this.form.companyTypeId || ''
         this.form.serviceFeeDiscount = this.form.serviceFeeDiscount || ''
+        this.isNeedServiceFeeDiscount = !!this.form.serviceFeeDiscount
         this.form.depositRemissionAmount = this.form.depositRemissionAmount || ''
+        this.isNeedDepositRemissionAmount = !!this.form.depositRemissionAmount
         this.form.tradeFeeDiscount = this.form.tradeFeeDiscount || ''
 
         this.onGoodsChange(orderInfo.goodsId)
@@ -561,6 +557,10 @@ export default {
       }
       this.form.companyName = arr.join(',')
       this.form.tradeFeeDiscount = this.form.tradeFeeDiscount || 1
+      let d = this.form.depositRemissionAmount
+      let s = this.form.serviceFeeDiscount
+      let p = this.form.priorityReason
+      this.form.isNeedApproval = (d && d !== '') || (s && s !== '') || (p && p !== '') ? 'Y' : 'N'
       const loading = this.$loading({
         text: '正在操作',
         spinner: 'el-icon-loading'
@@ -616,20 +616,11 @@ export default {
     onExpressChoose(res, name){
       this.form[name] = `${res.receiver || ' '}，${res.phone || ' '}，${res.address || ' '}。`
     },
-    openLoading(target) {
-      this.uploadLoading = this.$loading({
-        lock: true,
-        text: '文件上传中',
-        spinner: 'el-icon-loading',
-        target: target
-      })
-    },
-    closeLoading(){
-      this.uploadLoading.close()
-    },
     clearForm(){
       this.orderId = ''
       this.isShowButton = false
+      this.isNeedServiceFeeDiscount = false
+      this.isNeedDepositRemissionAmount = false
       this.form = {
         orderId: '',
         orderNo: '',

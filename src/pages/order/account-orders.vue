@@ -98,7 +98,6 @@
             {{scope.row.goodsName}}
           </goods-details-dialog>
         </el-table-column>
-        <el-table-column prop="totalAmount" label="交易费" width="100" align="right" :formatter="(row) => `${$options.filters['currency'](row.totalAmount, '', 2)}`"/>
         <el-table-column prop="realDepositFee" label="押金" width="100" align="right" :formatter="(row) => `${$options.filters['currency'](row.realDepositFee, '', 2)}`"/>
         <el-table-column prop="handleAdminUserName" label="待处理人" align="center" width="100"/>
         <el-table-column prop="workflowName" label="状态" :render-header="renderStatusHeader" width="120"/>

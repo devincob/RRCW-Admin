@@ -347,7 +347,7 @@ class Model {
    * @private
    */
   _getUrl () {
-    let protocol = this.protocol + '://'
+    let protocol = location.protocol + '//'
     if (this.url.substr(0, 10).indexOf('://') !== -1){
       protocol = ''
     }

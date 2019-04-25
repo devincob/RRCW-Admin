@@ -137,7 +137,7 @@ export default {
         this.totalCount = data.totalCount
         this.orderList = data.datas
       } catch (e){
-        console.log(e)
+        e.message && this.$message.error(e.message)
       } finally {
         this.loading = false
       }

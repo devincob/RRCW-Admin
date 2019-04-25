@@ -3038,6 +3038,9 @@ export default class MSModel extends Model {
   riskImportCompanyWater(params, callback){
     return this.modelExecute('/Risk/Import/CompanyWater', params, callback)
   }
+  riskCompanyWaterImport(params, callback){
+    return this.modelExecute('/Risk/CompanyWater/Import', params, callback)
+  }
   /**
    *名称：风控.查询站点流水 路由：/Risk/Query/CompanyWater
    *@param {*} params 向服务器传送的参数,对应Request

@@ -148,7 +148,7 @@
             >提交订单</el-button>
             <el-button
               size="mini"
-              @click="companyRegisterInfoDialogDisplay = true"
+              @click="$refs['companyRegisterInfoDialog'].show()"
             >填写站点注册信息</el-button>
             <el-button
               size="mini"
@@ -167,7 +167,7 @@
             >确认无误，提交订单</el-button>
             <el-button
               size="mini"
-              @click="companyRegisterInfoDialogDisplay = true"
+              @click="$refs['companyRegisterInfoDialog'].show()"
             >修改站点注册信息</el-button>
             <el-button
               size="mini"
@@ -201,7 +201,7 @@
             >提交订单</el-button>
             <el-button
               size="mini"
-              @click="registrationProcessDialogDisplay = true"
+              @click="$refs['registrationProcessDialog'].show()"
             >更新站点注册进度</el-button>
             <el-button
               size="mini"
@@ -220,7 +220,7 @@
             >录入完成，提交订单</el-button>
             <el-button
               size="mini"
-              @click="companyAttachmentDialogDisplay = true"
+              @click="$refs['companyAttachmentDialog'].show()"
             >录入站点注册信息</el-button>
             <el-button
               size="mini"
@@ -239,7 +239,7 @@
             >提交订单</el-button>
             <el-button
               size="mini"
-              @click="expressDialogDisplay = true"
+              @click="$refs['expressDialog'].show()"
             >录入物流信息</el-button>
             <el-button
               size="mini"
@@ -764,12 +764,6 @@
             <td>纳税性质</td>
             <td>{{info.orderInfo.showTaxTypeName || '-'}}</td>
           </tr>
-          <tr>
-            <td>开票费率折扣</td>
-            <td>{{info.orderInfo.serviceFeeDiscount || '-'}}</td>
-            <td></td>
-            <td></td>
-          </tr>
           <tr class="scope-operation">
             <td>经营范围</td>
             <td colspan="3">{{info.orderInfo.businessScope || '-'}}</td>
@@ -887,8 +881,8 @@
             <td>{{info.orderInfo.createAdminUserName || '-'}}</td>
           </tr>
           <tr>
-            <td>交易费折扣</td>
-            <td>{{info.orderInfo.tradeFeeDiscount || '-'}}</td>
+            <td>开票费率折扣</td>
+            <td>{{showServiceFee}}</td>
             <td>订单状态</td>
             <td style="color: red">{{info.orderInfo.workflowName || '-'}}</td>
           </tr>
@@ -916,927 +910,15 @@
       <!--订单已完成，共耗时30天4小时（2018-05-02~2018-05-20）。-->
       <!--</el-card>-->
     </div>
-    <el-dialog
-      title="站点信息"
-      :visible.sync="companyRegisterInfoDialogDisplay"
-      :close-on-click-modal="false"
-      width="600px"
-      custom-class="company-register-info-dialog"
-      center
-    >
-      <el-form
-        ref="companyRegisterInfoForm"
-        :model="companyRegisterInfoForm"
-        label-width="130px"
-        size="small"
-      >
-        <el-form-item
-          label="供应商"
-          prop="companyTypeName"
-        >
-          <el-select
-            style="width: 100%"
-            v-model="companyRegisterInfoForm.supplierId"
-            placeholder="请选择供应商"
-          >
-            <el-option
-              v-for="item in sourceTaxSupplierList"
-              :key="item.supplierId"
-              :label="item.supplierName"
-              :value="item.supplierId"
-            >
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item
-          prop="companyName"
-          v-for="(name, index) in companyRegisterInfoForm.companyNames"
-          :key="index"
-        >
-          <label
-            slot="label"
-            v-show="index === 0"
-          >站点名称<span
-              style="color: red"
-              v-if="info && info.orderInfo && info.orderInfo.isAdjustment !== 'Y'"
-            >(不可调剂)</span></label>
-          <el-row>
-            <el-col :span="20">
-              <el-input
-                v-model="name.value"
-                placeholder="站点名称"
-              />
-            </el-col>
-            <el-col :span="4">
-              <el-button
-                type="text"
-                size="mini"
-                style="margin-left: 5px"
-                @click.prevent="removeCompanyName(name)"
-                v-if="companyRegisterInfoForm.companyNames && companyRegisterInfoForm.companyNames.length > 1"
-              >删除</el-button>
-              <el-button
-                type="text"
-                size="mini"
-                style="margin-left: 5px"
-                @click.prevent="addCompanyName()"
-                v-if="companyRegisterInfoForm.companyNames && companyRegisterInfoForm.companyNames.length < 10 &&companyRegisterInfoForm.companyNames.length === index + 1"
-              >增加</el-button>
-            </el-col>
-          </el-row>
-        </el-form-item>
-        <el-form-item
-          label="站点类型"
-          prop="companyTypeName"
-        >
-          <el-select
-            style="width: 100%"
-            v-model="companyRegisterInfoForm.companyTypeId"
-            @change="onCompanyTypeChange"
-            placeholder="请选择站点类型"
-          >
-            <el-option
-              v-for="item in companyTypeList"
-              :key="item.companyTypeId"
-              :label="item.companyTypeName"
-              :value="item.companyTypeId"
-            >
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item
-          label="经营范围"
-          prop="businessScope"
-        >
-          <el-input
-            v-model="companyRegisterInfoForm.businessScope"
-            placeholder="经营范围"
-            type="textarea"
-            :autosize="{ minRows: 2, maxRows: 2}"
-            readonly
-          />
-        </el-form-item>
-        <el-form-item
-          label="注册资本"
-          prop="registeredCapital"
-          class="flex-content"
-        >
-          <el-input
-            v-model="companyRegisterInfoForm.registeredCapital"
-            placeholder="注册资本"
-            readonly
-          /><span>万元</span>
-        </el-form-item>
-        <el-form-item
-          label="纳税性质"
-          prop="showTaxTypeName"
-        >
-          <el-input
-            v-model="companyRegisterInfoForm.showTaxTypeName"
-            placeholder="纳税性质"
-            readonly
-          />
-        </el-form-item>
-        <el-form-item
-          label="投资人姓名"
-          prop="investorName"
-        >
-          <el-input
-            v-model="companyRegisterInfoForm.investorName"
-            placeholder="投资人姓名"
-          />
-        </el-form-item>
-        <el-form-item
-          label="投资人手机"
-          prop="investorMobile"
-        >
-          <el-input
-            v-model="companyRegisterInfoForm.investorMobile"
-            placeholder="投资人手机"
-          />
-        </el-form-item>
-        <el-form-item
-          label="投资人身份证号码"
-          prop="investorIdCardNo"
-        >
-          <el-input
-            v-model="companyRegisterInfoForm.investorIdCardNo"
-            placeholder="投资人身份证号码"
-          />
-        </el-form-item>
-        <el-form-item
-          label="上传投资人身份证"
-          class="account-upload"
-        >
-          <div>
-            <el-upload
-              class="avatar-uploader investorIdCardFront"
-              :action="$$main.getUrl('/Common/ImageUpload')"
-              :show-file-list="false"
-              :before-upload="() => {openLoading('.investorIdCardFront')}"
-              :on-error="closeLoading"
-              :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (companyRegisterInfoForm.investorIdCardFrontUrl = res.body.imageUrl) }"
-            >
-              <x-image
-                v-if="companyRegisterInfoForm.investorIdCardFrontUrl"
-                :src="companyRegisterInfoForm.investorIdCardFrontUrl"
-                class="avatar"
-              />
-              <i
-                v-else
-                class="el-icon-plus avatar-uploader-icon"
-                style="display: block"
-              >正面</i>
-            </el-upload>
-            <preview-button
-              type="text"
-              size="mini"
-              always-show
-              new-window-open
-              :src="companyRegisterInfoForm.investorIdCardFrontUrl"
-              v-if="companyRegisterInfoForm.investorIdCardFrontUrl"
-            >查看原文件</preview-button>
-            <preview-button
-              type="text"
-              size="mini"
-              :src="companyRegisterInfoForm.investorIdCardFrontUrl"
-              v-if="companyRegisterInfoForm.investorIdCardFrontUrl"
-            >预览原文件</preview-button>
-          </div>
-          <div class="ml-10">
-            <el-upload
-              class="avatar-uploader ml-10 financePersonIdCard"
-              :action="$$main.getUrl('/Common/ImageUpload')"
-              :show-file-list="false"
-              :before-upload="() => {openLoading('.financePersonIdCard')}"
-              :on-error="closeLoading"
-              :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (companyRegisterInfoForm.investorIdCardBackUrl = res.body.imageUrl) }"
-            >
-              <x-image
-                v-if="companyRegisterInfoForm.investorIdCardBackUrl"
-                :src="companyRegisterInfoForm.investorIdCardBackUrl"
-                class="avatar"
-              />
-              <i
-                v-else
-                class="el-icon-plus avatar-uploader-icon"
-              >反面</i>
-            </el-upload>
-            <preview-button
-              type="text"
-              size="mini"
-              always-show
-              new-window-open
-              :src="companyRegisterInfoForm.investorIdCardBackUrl"
-              v-if="companyRegisterInfoForm.investorIdCardBackUrl"
-            >查看原文件</preview-button>
-            <preview-button
-              type="text"
-              size="mini"
-              :src="companyRegisterInfoForm.investorIdCardBackUrl"
-              v-if="companyRegisterInfoForm.investorIdCardBackUrl"
-            >预览原文件</preview-button>
-          </div>
-        </el-form-item>
-        <el-form-item
-          label="投资人邮箱"
-          prop="investorEmail"
-        >
-          <el-input
-            v-model="companyRegisterInfoForm.investorEmail"
-            placeholder="投资人邮箱"
-          />
-        </el-form-item>
-        <el-form-item
-          label="财务人员姓名"
-          prop="financePersonName"
-        >
-          <el-input
-            v-model="companyRegisterInfoForm.financePersonName"
-            placeholder="财务人员姓名"
-          />
-        </el-form-item>
-        <el-form-item
-          label="财务人员手机"
-          prop="financePersonMobile"
-        >
-          <el-input
-            v-model="companyRegisterInfoForm.financePersonMobile"
-            placeholder="财务人员手机"
-          />
-        </el-form-item>
-        <el-form-item
-          label="上传财务人员身份证"
-          prop="investorEmail"
-          class="account-upload"
-          v-show="companyRegisterInfoForm.isNeedFinanceID === 'Y'"
-        >
-          <div>
-            <el-upload
-              class="avatar-uploader financePersonIdCardFront"
-              :action="$$main.getUrl('/Common/ImageUpload')"
-              :show-file-list="false"
-              :before-upload="() => {openLoading('.financePersonIdCardFront')}"
-              :on-error="closeLoading"
-              :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (companyRegisterInfoForm.financePersonIdCardFrontUrl = res.body.imageUrl) }"
-            >
-              <x-image
-                v-if="companyRegisterInfoForm.financePersonIdCardFrontUrl"
-                :src="companyRegisterInfoForm.financePersonIdCardFrontUrl"
-                class="avatar"
-              />
-              <i
-                v-else
-                class="el-icon-plus avatar-uploader-icon"
-                style="display: block"
-              >正面</i>
-            </el-upload>
-            <preview-button
-              type="text"
-              size="mini"
-              always-show
-              new-window-open
-              :src="companyRegisterInfoForm.financePersonIdCardFrontUrl"
-              v-if="companyRegisterInfoForm.financePersonIdCardFrontUrl"
-            >查看原文件</preview-button>
-            <preview-button
-              type="text"
-              size="mini"
-              :src="companyRegisterInfoForm.financePersonIdCardFrontUrl"
-              v-if="companyRegisterInfoForm.financePersonIdCardFrontUrl"
-            >预览原文件</preview-button>
-          </div>
-          <div class="ml-10">
-            <el-upload
-              class="avatar-uploader ml-10 financePersonIdCardBack"
-              :action="$$main.getUrl('/Common/ImageUpload')"
-              :show-file-list="false"
-              :before-upload="() => {openLoading('.financePersonIdCardBack')}"
-              :on-error="closeLoading"
-              :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (companyRegisterInfoForm.financePersonIdCardBackUrl = res.body.imageUrl) }"
-            >
-              <x-image
-                v-if="companyRegisterInfoForm.financePersonIdCardBackUrl"
-                :src="companyRegisterInfoForm.financePersonIdCardBackUrl"
-                class="avatar"
-              />
-              <i
-                v-else
-                class="el-icon-plus avatar-uploader-icon"
-              >反面</i>
-            </el-upload>
-            <preview-button
-              type="text"
-              size="mini"
-              always-show
-              new-window-open
-              :src="companyRegisterInfoForm.financePersonIdCardBackUrl"
-              v-if="companyRegisterInfoForm.financePersonIdCardBackUrl"
-            >查看原文件</preview-button>
-            <preview-button
-              type="text"
-              size="mini"
-              :src="companyRegisterInfoForm.financePersonIdCardBackUrl"
-              v-if="companyRegisterInfoForm.financePersonIdCardBackUrl"
-            >预览原文件</preview-button>
-          </div>
-        </el-form-item>
-        <el-form-item
-          label="财务人员身份证号"
-          prop="financePersonIdCardNo"
-        >
-          <el-input
-            v-model="companyRegisterInfoForm.financePersonIdCardNo"
-            placeholder="财务人员身份证号"
-          />
-        </el-form-item>
-        <el-form-item
-          label="备注"
-          prop="remark"
-        >
-          <el-input
-            v-model="companyRegisterInfoForm.remark"
-            placeholder="备注"
-            type="textarea"
-            :autosize="{ minRows: 2, maxRows: 2}"
-          />
-        </el-form-item>
-      </el-form>
-      <span
-        slot="footer"
-        class="dialog-footer"
-      >
-        <el-button @click="companyRegisterInfoDialogDisplay = false">取消</el-button>
-        <el-button
-          type="primary"
-          @click="editCompanyRegisterInfo"
-        >确认</el-button>
-      </span>
-    </el-dialog>
-    <el-dialog
-      title="站点注册进度"
-      :visible.sync="registrationProcessDialogDisplay"
-      :close-on-click-modal="false"
-      custom-class="registration-process-dialog"
-      width="560px"
-      center
-    >
-      <el-form
-        ref="registrationProcessForm"
-        :model="registrationProcessForm"
-        label-width="130px"
-        size="small"
-      >
-        <el-form-item
-          label="核名完成时间"
-          prop="checkNameCompletedTime"
-        >
-          <el-date-picker
-            style="width: 210px !important;"
-            v-model="registrationProcessForm.checkNameCompletedTime"
-            type="datetime"
-            value-format="yyyy/MM/dd HH:mm:ss"
-            placeholder="核名完成时间"
-          >
-          </el-date-picker>
-          <el-upload
-            :action="$$main.getUrl('/Common/ImageUpload')"
-            :show-file-list="false"
-            :before-upload="() => {openLoading()}"
-            :on-error="closeLoading"
-            :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (registrationProcessForm.checkNameCompletedUrl = res.body.imageUrl) }"
-          >
-            <el-button
-              type="text"
-              size="mini"
-            >上传材料</el-button>
-          </el-upload>
-          <preview-button
-            v-if="registrationProcessForm.checkNameCompletedUrl"
-            always-show
-            show-preview-dialog
-            size="mini"
-            type="text"
-            :src="registrationProcessForm.checkNameCompletedUrl"
-          >查看原文件</preview-button>
-          <preview-button
-            v-if="registrationProcessForm.checkNameCompletedUrl"
-            size="mini"
-            type="text"
-            :src="registrationProcessForm.checkNameCompletedUrl"
-          >预览</preview-button>
-        </el-form-item>
-        <el-form-item
-          label="营业执照发放时间"
-          prop="licenseTime"
-        >
-          <el-date-picker
-            style="width: 210px !important;"
-            v-model="registrationProcessForm.licenseTime"
-            type="datetime"
-            value-format="yyyy/MM/dd HH:mm:ss"
-            placeholder="营业执照发放时间"
-          >
-          </el-date-picker>
-          <el-upload
-            :action="$$main.getUrl('/Common/ImageUpload')"
-            :show-file-list="false"
-            :before-upload="() => {openLoading()}"
-            :on-error="closeLoading"
-            :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (registrationProcessForm.licenseUrl = res.body.imageUrl) }"
-          >
-            <el-button
-              type="text"
-              size="mini"
-            >上传材料</el-button>
-          </el-upload>
-          <preview-button
-            v-if="registrationProcessForm.licenseUrl"
-            always-show
-            show-preview-dialog
-            size="mini"
-            type="text"
-            :src="registrationProcessForm.licenseUrl"
-          >查看原文件</preview-button>
-          <preview-button
-            v-if="registrationProcessForm.licenseUrl"
-            size="mini"
-            type="text"
-            :src="registrationProcessForm.licenseUrl"
-          >预览</preview-button>
-        </el-form-item>
-        <el-form-item
-          label="银行开户时间"
-          prop="bankOpenAccountTime"
-        >
-          <el-date-picker
-            style="width: 210px !important;"
-            v-model="registrationProcessForm.bankOpenAccountTime"
-            type="datetime"
-            value-format="yyyy/MM/dd HH:mm:ss"
-            placeholder="银行开户时间"
-          >
-          </el-date-picker>
-          <el-upload
-            :action="$$main.getUrl('/Common/ImageUpload')"
-            :show-file-list="false"
-            :before-upload="() => {openLoading()}"
-            :on-error="closeLoading"
-            :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (registrationProcessForm.bankOpenAccountUrl = res.body.imageUrl) }"
-          >
-            <el-button
-              type="text"
-              size="mini"
-            >上传材料</el-button>
-          </el-upload>
-          <preview-button
-            v-if="registrationProcessForm.bankOpenAccountUrl"
-            always-show
-            show-preview-dialog
-            size="mini"
-            type="text"
-            :src="registrationProcessForm.bankOpenAccountUrl"
-          >查看原文件</preview-button>
-          <preview-button
-            v-if="registrationProcessForm.bankOpenAccountUrl"
-            size="mini"
-            type="text"
-            :src="registrationProcessForm.bankOpenAccountUrl"
-          >预览</preview-button>
-        </el-form-item>
-        <el-form-item
-          label="银行开户完成时间"
-          prop="bankOpenAccountCompletedTime"
-        >
-          <el-date-picker
-            style="width: 210px !important;"
-            v-model="registrationProcessForm.bankOpenAccountCompletedTime"
-            type="datetime"
-            value-format="yyyy/MM/dd HH:mm:ss"
-            placeholder="银行开户完成时间"
-          >
-          </el-date-picker>
-          <el-upload
-            :action="$$main.getUrl('/Common/ImageUpload')"
-            :show-file-list="false"
-            :before-upload="() => {openLoading()}"
-            :on-error="closeLoading"
-            :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (registrationProcessForm.bankOpenAccountCompletedUrl = res.body.imageUrl) }"
-          >
-            <el-button
-              type="text"
-              size="mini"
-            >上传材料</el-button>
-          </el-upload>
-          <preview-button
-            v-if="registrationProcessForm.bankOpenAccountCompletedUrl"
-            always-show
-            show-preview-dialog
-            size="mini"
-            type="text"
-            :src="registrationProcessForm.bankOpenAccountCompletedUrl"
-          >查看原文件</preview-button>
-          <preview-button
-            v-if="registrationProcessForm.bankOpenAccountCompletedUrl"
-            size="mini"
-            type="text"
-            :src="registrationProcessForm.bankOpenAccountCompletedUrl"
-          >预览</preview-button>
-        </el-form-item>
-        <el-form-item
-          label="核税完成时间"
-          prop="checkTaxCompletedTime"
-        >
-          <el-date-picker
-            style="width: 210px !important;"
-            v-model="registrationProcessForm.checkTaxCompletedTime"
-            type="datetime"
-            value-format="yyyy/MM/dd HH:mm:ss"
-            placeholder="核税完成时间"
-          >
-          </el-date-picker>
-          <el-upload
-            :action="$$main.getUrl('/Common/ImageUpload')"
-            :show-file-list="false"
-            :before-upload="() => {openLoading()}"
-            :on-error="closeLoading"
-            :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (registrationProcessForm.checkTaxCompletedUrl = res.body.imageUrl) }"
-          >
-            <el-button
-              type="text"
-              size="mini"
-            >上传材料</el-button>
-          </el-upload>
-          <preview-button
-            v-if="registrationProcessForm.checkTaxCompletedUrl"
-            always-show
-            show-preview-dialog
-            size="mini"
-            type="text"
-            :src="registrationProcessForm.checkTaxCompletedUrl"
-          >查看原文件</preview-button>
-          <preview-button
-            v-if="registrationProcessForm.checkTaxCompletedUrl"
-            size="mini"
-            type="text"
-            :src="registrationProcessForm.checkTaxCompletedUrl"
-          >预览</preview-button>
-        </el-form-item>
-      </el-form>
-      <span
-        slot="footer"
-        class="dialog-footer"
-      >
-        <el-button @click="registrationProcessDialogDisplay = false">取消</el-button>
-        <el-button
-          type="primary"
-          @click="editRegistrationProcess"
-        >确认</el-button>
-      </span>
-    </el-dialog>
-    <el-dialog
-      title="站点实际注册信息"
-      :visible.sync="companyAttachmentDialogDisplay"
-      :close-on-click-modal="false"
-      custom-class="company-attachment-dialog"
-      width="500px"
-      center
-    >
-      <el-form
-        ref="companyAttachmentForm"
-        :model="companyAttachmentForm"
-        label-width="0"
-        size="small"
-      >
-        <el-form-item class="input-item">
-          <span>站点名称</span>
-          <el-input
-            v-model="companyAttachmentForm.companyName"
-            placeholder="请输入站点营业执照名称"
-          />
-        </el-form-item>
-        <el-form-item class="input-item">
-          <span>站点地址</span>
-          <el-input
-            v-model="companyAttachmentForm.companyAddress"
-            placeholder="请输入站点营业执照注册地址"
-          />
-        </el-form-item>
-        <el-form-item class="input-item">
-          <span>公司电话</span>
-          <el-input
-            v-model="companyAttachmentForm.companyPhone"
-            placeholder="请输入站点注册电话"
-          />
-        </el-form-item>
-        <el-form-item class="input-item">
-          <span>开户银行</span>
-          <el-input
-            v-model="companyAttachmentForm.accountBank"
-            placeholder="请输入站点开户银行"
-          />
-        </el-form-item>
-        <el-form-item class="input-item">
-          <span>开户银行账号</span>
-          <el-input
-            v-model="companyAttachmentForm.accountBankAccount"
-            placeholder="请输入站点开户银行账号"
-          />
-        </el-form-item>
-        <el-form-item class="input-item">
-          <span>税号</span>
-          <el-input
-            v-model="companyAttachmentForm.taxNo"
-            placeholder="请输入站点税号"
-          />
-        </el-form-item>
-        <el-row>
-          <el-col
-            :span="11"
-            :offset="1"
-          >上传网银U盾（序列号）</el-col>
-          <el-col
-            :span="11"
-            :offset="1"
-          >上传公章照片</el-col>
-        </el-row>
-        <el-row>
-          <el-col
-            :span="11"
-            :offset="1"
-          >
-            <el-form-item class="account-upload">
-              <div>
-                <el-upload
-                  class="avatar-uploader ukeyImg"
-                  :action="$$main.getUrl('/Common/ImageUpload')"
-                  :show-file-list="false"
-                  :before-upload="() => {openLoading('.ukeyImg')}"
-                  :on-error="closeLoading"
-                  :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (companyAttachmentForm.ukeyImgUrl = res.body.imageUrl) }"
-                >
-                  <x-image
-                    v-if="companyAttachmentForm.ukeyImgUrl"
-                    :src="companyAttachmentForm.ukeyImgUrl"
-                    class="avatar"
-                  />
-                  <i
-                    v-else
-                    class="el-icon-plus avatar-uploader-icon"
-                    style="display: block"
-                  ></i>
-                </el-upload>
-                <preview-button
-                  type="text"
-                  size="mini"
-                  always-show
-                  new-window-open
-                  :src="companyAttachmentForm.ukeyImgUrl"
-                  v-if="companyAttachmentForm.ukeyImgUrl"
-                >查看原文件</preview-button>
-                <preview-button
-                  type="text"
-                  size="mini"
-                  :src="companyAttachmentForm.ukeyImgUrl"
-                  v-if="companyAttachmentForm.ukeyImgUrl"
-                >预览原文件</preview-button>
-              </div>
-            </el-form-item>
-          </el-col>
-          <el-col
-            :span="11"
-            :offset="1"
-          >
-            <el-form-item class="account-upload">
-              <div>
-                <el-upload
-                  class="avatar-uploader stampImg"
-                  :action="$$main.getUrl('/Common/ImageUpload')"
-                  :show-file-list="false"
-                  :before-upload="() => {openLoading('.stampImg')}"
-                  :on-error="closeLoading"
-                  :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (companyAttachmentForm.stampImgUrl = res.body.imageUrl) }"
-                >
-                  <x-image
-                    v-if="companyAttachmentForm.stampImgUrl"
-                    :src="companyAttachmentForm.stampImgUrl"
-                    class="avatar"
-                  />
-                  <i
-                    v-else
-                    class="el-icon-plus avatar-uploader-icon"
-                    style="display: block"
-                  ></i>
-                </el-upload>
-                <preview-button
-                  type="text"
-                  size="mini"
-                  always-show
-                  new-window-open
-                  :src="companyAttachmentForm.stampImgUrl"
-                  v-if="companyAttachmentForm.stampImgUrl"
-                >查看原文件</preview-button>
-                <preview-button
-                  type="text"
-                  size="mini"
-                  :src="companyAttachmentForm.stampImgUrl"
-                  v-if="companyAttachmentForm.stampImgUrl"
-                >预览原文件</preview-button>
-              </div>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col
-            :span="11"
-            :offset="1"
-          >上传营业执照</el-col>
-          <el-col
-            :span="11"
-            :offset="1"
-          >上传国地税三方协议PDF</el-col>
-        </el-row>
-        <el-row>
-          <el-col
-            :span="11"
-            :offset="1"
-          >
-            <el-form-item class="account-upload">
-              <div>
-                <el-upload
-                  class="avatar-uploader licenseImg"
-                  :action="$$main.getUrl('/Common/ImageUpload')"
-                  :show-file-list="false"
-                  :before-upload="() => {openLoading('.licenseImg')}"
-                  :on-error="closeLoading"
-                  :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (companyAttachmentForm.licenseImgUrl = res.body.imageUrl) }"
-                >
-                  <x-image
-                    v-if="companyAttachmentForm.licenseImgUrl"
-                    :src="companyAttachmentForm.licenseImgUrl"
-                    class="avatar"
-                  />
-                  <i
-                    v-else
-                    class="el-icon-plus avatar-uploader-icon"
-                    style="display: block"
-                  ></i>
-                </el-upload>
-                <preview-button
-                  type="text"
-                  size="mini"
-                  always-show
-                  new-window-open
-                  :src="companyAttachmentForm.licenseImgUrl"
-                  v-if="companyAttachmentForm.licenseImgUrl"
-                >查看原文件</preview-button>
-                <preview-button
-                  type="text"
-                  size="mini"
-                  :src="companyAttachmentForm.licenseImgUrl"
-                  v-if="companyAttachmentForm.licenseImgUrl"
-                >预览原文件</preview-button>
-              </div>
-            </el-form-item>
-          </el-col>
-          <el-col
-            :span="11"
-            :offset="1"
-          >
-            <el-form-item class="account-upload">
-              <div>
-                <el-upload
-                  class="avatar-uploader taxAgreementPDF"
-                  :action="$$main.getUrl('/Common/ImageUpload')"
-                  :show-file-list="false"
-                  :before-upload="() => {openLoading('.taxAgreementPDF')}"
-                  :on-error="closeLoading"
-                  :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (companyAttachmentForm.taxAgreementPDFUrl = res.body.imageUrl) }"
-                >
-                  <x-image
-                    v-if="companyAttachmentForm.taxAgreementPDFUrl"
-                    :src="companyAttachmentForm.taxAgreementPDFUrl"
-                    class="avatar"
-                  />
-                  <i
-                    v-else
-                    class="el-icon-plus avatar-uploader-icon"
-                    style="display: block"
-                  ></i>
-                </el-upload>
-                <preview-button
-                  type="text"
-                  size="mini"
-                  always-show
-                  new-window-open
-                  :src="companyAttachmentForm.taxAgreementPDFUrl"
-                  v-if="companyAttachmentForm.taxAgreementPDFUrl"
-                >查看原文件</preview-button>
-                <preview-button
-                  type="text"
-                  size="mini"
-                  :src="companyAttachmentForm.taxAgreementPDFUrl"
-                  v-if="companyAttachmentForm.taxAgreementPDFUrl"
-                >预览原文件</preview-button>
-              </div>
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </el-form>
-      <span
-        slot="footer"
-        class="dialog-footer"
-      >
-        <el-button @click="companyAttachmentDialogDisplay = false">取消</el-button>
-        <el-button
-          type="primary"
-          @click="editCompanyAttachment"
-        >确认</el-button>
-      </span>
-    </el-dialog>
-    <el-dialog
-      title="交付物流信息"
-      :visible.sync="expressDialogDisplay"
-      :close-on-click-modal="false"
-      width="500px"
-      center
-    >
-      <el-form
-        ref="expressForm"
-        :model="expressForm"
-        label-width="120px"
-        size="small"
-      >
-        <el-form-item
-          label="快递单号"
-          prop="bankNo"
-        >
-          <el-input
-            v-model="expressForm.expressNo"
-            placeholder="快递单号"
-          />
-        </el-form-item>
-        <el-form-item
-          label="快递公司"
-          prop="trainAmount"
-        >
-          <el-input
-            v-model="expressForm.expressName"
-            placeholder="快递公司"
-          />
-        </el-form-item>
-        <el-form-item
-          label="快递单回单截图"
-          class="account-upload"
-        >
-          <div>
-            <el-upload
-              class="avatar-uploader expressImg"
-              :action="$$main.getUrl('/Common/ImageUpload')"
-              :show-file-list="false"
-              :before-upload="() => {openLoading('.expressImg')}"
-              :on-error="closeLoading"
-              :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (expressForm.expressImgUrl = res.body.imageUrl) }"
-            >
-              <x-image
-                v-if="expressForm.expressImgUrl"
-                :src="expressForm.expressImgUrl"
-                class="avatar"
-              />
-              <i
-                v-else
-                class="el-icon-plus avatar-uploader-icon"
-                style="display: block"
-              ></i>
-            </el-upload>
-            <preview-button
-              type="text"
-              size="mini"
-              always-show
-              new-window-open
-              :src="expressForm.expressImgUrl"
-              v-if="expressForm.expressImgUrl"
-            >查看原文件</preview-button>
-            <preview-button
-              type="text"
-              size="mini"
-              :src="expressForm.expressImgUrl"
-              v-if="expressForm.expressImgUrl"
-            >预览原文件</preview-button>
-          </div>
-        </el-form-item>
-      </el-form>
-      <span
-        slot="footer"
-        class="dialog-footer"
-      >
-        <el-button @click="expressDialogDisplay = false">取消</el-button>
-        <el-button
-          type="primary"
-          @click="editExpress"
-        >确认</el-button>
-      </span>
-    </el-dialog>
+    <!-- 站点信息 -->
+    <company-register-info-dialog ref="companyRegisterInfoDialog" :info="info" @saved="queryOrderInfo"/>
+    <!-- 站点注册进度 -->
+    <registration-process-dialog ref="registrationProcessDialog" :info="info" @saved="queryOrderInfo"/>
+    <!-- 站点实际注册信息 -->
+    <company-attachment-dialog ref="companyAttachmentDialog" :info="info" @saved="queryOrderInfo"/>
+    <!-- 交付物流信息 -->
+    <express-dialog ref="expressDialog" :info="info" @saved="queryOrderInfo"/>
+    <!-- 客服回访信息 -->
     <el-dialog
       title="客服回访信息"
       :visible.sync="customerServiceRecordDialogDisplay"
@@ -1893,13 +975,27 @@
 import PreviewButton from '../../components/PreviewButton'
 import BankReceiptDialog from '../../components/BankReceiptDialog'
 import OrderLogDialog from '../../components/OrderLogDialog'
+import PasteUploadImage from '../../components/PasteUploadImage'
+import UploadFiles from '../../components/UploadFiles'
+import CompanyRegisterInfoDialog from './account_components/CompanyRegisterInfoDialog'
+import RegistrationProcessDialog from './account_components/RegistrationProcessDialog'
+import CompanyAttachmentDialog from './account_components/CompanyAttachmentDialog'
+import ExpressDialog from './account_components/ExpressDialog'
 export default {
   name: 'account-order-details',
-  components: { PreviewButton, BankReceiptDialog, OrderLogDialog },
+  components: {
+    PreviewButton,
+    BankReceiptDialog,
+    OrderLogDialog,
+    PasteUploadImage,
+    UploadFiles,
+    CompanyRegisterInfoDialog,
+    RegistrationProcessDialog,
+    CompanyAttachmentDialog,
+    ExpressDialog},
   data() {
     return {
       orderId: '',
-      uploadLoading: null,
       info: {},
       bankTypes: {
         B: '银行',
@@ -1907,73 +1003,6 @@ export default {
         W: '微信',
         N: '-'
       },
-      companyRegisterInfoDialogDisplay: false,
-      companyRegisterInfoForm: {
-        orderId: '', // 订单Id
-        supplierId: '',
-        companyNames: [{
-          value: ''
-        }],
-        companyName: '', // 站点名称
-        companyTypeId: '', // 站点类型
-        businessScope: '',
-        registeredCapital: '', // 注册资本
-        showTaxTypeName: '', // 纳税性质
-        taxTypeName: '', // 纳税性质
-        investorName: '', // 投资人姓名
-        investorMobile: '', // 投资人手机
-        investorIdCardNo: '', // 投资人身份证号码
-        investorIdCardFrontUrl: '', // 投资人身份证正面URL
-        investorIdCardBackUrl: '', // 投资人身份证背面URL
-        investorEmail: '', // 投资人邮箱
-        financePersonName: '', // 财务人员姓名
-        financePersonMobile: '', // 财务人员手机
-        isNeedFinanceID: 'N',
-        financePersonIdCardFrontUrl: '', // 财务人员身份证正面URL
-        financePersonIdCardBackUrl: '', // 财务人员身份证背面URL
-        financePersonIdCardNo: '', // 财务人员身份证号
-        remark: '' // 备注
-      },
-      companyTypeList: [], // 公司类型列表
-      companyRegisterInfoRules: [],
-      registrationProcessDialogDisplay: false,
-      registrationProcessForm: {
-        orderId: '', // 订单Id
-        checkNameCompletedTime: '', // 核名完成时间
-        licenseTime: '', // 营业执照发放时间
-        bankOpenAccountTime: '', // 银行开户时间
-        bankOpenAccountCompletedTime: '', // 银行开户完成时间
-        checkTaxCompletedTime: '', // 核税完成时间
-        checkNameCompletedUrl: '', // 核名书Url
-        licenseUrl: '', // 营业执照Url
-        bankOpenAccountUrl: '', // 银行开户申请书Url
-        bankOpenAccountCompletedUrl: '', // 银行开户完成通知书Url
-        checkTaxCompletedUrl: '' // 核税完成单Url
-      },
-      registrationProcessRules: [],
-      companyAttachmentDialogDisplay: false,
-      companyAttachmentForm: {
-        orderId: '', // 订单Id
-        ukeyImgUrl: '', // U盾图片路径
-        stampImgUrl: '', // 公章图片路径
-        licenseImgUrl: '', // 营业执照图片路径
-        taxAgreementPDFUrl: '', // 国地税协议三方PDF
-        companyAddress: '', // 站点地址
-        taxNo: '', // 税号
-        companyPhone: '', // 公司电话
-        accountBank: '', // 开户银行
-        accountBankAccount: '', // 开户银行账号
-        companyName: '' // 站点名称
-      },
-      companyAttachmentRules: [],
-      expressDialogDisplay: false,
-      expressForm: {
-        orderId: '', // 订单Id
-        expressNo: '', // 快递单号
-        expressImgUrl: '', // 快递单回单截图URL
-        expressName: '顺丰快递' // 快递公司
-      },
-      expressRules: [],
       customerServiceRecordDialogDisplay: false,
       customerServiceRecordForm: {
         orderId: '', // 订单Id
@@ -1982,9 +1011,7 @@ export default {
         displayEval: 0,
         evalValue: '', // 评价等级（1-10）
         feedback: '' // 客户反馈
-      },
-      customerServiceRecordRules: [],
-      sourceTaxSupplierList: [] // 供应商列表
+      }
     }
   },
   watch: {
@@ -1993,6 +1020,16 @@ export default {
         this.customerServiceRecordForm.evalValue = Number(val || 0) * 2
       },
       deep: true
+    }
+  },
+  computed: {
+    showServiceFee(){
+      let val = this.info.orderInfo.serviceFeeDiscount
+      if (!val || val === 1) {
+        return '无折扣'
+      } else {
+        return val * 100 + '折'
+      }
     }
   },
   methods: {
@@ -2005,72 +1042,7 @@ export default {
         this.info = await this.$$main.orderAccountOrderDetail({
           orderId: this.orderId
         })
-        this.info.orderInfo && this.info.orderInfo.sourceTaxId && this.querySourceTaxSupplierList()
 
-        let regInfo = this.info.companyRegInfo
-        if (regInfo) {
-          if (regInfo.companyName && regInfo.companyName !== '') {
-            let arr = regInfo.companyName.split(',')
-            regInfo.companyNames = arr.map((i) => {
-              return {
-                value: i
-              }
-            })
-          } else {
-            regInfo.companyNames = [{
-              value: ''
-            }]
-          }
-          regInfo.supplierId = regInfo.supplierId || ''
-          this.companyRegisterInfoForm = JSON.parse(JSON.stringify(regInfo))
-        } else {
-          const orderInfo = this.info.orderInfo
-          let arr = orderInfo.companyName.split(',')
-          let names = arr.map((i) => {
-            return {
-              value: i
-            }
-          })
-          this.companyRegisterInfoForm = {
-            orderId: (orderInfo && orderInfo.orderId) || '', // 订单Id
-            supplierId: '',
-            companyNames: names,
-            companyName: (orderInfo && orderInfo.companyName) || '', // 站点名称
-            companyTypeId: (orderInfo && orderInfo.companyTypeId) || '', // 站点类型
-            businessScope: (orderInfo && orderInfo.businessScope) || '',
-            registeredCapital: (orderInfo && orderInfo.registeredCapital) || '', // 注册资本
-            taxTypeName: (orderInfo && orderInfo.taxTypeName) || '', // 纳税性质
-            showTaxTypeName: (orderInfo && orderInfo.showTaxTypeName) || '', // 纳税性质
-            investorName: (orderInfo && orderInfo.investorName) || '', // 投资人姓名
-            investorMobile: (orderInfo && orderInfo.investorMobile) || '', // 投资人手机
-            investorIdCardNo: (orderInfo && orderInfo.investorIdCardNo) || '', // 投资人身份证号码
-            investorIdCardFrontUrl: (orderInfo && orderInfo.investorIdCardFrontUrl) || '', // 投资人身份证正面URL
-            investorIdCardBackUrl: (orderInfo && orderInfo.investorIdCardBackUrl) || '', // 投资人身份证背面URL
-            investorEmail: (orderInfo && orderInfo.investorEmail) || '', // 投资人邮箱
-            financePersonName: (orderInfo && orderInfo.financePersonName) || '', // 财务人员姓名
-            financePersonMobile: (orderInfo && orderInfo.financePersonMobile) || '', // 财务人员手机
-            isNeedFinanceID: (orderInfo && orderInfo.isNeedFinanceID) || 'N',
-            financePersonIdCardFrontUrl: (orderInfo && orderInfo.financePersonIdCardFrontUrl) || '', // 财务人员身份证正面URL
-            financePersonIdCardBackUrl: (orderInfo && orderInfo.financePersonIdCardBackUrl) || '', // 财务人员身份证背面URL
-            financePersonIdCardNo: (orderInfo && orderInfo.financePersonIdCardNo) || '', // 财务人员身份证号
-            remark: '' // 备注
-          }
-        }
-        this.info.processInfo && (this.registrationProcessForm = {
-          orderId: this.orderId, // 订单Id
-          checkNameCompletedTime: this.info.processInfo.showCheckNameCompletedTime || '', // 核名完成时间
-          licenseTime: this.info.processInfo.showLicenseTime || '', // 营业执照发放时间
-          bankOpenAccountTime: this.info.processInfo.showBankOpenAccountTime || '', // 银行开户时间
-          bankOpenAccountCompletedTime: this.info.processInfo.showBankOpenAccountCompletedTime || '', // 银行开户完成时间
-          checkTaxCompletedTime: this.info.processInfo.showCheckTaxCompletedTime || '', // 核税完成时间
-          checkNameCompletedUrl: this.info.processInfo.checkNameCompletedUrl || '', // 核名书Url
-          licenseUrl: this.info.processInfo.licenseUrl || '', // 营业执照Url
-          bankOpenAccountUrl: this.info.processInfo.bankOpenAccountUrl || '', // 银行开户申请书Url
-          bankOpenAccountCompletedUrl: this.info.processInfo.bankOpenAccountCompletedUrl || '', // 银行开户完成通知书Url
-          checkTaxCompletedUrl: this.info.processInfo.checkTaxCompletedUrl || '' // 核税完成单Url
-        })
-        this.info.companyAttachment && (this.companyAttachmentForm = JSON.parse(JSON.stringify(this.info.companyAttachment)))
-        this.info.accountOrderExpress && (this.expressForm = JSON.parse(JSON.stringify(this.info.accountOrderExpress)))
         this.info.customerServiceRecord && (this.customerServiceRecordForm = {
           orderId: this.orderId, // 订单Id
           orderType: 'A',
@@ -2083,15 +1055,6 @@ export default {
         e.message && this.$message.error(e.message)
       } finally {
         loading.close()
-      }
-    },
-    async querySourceTaxSupplierList() {
-      try {
-        this.sourceTaxSupplierList = await this.$$main.sourceTaxListSupplier({
-          sourceTaxId: this.info.orderInfo.sourceTaxId
-        })
-      } catch (e) {
-        e.message && this.$message.error(e.message)
       }
     },
     displayNextDialog(actionName) {
@@ -2208,119 +1171,6 @@ export default {
         loading.close()
       }
     },
-    async queryCompanyTypeList() {
-      try {
-        this.companyTypeList = await this.$$main.commonListCompanyType()
-      } catch (e) {
-        this.companyTypeList = []
-      }
-    },
-    onCompanyTypeChange(i) {
-      let chooseCompanyType = this.companyTypeList.filter((item) => {
-        return item.companyTypeId === i
-      })
-      if (chooseCompanyType && chooseCompanyType.length > 0) {
-        this.companyRegisterInfoForm.businessScope = chooseCompanyType[0].businessScope
-      }
-    },
-    addCompanyName() {
-      this.companyRegisterInfoForm.companyNames.push({
-        value: ''
-      })
-    },
-    removeCompanyName(item) {
-      let index = this.companyRegisterInfoForm.companyNames.indexOf(item)
-      if (index !== -1) {
-        this.companyRegisterInfoForm.companyNames.splice(index, 1)
-      }
-    },
-    async editCompanyRegisterInfo() {
-      let arr = []
-      if (this.companyRegisterInfoForm.companyNames && this.companyRegisterInfoForm.companyNames.length > 0) {
-        this.companyRegisterInfoForm.companyNames.forEach((item) => {
-          item && item.value && arr.push(item.value)
-        })
-      }
-      this.companyRegisterInfoForm.companyName = arr.join(',')
-      const loading = this.$loading({
-        text: '正在操作',
-        spinner: 'el-icon-loading'
-      })
-      try {
-        this.companyRegisterInfoForm.orderId = this.orderId
-        await this.$$main.orderAOEditCompanyRegisterInfo(this.companyRegisterInfoForm)
-        this.$message({
-          message: `保存成功`,
-          type: 'success'
-        })
-        this.queryOrderInfo()
-        this.companyRegisterInfoDialogDisplay = false
-      } catch (e) {
-        e.message && this.$message.error(e.message)
-      } finally {
-        loading.close()
-      }
-    },
-    async editRegistrationProcess() {
-      const loading = this.$loading({
-        text: '正在操作',
-        spinner: 'el-icon-loading'
-      })
-      try {
-        this.registrationProcessForm.orderId = this.orderId
-        await this.$$main.orderAORegistrationProcess(this.registrationProcessForm)
-        this.$message({
-          message: `保存成功`,
-          type: 'success'
-        })
-        this.queryOrderInfo()
-        this.registrationProcessDialogDisplay = false
-      } catch (e) {
-        e.message && this.$message.error(e.message)
-      } finally {
-        loading.close()
-      }
-    },
-    async editCompanyAttachment() {
-      const loading = this.$loading({
-        text: '正在操作',
-        spinner: 'el-icon-loading'
-      })
-      try {
-        this.companyAttachmentForm.orderId = this.orderId
-        await this.$$main.orderEditCompanyAttachment(this.companyAttachmentForm)
-        this.$message({
-          message: `保存成功`,
-          type: 'success'
-        })
-        this.queryOrderInfo()
-        this.companyAttachmentDialogDisplay = false
-      } catch (e) {
-        e.message && this.$message.error(e.message)
-      } finally {
-        loading.close()
-      }
-    },
-    async editExpress() {
-      const loading = this.$loading({
-        text: '正在操作',
-        spinner: 'el-icon-loading'
-      })
-      try {
-        this.expressForm.orderId = this.orderId
-        await this.$$main.orderAOEditExpress(this.expressForm)
-        this.$message({
-          message: `保存成功`,
-          type: 'success'
-        })
-        this.queryOrderInfo()
-        this.expressDialogDisplay = false
-      } catch (e) {
-        e.message && this.$message.error(e.message)
-      } finally {
-        loading.close()
-      }
-    },
     async editCustomerServiceRecord() {
       const loading = this.$loading({
         text: '正在操作',
@@ -2341,20 +1191,8 @@ export default {
         loading.close()
       }
     },
-    openLoading(target) {
-      this.uploadLoading = this.$loading({
-        lock: true,
-        text: '文件上传中',
-        spinner: 'el-icon-loading',
-        target: target
-      })
-    },
-    closeLoading() {
-      this.uploadLoading.close()
-    },
     onPageShow(){
       this.orderId = (this.$route.query && this.$route.query.orderid) || ''
-      this.queryCompanyTypeList()
       this.queryOrderInfo()
     }
   },

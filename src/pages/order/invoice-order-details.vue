@@ -20,7 +20,7 @@
     <el-row style="margin-bottom: 10px;" v-if="info.orderInfo && info.orderInfo.workflowId === 5000 && info.differenceInfo && info.differenceInfo.traderId === adminUserId">
       <el-col :span="24" class="header-buttons">
         <div>
-          <el-button size="mini" @click="invoiceDialogDisplay = true">补录发票</el-button>
+          <el-button size="mini" @click="$refs['invoiceDialog'].show()">补录发票</el-button>
         </div>
       </el-col>
     </el-row>
@@ -73,7 +73,7 @@
         </div>
         <div v-if="info.orderInfo.workflowId === 2120">
           <el-button type="primary" size="mini" @click="displayNextDialog()">提交订单</el-button>
-          <el-button size="mini" @click="invoiceDialogDisplay = true">录入发票信息</el-button>
+          <el-button size="mini" @click="$refs['invoiceDialog'].show()">录入发票信息</el-button>
           <el-button size="mini" @click="displayRejectDialog()">驳回</el-button>
           <el-button size="mini" @click="displayRejectDialog('驳回至创建人的', 'restart')">驳回至创建人</el-button>
         </div>
@@ -84,7 +84,7 @@
         </div>
         <div v-if="info.orderInfo.workflowId === 2140">
           <el-button type="primary" size="mini" @click="displayNextDialog()">提交订单</el-button>
-          <el-button size="mini" @click="customerServiceRecordDialogDisplay = true">录入回访结果</el-button>
+          <!--<el-button size="mini" @click="customerServiceRecordDialogDisplay = true">录入回访结果</el-button>-->
           <el-button size="mini" @click="displayRejectDialog('暂无结果', 'wait')">暂无结果</el-button>
           <el-button size="mini" @click="displayRejectDialog()">驳回</el-button>
           <el-button size="mini" @click="displayRejectDialog('驳回至创建人的', 'restart')">驳回至创建人</el-button>
@@ -332,103 +332,8 @@
     <!--<el-card class="box-card finish-info">-->
       <!--订单已完成，共耗时30天4小时（2018-05-02~2018-05-20）。-->
     <!--</el-card>-->
-    <el-dialog
-      title="发票信息"
-      v-drag-dialog="{reset: true}"
-      :visible.sync="invoiceDialogDisplay"
-      :close-on-click-modal="false"
-      width="750px"
-      center>
-      <el-form ref="invoiceForm" :model="invoiceForm" label-width="120px" size="small">
-        <div style="border: 1px solid #cecece;padding: 15px;margin-bottom: 5px;" v-for="(item, index) in invoiceList" :key="index">
-          <el-row>
-            <el-col :span="12">
-              <el-form-item label="创建时间" prop="createTime">
-                <el-input v-model="item.createTime" placeholder="创建时间" disabled/>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="快递单号" prop="expressNo">
-                <el-input v-model="item.expressNo" placeholder="快递单号"/>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="12">
-              <el-form-item label="快递公司" prop="expressName">
-                <el-input v-model="item.expressName" placeholder="快递公司"/>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="快递回单截图" prop="billImgUrl" class="account-upload">
-                <div style="display: flex">
-                  <el-upload
-                    :action="$$main.getUrl('/Common/ImageUpload')"
-                    :show-file-list="false"
-                    :before-upload="() => {openLoading()}"
-                    :on-error="closeLoading"
-                    :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (item.expressImgUrl = res.body.imageUrl) }">
-                    <el-button type="text" size="mini">上传材料</el-button>
-                  </el-upload>
-                  <div class="el-upload el-upload--text" style="margin-left: 10px">
-                    <preview-button type="text" size="mini" show-preview-dialog always-show :src="item.expressImgUrl" v-if="item.expressImgUrl">查看原文件</preview-button>
-                    <preview-button type="text" size="mini" :src="item.expressImgUrl" v-if="item.expressImgUrl">预览</preview-button>
-                  </div>
-                </div>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="12">
-              <el-form-item label="录入发票总张数" prop="expressNo">
-                <el-input v-model.number="item.invoiceCount" placeholder="录入发票总张数"/>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="实际开票总金额" prop="expressName">
-                <el-input v-model.number="item.invoiceAmount" placeholder="实际开票总金额"/>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="12">
-              <el-form-item label="实际税额" prop="expressNo">
-                <el-input v-model.number="item.taxAmount" placeholder="实际税额"/>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="上传发票图片" prop="billImgUrl" class="account-upload">
-                <div style="display: flex">
-                  <el-upload
-                    :action="$$main.getUrl('/Common/ImageUpload')"
-                    :show-file-list="false"
-                    :before-upload="() => {openLoading()}"
-                    :on-error="closeLoading"
-                    :on-success="(res, file, fileList) => { closeLoading(); res && res.isSuccess && (item.invoiceImgUrl = res.body.imageUrl) }">
-                    <el-button type="text" size="mini">上传材料</el-button>
-                  </el-upload>
-                  <div class="el-upload el-upload--text" style="margin-left: 10px">
-                    <preview-button type="text" size="mini" show-preview-dialog always-show :src="item.invoiceImgUrl" v-if="item.invoiceImgUrl">查看原文件</preview-button>
-                    <preview-button type="text" size="mini" :src="item.invoiceImgUrl" v-if="item.invoiceImgUrl">预览</preview-button>
-                  </div>
-                </div>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="24" style="text-align: right">
-              <el-button size="mini" type="primary" @click="editInvoice(item, index)">保存</el-button>
-              <el-button size="mini" type="danger" @click="deleteInvoice(item, index)">删除</el-button>
-            </el-col>
-          </el-row>
-        </div>
-      </el-form>
-      <el-row style="margin-top: 15px;">
-        <el-col :span="24" style="text-align: center">
-          <el-button size="mini" type="text" @click="addInvoice"><i class="el-icon-circle-plus-outline"></i>添加发票信息</el-button>
-        </el-col>
-      </el-row>
-    </el-dialog>
+    <!-- 发票信息 -->
+    <invoice-dialog ref="invoiceDialog" :info="info" @saved="queryOrderInfo"/>
     <el-dialog
       title="客服回访信息"
       :visible.sync="customerServiceRecordDialogDisplay"
@@ -481,9 +386,11 @@
 import PreviewButton from '../../components/PreviewButton'
 import BankReceiptDialog from '../../components/BankReceiptDialog'
 import OrderLogDialog from '../../components/OrderLogDialog'
+import PasteUploadImage from '../../components/PasteUploadImage'
+import InvoiceDialog from './invoice_components/InvoiceDialog'
 export default {
   name: 'invoice-order-details',
-  components: {PreviewButton, BankReceiptDialog, OrderLogDialog},
+  components: {PreviewButton, BankReceiptDialog, OrderLogDialog, PasteUploadImage, InvoiceDialog},
   data() {
     return {
       orderId: '',
@@ -495,21 +402,6 @@ export default {
         W: '微信',
         N: '-'
       },
-      invoiceDialogDisplay: false,
-      invoiceList: [],
-      invoiceForm: {
-        createTime: '',
-        orderId: '', // 订单Id
-        expressId: '',
-        expressNo: '', // 快递单号
-        expressImgUrl: '', // 快递单回单截图URL
-        expressName: '顺丰快递', // 快递公司
-        invoiceImgUrl: '', // 发票图片URL
-        invoiceCount: '', // 发票数量
-        invoiceAmount: '', // 开票总额
-        taxAmount: '' // 税额
-      },
-      invoiceRules: [],
       customerServiceRecordDialogDisplay: false,
       customerServiceRecordForm: {
         orderId: '', // 订单Id
@@ -552,25 +444,7 @@ export default {
         this.info = await this.$$main.orderInvoiceOrderDetail({
           orderId: this.orderId
         })
-        this.invoiceList = []
-        if (this.info.invoiceInfos && this.info.invoiceInfos.length > 0) {
-          this.info.invoiceInfos.forEach((item) => {
-            this.invoiceList.push({
-              createTime: item.createTime,
-              orderId: this.orderId, // 订单Id
-              expressId: item.expressId,
-              expressNo: item.expressNo, // 快递单号
-              expressImgUrl: item.expressImgUrl, // 快递单回单截图URL
-              expressName: item.expressName, // 快递公司
-              invoiceImgUrl: item.invoiceImgUrl, // 发票图片URL
-              invoiceCount: item.invoiceCount, // 发票数量
-              invoiceAmount: item.invoiceAmount, // 开票总额
-              taxAmount: item.taxAmount // 税额
-            })
-          })
-        } else {
-          this.addInvoice()
-        }
+
         if (this.info.invoiceInfos && this.info.invoiceInfos.length > 0) {
           this.info.invoiceInfos = this.info.invoiceInfos.map((i) => {
             // [object Array] [object Object]
@@ -712,71 +586,6 @@ export default {
         loading.close()
       }
     },
-    async editInvoice(form, index){
-      let amount = 0
-      this.invoiceList.forEach((i) => {
-        amount = amount + Number((i.invoiceAmount || 0).toFixed(2))
-      })
-      if (amount > this.info.orderInfo.invoiceAmount || 0) {
-        this.$message.error('实际开票总金额的总和不能大于该订单的开票金额')
-        return
-      }
-      const loading = this.$loading({
-        text: '正在操作',
-        spinner: 'el-icon-loading'
-      })
-      try {
-        this.invoiceForm.orderId = this.orderId
-        this.invoiceList[index].expressId = await this.$$main.orderIOEditInvoice(form)
-        this.$message({
-          message: `保存成功`,
-          type: 'success'
-        })
-        this.queryOrderInfo()
-      } catch (e) {
-        e.message && this.$message.error(e.message)
-      } finally {
-        loading.close()
-      }
-    },
-    async deleteInvoice(form, index){
-      if (!form.expressId || form.expressId === '') {
-        this.invoiceList.splice(index, 1)
-        return
-      }
-      const loading = this.$loading({
-        text: '正在操作',
-        spinner: 'el-icon-loading'
-      })
-      try {
-        await this.$$main.orderIODeleteInvoice({
-          expressId: form.expressId || 0
-        })
-        this.invoiceList.splice(index, 1)
-        this.$message({
-          message: `操作成功`,
-          type: 'success'
-        })
-        this.queryOrderInfo()
-      } catch (e) {
-        e.message && this.$message.error(e.message)
-      } finally {
-        loading.close()
-      }
-    },
-    addInvoice(){
-      this.invoiceList.push({
-        orderId: this.orderId, // 订单Id
-        expressId: '',
-        expressNo: '', // 快递单号
-        expressImgUrl: '', // 快递单回单截图URL
-        expressName: '顺丰快递', // 快递公司
-        invoiceImgUrl: '', // 发票图片URL
-        invoiceCount: '', // 发票数量
-        invoiceAmount: '', // 开票总额
-        taxAmount: '' // 税额
-      })
-    },
     async editCustomerServiceRecord(){
       const loading = this.$loading({
         text: '正在操作',
@@ -796,17 +605,6 @@ export default {
       } finally {
         loading.close()
       }
-    },
-    openLoading(target) {
-      this.uploadLoading = this.$loading({
-        lock: true,
-        text: '文件上传中',
-        spinner: 'el-icon-loading',
-        target: target
-      })
-    },
-    closeLoading(){
-      this.uploadLoading.close()
     },
     showExpressDialog({expressMsg}){
       this.expressDialogInfo = expressMsg
